@@ -1,5 +1,41 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from typing import List
+
+
+class SoftDeleteManager(models.Manager):
+    """Gerenciador customizado para ignorar registros deletados (Soft Delete)."""
+    
+    def get_queryset(self):
+        return super().get_queryset().filter(is_deleted=False)
+
+
+from typing import Any
+
+class SoftDeleteModel(models.Model):
+    """Modelo abstrato para herança de Soft Delete em vez de Hard Delete."""
+    
+    is_deleted = models.BooleanField(default=False)
+    deleted_at = models.DateTimeField(null=True, blank=True)
+    
+    objects = SoftDeleteManager()
+    all_objects = models.Manager()  # Acessível para admins caso precisem ver tudo
+    
+    class Meta:
+        abstract = True
+        
+    def delete(self, *args, **kwargs) -> tuple[int, dict[str, int]]:
+        """Em vez de deletar do banco, marca como deletado."""
+        from django.utils import timezone
+        self.is_deleted = True
+        self.deleted_at = timezone.now()
+        self.save()
+        return (1, {self._meta.label: 1})
+        
+    def hard_delete(self, *args, **kwargs) -> tuple[int, dict[str, int]]:
+        """Deleta fisicamente do banco de dados referenciado no ORM."""
+        return super().delete(*args, **kwargs)
+
 
 
 class CustomUser(AbstractUser):
@@ -35,17 +71,17 @@ class CustomUser(AbstractUser):
     def __str__(self):
         return f'{self.get_full_name() or self.username} ({self.get_role_display()})'
     
-    def is_admin(self):
+    def is_admin(self) -> bool:
         return self.role == 'admin'
     
-    def is_therapist(self):
+    def is_therapist(self) -> bool:
         return self.role == 'therapist'
     
-    def is_family(self):
+    def is_family(self) -> bool:
         return self.role == 'family'
 
 
-class Patient(models.Model):
+class Patient(SoftDeleteModel):
     """Modelo de Paciente com histórico de atendimento."""
     
     name = models.CharField(max_length=255)
@@ -61,11 +97,11 @@ class Patient(models.Model):
         verbose_name = 'Paciente'
         verbose_name_plural = 'Pacientes'
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.name
 
 
-class Session(models.Model):
+class Session(SoftDeleteModel):
     """Modelo de Sessão Terapêutica (Agenda)."""
     
     STATUS_CHOICES = [
@@ -87,11 +123,11 @@ class Session(models.Model):
         verbose_name = 'Sessão'
         verbose_name_plural = 'Sessões'
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f'{self.patient.name} - {self.date_time.strftime("%d/%m/%Y %H:%M")}'
 
 
-class TherapeuticEvolution(models.Model):
+class TherapeuticEvolution(SoftDeleteModel):
     """Evolução Terapêutica registrada após uma sessão."""
     
     session = models.OneToOneField(Session, on_delete=models.CASCADE, related_name='evolution', verbose_name='Sessão')

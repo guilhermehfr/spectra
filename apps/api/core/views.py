@@ -1,3 +1,4 @@
+from django.db.models import QuerySet
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.decorators import action
@@ -69,21 +70,21 @@ class PatientListCreateView(ListCreateAPIView):
     """
     Listar e criar pacientes.
     
-    GET /api/patients/ - Listar todos os pacientes (requer autenticação)
+    GET /api/patients/ - Listar todos os pacientes com ordenação / paginação / buscas
     POST /api/patients/ - Criar novo paciente (apenas therapist/admin)
     """
     queryset = Patient.objects.all().order_by("-id")
     serializer_class = PatientSerializer
     permission_classes = [IsTherapistOrAdmin]
+    
+    filterset_fields = ['birth_date']
+    search_fields = ['name', 'guardian_name', 'guardian_email']
+    ordering_fields = ['name', 'created_at']
 
 
 class PatientDetailView(RetrieveUpdateDestroyAPIView):
     """
-    Visualizar, atualizar ou deletar um paciente específico.
-    
-    GET /api/patients/{id}/ - Detalhes do paciente
-    PUT /api/patients/{id}/ - Atualizar paciente
-    DELETE /api/patients/{id}/ - Deletar paciente
+    Visualizar, atualizar ou realizar soft delete em um paciente.
     """
     queryset = Patient.objects.all()
     serializer_class = PatientSerializer
@@ -98,18 +99,25 @@ class SessionListCreateView(ListCreateAPIView):
     serializer_class = SessionSerializer
     permission_classes = [IsTherapistOrAdmin]
     
-    def get_queryset(self):
+    filterset_fields = ['status', 'patient', 'therapist']
+    search_fields = ['patient__name', 'therapist__username']
+    ordering_fields = ['date_time']
+    
+    def get_queryset(self) -> QuerySet:
+        qs = Session.objects.all().order_by("-id")
         user = self.request.user
+        if not user.is_authenticated:
+            return qs.none()
         # Terapeuta vê as suas sessões
-        if user.is_therapist():
-            return Session.objects.filter(therapist=user)
+        if getattr(user, 'is_therapist', lambda: False)():
+            return qs.filter(therapist=user)
         # Admin vê todas
-        return Session.objects.all()
+        return qs
 
-    def perform_create(self, serializer):
+    def perform_create(self, serializer) -> None:
         # Associa automaticamente ao terapeuta logado se for terapeuta
         user = self.request.user
-        if user.is_therapist():
+        if user.is_authenticated and getattr(user, 'is_therapist', lambda: False)():
             serializer.save(therapist=user)
         else:
             serializer.save()
