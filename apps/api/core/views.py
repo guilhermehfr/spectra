@@ -5,12 +5,14 @@ from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK, HTTP_201_CREATED
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
-from .models import Patient, CustomUser
+from .models import Patient, CustomUser, Session, TherapeuticEvolution
 from .serializers import (
     PatientSerializer, 
     LoginSerializer,
     CustomUserSerializer,
-    RefreshTokenSerializer
+    RefreshTokenSerializer,
+    SessionSerializer,
+    TherapeuticEvolutionSerializer
 )
 from .permissions import IsTherapistOrAdmin, IsAdminOrReadOnly
 
@@ -87,3 +89,69 @@ class PatientDetailView(RetrieveUpdateDestroyAPIView):
     serializer_class = PatientSerializer
     permission_classes = [IsTherapistOrAdmin]
     lookup_field = 'pk'
+
+
+class SessionListCreateView(ListCreateAPIView):
+    """
+    Listar e criar sessões agendadas.
+    """
+    serializer_class = SessionSerializer
+    permission_classes = [IsTherapistOrAdmin]
+    
+    def get_queryset(self):
+        user = self.request.user
+        # Terapeuta vê as suas sessões
+        if user.is_therapist():
+            return Session.objects.filter(therapist=user)
+        # Admin vê todas
+        return Session.objects.all()
+
+    def perform_create(self, serializer):
+        # Associa automaticamente ao terapeuta logado se for terapeuta
+        user = self.request.user
+        if user.is_therapist():
+            serializer.save(therapist=user)
+        else:
+            serializer.save()
+
+
+class SessionDetailView(RetrieveUpdateDestroyAPIView):
+    """
+    Atualizar reagendar ou cancelar sessões.
+    """
+    serializer_class = SessionSerializer
+    permission_classes = [IsTherapistOrAdmin]
+    
+    def get_queryset(self):
+        user = self.request.user
+        if user.is_therapist():
+            return Session.objects.filter(therapist=user)
+        return Session.objects.all()
+
+
+class TherapeuticEvolutionListCreateView(ListCreateAPIView):
+    """
+    Listar evoluções e registrar.
+    """
+    serializer_class = TherapeuticEvolutionSerializer
+    permission_classes = [IsTherapistOrAdmin]
+    
+    def get_queryset(self):
+        user = self.request.user
+        if user.is_therapist():
+            return TherapeuticEvolution.objects.filter(session__therapist=user)
+        return TherapeuticEvolution.objects.all()
+
+
+class TherapeuticEvolutionDetailView(RetrieveUpdateDestroyAPIView):
+    """
+    Atualizar a evolução
+    """
+    serializer_class = TherapeuticEvolutionSerializer
+    permission_classes = [IsTherapistOrAdmin]
+
+    def get_queryset(self):
+        user = self.request.user
+        if user.is_therapist():
+            return TherapeuticEvolution.objects.filter(session__therapist=user)
+        return TherapeuticEvolution.objects.all()

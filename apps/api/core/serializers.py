@@ -1,8 +1,9 @@
 from rest_framework import serializers
 from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import RefreshToken
+from django.utils import timezone
 
-from .models import Patient, CustomUser
+from .models import Patient, CustomUser, Session, TherapeuticEvolution
 
 
 class CustomUserSerializer(serializers.ModelSerializer):
@@ -99,4 +100,44 @@ class PatientSerializer(serializers.ModelSerializer):
         """Validar email do responsável se fornecido."""
         if value and not value.strip():
             return ''
+        return value
+
+
+class SessionSerializer(serializers.ModelSerializer):
+    """Serializer para Sessões Terapêuticas."""
+    
+    patient_name = serializers.CharField(source='patient.name', read_only=True)
+    therapist_name = serializers.CharField(source='therapist.get_full_name', read_only=True)
+    
+    class Meta:
+        model = Session
+        fields = ['id', 'patient', 'patient_name', 'therapist', 'therapist_name', 
+                  'date_time', 'status', 'notes', 'created_at', 'updated_at']
+        read_only_fields = ['id', 'created_at', 'updated_at']
+        
+    def validate_date_time(self, value):
+        """Não permitir agendamento no passado."""
+        # Se for atualização e a data não mudou, ok. Mas para criação, não pode ser passado.
+        if self.instance is None and value < timezone.now():
+            raise serializers.ValidationError('Não é possível agendar uma sessão no passado.')
+        return value
+
+class TherapeuticEvolutionSerializer(serializers.ModelSerializer):
+    """Serializer para Evoluções."""
+    
+    session_details = SessionSerializer(source='session', read_only=True)
+    
+    class Meta:
+        model = TherapeuticEvolution
+        fields = ['id', 'session', 'session_details', 'objective', 'activities', 
+                  'behavior', 'progress', 'next_steps', 'created_at', 'updated_at']
+        read_only_fields = ['id', 'created_at', 'updated_at']
+        
+    def validate_session(self, value):
+        """Validar se a sessão já possui evolução e se está marcada como realizada."""
+        if self.instance is None:
+            if TherapeuticEvolution.objects.filter(session=value).exists():
+                raise serializers.ValidationError('Esta sessão já possui uma evolução registrada.')
+            if value.status != 'completed':
+                raise serializers.ValidationError('A sessão precisa estar marcada como "Realizada" para registrar a evolução.')
         return value
