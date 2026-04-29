@@ -7,12 +7,12 @@ class CustomUserAdmin(BaseUserAdmin):
     """Admin customizado para o modelo CustomUser."""
     
     model = CustomUser
-    fieldsets = BaseUserAdmin.fieldsets + (
+    fieldsets = list(BaseUserAdmin.fieldsets or []) + [
         ('Informações Adicionais', {'fields': ('role', 'phone')}),
-    )
+    ]
     list_display = ['username', 'email', 'first_name', 'last_name', 'role', 'is_active']
-    list_filter = BaseUserAdmin.list_filter + ('role', 'is_active')
-    search_fields = BaseUserAdmin.search_fields + ('role',)
+    list_filter = list(BaseUserAdmin.list_filter or []) + ['role', 'is_active']
+    search_fields = list(BaseUserAdmin.search_fields or []) + ['role']
 
 
 class PatientAdmin(admin.ModelAdmin):
@@ -32,17 +32,17 @@ class SessionAdmin(admin.ModelAdmin):
 class TherapeuticEvolutionAdmin(admin.ModelAdmin):
     list_display = ['get_patient', 'get_therapist', 'get_session_date', 'created_at']
     
+    @admin.display(description='Paciente')
     def get_patient(self, obj):
         return obj.session.patient.name
-    get_patient.short_description = 'Paciente'
     
+    @admin.display(description='Terapeuta')
     def get_therapist(self, obj):
         return obj.session.therapist.get_full_name() or obj.session.therapist.username
-    get_therapist.short_description = 'Terapeuta'
 
+    @admin.display(description='Data da Sessão')
     def get_session_date(self, obj):
         return obj.session.date_time
-    get_session_date.short_description = 'Data da Sessão'
 
 admin.site.register(CustomUser, CustomUserAdmin)
 admin.site.register(Patient, PatientAdmin)
