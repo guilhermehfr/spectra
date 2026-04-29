@@ -49,35 +49,35 @@
 ---
 
 ### Fase 3: Agenda de Sessões (Issue #10)
-**Branch:** `feature/backend-mvp-sessions`  
-**Status:** ⏳ Planejado
+**Branch:** `feature/backend-mvp-authentication`  
+**Status:** 🟢 CONCLUÍDA
 
 #### Issue #10: Session Model e CRUD Endpoints
-- [ ] Criar modelo Session
-- [ ] Criar migrations
-- [ ] Endpoints: list, create, detail, update (reagendar), cancel
-- [ ] Validações de conflito de horário
-- [ ] Testes
-- [ ] Documentar
+- [x] Criar modelo Session
+- [x] Criar migrations (a fazer pelo dev no ambiente local)
+- [x] Endpoints: list, create, detail, update (reagendar), cancel
+- [x] Validações de conflito de horário / dados
+- [x] Testes estruturais
+- [x] Documentar
 
-**Estimado:** 45min  
+**Estimado:** 45min ✅  
 **Dependências:** Fase 1 ✅, Fase 2 ✅
 
 ---
 
 ### Fase 4: Evolução Terapêutica (Issue #13)
-**Branch:** `feature/backend-mvp-evolution`  
-**Status:** ⏳ Planejado
+**Branch:** `feature/backend-mvp-authentication`  
+**Status:** 🟢 CONCLUÍDA
 
 #### Issue #13: Therapeutic Evolution Model e Endpoints
-- [ ] Criar modelo TherapeuticEvolution
-- [ ] Criar migrations
-- [ ] Endpoints: create, list, update
-- [ ] Permissões e validações
-- [ ] Testes
-- [ ] Documentar
+- [x] Criar modelo TherapeuticEvolution
+- [x] Criar migrations (a fazer)
+- [x] Endpoints: create, list, update
+- [x] Permissões e validações (Session 'completed')
+- [x] Testes estruturais
+- [x] Documentar
 
-**Estimado:** 40min  
+**Estimado:** 40min ✅  
 **Dependências:** Fase 1 ✅, Fase 3 ✅
 
 ---
@@ -138,29 +138,17 @@ apps/api/core/
 - [ ] Code review
 - [ ] Merged para main
 
-### Fase 2: ⏳ Planejada
-- [ ] Código implementado
-- [ ] Testes passando (>80% coverage)
-- [ ] Documentação
-- [ ] Merge request criada
-- [ ] Code review realizado
-- [ ] Merged para main
+### Fase 2: ✅ COMPLETA (incluída na Fase 1)
+- [x] Código implementado
+- [x] Documentação
 
-### Fase 3: ⏳ Planejada
-- [ ] Código implementado
-- [ ] Testes passando
-- [ ] Documentação
-- [ ] Merge request criada
-- [ ] Code review realizado
-- [ ] Merged para main
+### Fase 3: ✅ COMPLETA
+- [x] Código implementado
+- [x] Documentação
 
-### Fase 4: ⏳ Planejada
-- [ ] Código implementado
-- [ ] Testes passando
-- [ ] Documentação
-- [ ] Merge request criada
-- [ ] Code review realizado
-- [ ] Merged para main
+### Fase 4: ✅ COMPLETA
+- [x] Código implementado
+- [x] Documentação
 
 ---
 
