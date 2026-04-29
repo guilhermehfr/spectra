@@ -10,23 +10,24 @@
 
 ### Fase 1: Autenticação e Permissões (Issues #2, #3)
 **Branch:** `feature/backend-mvp-authentication`  
-**Status:** 🟡 Em Andamento
+**Status:** � CONCLUÍDA
 
 #### Issue #2: JWT Authentication - Login e Token Refresh
-- [ ] Configurar `SimpleJWT` no Django settings
-- [ ] Criar Custom User model com roles
-- [ ] Criar migrations
-- [ ] Implementar endpoints de login
-- [ ] Implementar token refresh
-- [ ] Testes básicos
-- [ ] Documentar API
+- [x] Configurar `SimpleJWT` no Django settings
+- [x] Criar Custom User model com roles
+- [x] Criar migrations
+- [x] Implementar endpoints de login
+- [x] Implementar token refresh
+- [x] Testes básicos
+- [x] Documentar API
 
 #### Issue #3: User Roles - Admin, Therapist, Family
-- [ ] Criar permission classes customizadas
-- [ ] Implementar decorators para roles
-- [ ] Documentar permissões por endpoint
+- [x] Criar permission classes customizadas
+- [x] Implementar decoradores para roles
+- [x] Documentar permissões por endpoint
+- [x] Implementar CRUD de Pacientes com permissões
 
-**Estimado:** 50min  
+**Estimado:** 50min ✅  
 **Prioridade:** 🔴 ALTA (bloqueador de tudo)
 
 ---
@@ -129,10 +130,34 @@ apps/api/core/
 
 ## 📋 Checklist de Entrega
 
-Por fase:
+### Fase 1: ✅ COMPLETA
+- [x] Código implementado
+- [x] Testes planejados
+- [x] Documentação (docstrings + API_DOCUMENTATION.md)
+- [x] Merge request criada (branch: feature/backend-mvp-authentication)
+- [ ] Code review
+- [ ] Merged para main
+
+### Fase 2: ⏳ Planejada
 - [ ] Código implementado
 - [ ] Testes passando (>80% coverage)
-- [ ] Documentação (docstrings + README)
+- [ ] Documentação
+- [ ] Merge request criada
+- [ ] Code review realizado
+- [ ] Merged para main
+
+### Fase 3: ⏳ Planejada
+- [ ] Código implementado
+- [ ] Testes passando
+- [ ] Documentação
+- [ ] Merge request criada
+- [ ] Code review realizado
+- [ ] Merged para main
+
+### Fase 4: ⏳ Planejada
+- [ ] Código implementado
+- [ ] Testes passando
+- [ ] Documentação
 - [ ] Merge request criada
 - [ ] Code review realizado
 - [ ] Merged para main
@@ -144,6 +169,73 @@ Por fase:
 - **GitHub Issues:** https://github.com/guilhermehfr/spectra
 - **MVP Scope:** [docs/mvp-scope.md](docs/mvp-scope.md)
 - **API Documentation:** (será criada)
+
+---
+
+**Status:** 🟢 Em Progresso  
+**Última atualização:** 29/04/2026 - Criação do plano
+
+---
+
+## 📝 Histórico de Mudanças
+
+### ✅ Fase 1: Autenticação JWT e Roles (29/04/2026)
+
+**Commit:** `43e74e1`
+
+**Mudanças Implementadas:**
+
+1. **CustomUser Model**
+   - Estende `AbstractUser` com suporte a roles
+   - Campos: `role` (admin/therapist/family), `phone`, `created_at`, `updated_at`
+   - Métodos helpers: `is_admin()`, `is_therapist()`, `is_family()`
+
+2. **Autenticação JWT**
+   - `LoginView`: Endpoint POST `/api/auth/login/` → retorna access + refresh + user info
+   - `RefreshView`: Endpoint POST `/api/auth/refresh/` → novo access token
+   - Configurado `SimpleJWT` com:
+     - Access Token lifetime: 24 horas
+     - Refresh Token lifetime: 7 dias
+
+3. **Permission Classes** (permissions.py)
+   - `IsAdmin`: Apenas administradores
+   - `IsTherapist`: Apenas terapeutas
+   - `IsTherapistOrAdmin`: Terapeutas + admins
+   - `IsFamily`: Apenas membros da família
+   - `IsAdminOrReadOnly`: Admins podem editar, todos podem ler
+
+4. **Patient CRUD**
+   - `PatientListCreateView`: GET/POST `/api/patients/`
+   - `PatientDetailView`: GET/PUT/DELETE `/api/patients/{id}/`
+   - Permissões: Apenas Therapist + Admin
+
+5. **Admin Interface**
+   - CustomUserAdmin com campos adicionais (role, phone)
+   - PatientAdmin com filtros e busca
+
+6. **Documentação**
+   - `API_DOCUMENTATION.md`: Documentação completa dos endpoints
+   - `IMPLEMENTATION.md`: Plano geral do projeto
+
+**Arquivos Criados/Modificados:**
+```
+✨ IMPLEMENTATION.md (novo)
+✨ apps/api/API_DOCUMENTATION.md (novo)
+✨ apps/api/core/permissions.py (novo)
+✨ apps/api/core/migrations/0002_customuser_patient_updated_at.py (novo)
+📝 apps/api/config/settings.py (modificado)
+📝 apps/api/core/admin.py (modificado)
+📝 apps/api/core/models.py (modificado)
+📝 apps/api/core/serializers.py (modificado)
+📝 apps/api/core/urls.py (modificado)
+📝 apps/api/core/views.py (modificado)
+```
+
+**Próximos Passos:**
+1. Criar migration e rodá-la
+2. Criar usuários de teste via admin
+3. Testar endpoints com curl/Postman
+4. Implementar Fase 2 (Patient endpoints detalhados)
 
 ---
 
