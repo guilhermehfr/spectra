@@ -33,7 +33,7 @@ app/
 ### Data Fetching
 - Server-side fetching in page components using Next.js `fetch`
 - Use `cache: "no-store"` for dynamic data
-- API calls to Django backend via `process.env.NEXT_PUBLIC_API_URL` (default: `http://127.0.0.1:8000`)
+- API calls to Django backend via `process.env.NEXT_PUBLIC_API_URL` (default: `http://localhost:8000`)
 
 ### API Mocking (Development)
 - **MSW v2.14.2** integrated via `instrumentation-client.ts`
