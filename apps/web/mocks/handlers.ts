@@ -206,7 +206,9 @@ export const handlers = [
    */
   http.put(`${BASE_URL}/api/sessions/:id/`, async ({ params, request }) => {
     const body = (await request.json()) as Partial<typeof mockSessions[0]>
-    const index = sessions.findIndex((s) => s.id === Number(params.id))
+    const index = sessions.findIndex(
+      (s) => s.id === Number(params.id) && !s.is_deleted
+    )
 
     if (index === -1) {
       return HttpResponse.json(
