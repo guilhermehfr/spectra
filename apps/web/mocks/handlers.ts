@@ -110,7 +110,9 @@ export const handlers = [
    */
   http.put(`${BASE_URL}/api/patients/:id/`, async ({ params, request }) => {
     const body = (await request.json()) as Partial<typeof mockPatients[0]>
-    const index = patients.findIndex((p) => p.id === Number(params.id))
+    const index = patients.findIndex(
+      (p) => p.id === Number(params.id) && !p.is_deleted
+    )
 
     if (index === -1) {
       return HttpResponse.json(
