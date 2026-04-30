@@ -1,11 +1,11 @@
-import { http, HttpResponse } from "msw"
+import { http, HttpResponse } from 'msw'
 
-import { mockUsers, mockTokens } from "./data/users"
-import { mockPatients } from "./data/patients"
-import { mockSessions } from "./data/sessions"
-import { mockEvolutions } from "./data/evolutions"
+import { mockUsers, mockTokens } from './data/users'
+import { mockPatients } from './data/patients'
+import { mockSessions } from './data/sessions'
+import { mockEvolutions } from './data/evolutions'
 
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000"
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000'
 
 // ─────────────────────────────────────────────────────────────────────────────
 // In-Memory State (for development)
@@ -37,10 +37,7 @@ export const handlers = [
     const user = mockUsers.find((u) => u.email === body.email)
 
     if (!user) {
-      return HttpResponse.json(
-        { detail: "Email não encontrado." },
-        { status: 400 }
-      )
+      return HttpResponse.json({ detail: 'Email não encontrado.' }, { status: 400 })
     }
 
     return HttpResponse.json({
@@ -75,7 +72,7 @@ export const handlers = [
    * Creates a new patient
    */
   http.post(`${BASE_URL}/api/patients/`, async ({ request }) => {
-    const body = (await request.json()) as typeof mockPatients[0]
+    const body = (await request.json()) as (typeof mockPatients)[0]
     const newPatient = {
       ...body,
       id: nextPatientId++,
@@ -92,14 +89,9 @@ export const handlers = [
    * Retrieves a specific patient by ID
    */
   http.get(`${BASE_URL}/api/patients/:id/`, ({ params }) => {
-    const patient = patients.find(
-      (p) => p.id === Number(params.id) && !p.is_deleted
-    )
+    const patient = patients.find((p) => p.id === Number(params.id) && !p.is_deleted)
     if (!patient) {
-      return HttpResponse.json(
-        { detail: "Não encontrado." },
-        { status: 404 }
-      )
+      return HttpResponse.json({ detail: 'Não encontrado.' }, { status: 404 })
     }
     return HttpResponse.json(patient)
   }),
@@ -109,16 +101,11 @@ export const handlers = [
    * Updates an existing patient
    */
   http.put(`${BASE_URL}/api/patients/:id/`, async ({ params, request }) => {
-    const body = (await request.json()) as Partial<typeof mockPatients[0]>
-    const index = patients.findIndex(
-      (p) => p.id === Number(params.id) && !p.is_deleted
-    )
+    const body = (await request.json()) as Partial<(typeof mockPatients)[0]>
+    const index = patients.findIndex((p) => p.id === Number(params.id) && !p.is_deleted)
 
     if (index === -1) {
-      return HttpResponse.json(
-        { detail: "Não encontrado." },
-        { status: 404 }
-      )
+      return HttpResponse.json({ detail: 'Não encontrado.' }, { status: 404 })
     }
 
     patients[index] = {
@@ -137,10 +124,7 @@ export const handlers = [
   http.delete(`${BASE_URL}/api/patients/:id/`, ({ params }) => {
     const index = patients.findIndex((p) => p.id === Number(params.id))
     if (index === -1) {
-      return HttpResponse.json(
-        { detail: "Não encontrado." },
-        { status: 404 }
-      )
+      return HttpResponse.json({ detail: 'Não encontrado.' }, { status: 404 })
     }
     patients[index].is_deleted = true
     return new HttpResponse(null, { status: 204 })
@@ -163,18 +147,16 @@ export const handlers = [
    * Creates a new therapy session
    */
   http.post(`${BASE_URL}/api/sessions/`, async ({ request }) => {
-    const body = (await request.json()) as typeof mockSessions[0]
+    const body = (await request.json()) as (typeof mockSessions)[0]
     const patient = patients.find((p) => p.id === body.patient)
     const therapist = mockUsers.find((u) => u.id === body.therapist)
 
     const newSession = {
       ...body,
       id: nextSessionId++,
-      patient_name: patient?.name || "",
-      therapist_name: therapist
-        ? `${therapist.first_name} ${therapist.last_name}`
-        : "",
-      status: "scheduled",
+      patient_name: patient?.name || '',
+      therapist_name: therapist ? `${therapist.first_name} ${therapist.last_name}` : '',
+      status: 'scheduled',
       is_deleted: false,
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString(),
@@ -188,14 +170,9 @@ export const handlers = [
    * Retrieves a specific session by ID
    */
   http.get(`${BASE_URL}/api/sessions/:id/`, ({ params }) => {
-    const session = sessions.find(
-      (s) => s.id === Number(params.id) && !s.is_deleted
-    )
+    const session = sessions.find((s) => s.id === Number(params.id) && !s.is_deleted)
     if (!session) {
-      return HttpResponse.json(
-        { detail: "Não encontrado." },
-        { status: 404 }
-      )
+      return HttpResponse.json({ detail: 'Não encontrado.' }, { status: 404 })
     }
     return HttpResponse.json(session)
   }),
@@ -205,16 +182,11 @@ export const handlers = [
    * Updates an existing session
    */
   http.put(`${BASE_URL}/api/sessions/:id/`, async ({ params, request }) => {
-    const body = (await request.json()) as Partial<typeof mockSessions[0]>
-    const index = sessions.findIndex(
-      (s) => s.id === Number(params.id) && !s.is_deleted
-    )
+    const body = (await request.json()) as Partial<(typeof mockSessions)[0]>
+    const index = sessions.findIndex((s) => s.id === Number(params.id) && !s.is_deleted)
 
     if (index === -1) {
-      return HttpResponse.json(
-        { detail: "Não encontrado." },
-        { status: 404 }
-      )
+      return HttpResponse.json({ detail: 'Não encontrado.' }, { status: 404 })
     }
 
     sessions[index] = {
@@ -232,10 +204,7 @@ export const handlers = [
   http.delete(`${BASE_URL}/api/sessions/:id/`, ({ params }) => {
     const index = sessions.findIndex((s) => s.id === Number(params.id))
     if (index === -1) {
-      return HttpResponse.json(
-        { detail: "Não encontrado." },
-        { status: 404 }
-      )
+      return HttpResponse.json({ detail: 'Não encontrado.' }, { status: 404 })
     }
     sessions[index].is_deleted = true
     return new HttpResponse(null, { status: 204 })
@@ -253,12 +222,12 @@ export const handlers = [
    * - Only one evolution per session
    */
   http.post(`${BASE_URL}/api/evolutions/`, async ({ request }) => {
-    const body = (await request.json()) as typeof mockEvolutions[0]
+    const body = (await request.json()) as (typeof mockEvolutions)[0]
     const session = sessions.find((s) => s.id === body.session)
 
-    if (!session || session.status !== "completed") {
+    if (!session || session.status !== 'completed') {
       return HttpResponse.json(
-        { detail: "A sessão precisa estar com status completed." },
+        { detail: 'A sessão precisa estar com status completed.' },
         { status: 400 }
       )
     }
@@ -266,7 +235,7 @@ export const handlers = [
     const alreadyExists = evolutions.find((e) => e.session === body.session)
     if (alreadyExists) {
       return HttpResponse.json(
-        { detail: "Já existe uma evolução para esta sessão." },
+        { detail: 'Já existe uma evolução para esta sessão.' },
         { status: 400 }
       )
     }
@@ -289,10 +258,7 @@ export const handlers = [
   http.get(`${BASE_URL}/api/evolutions/:id/`, ({ params }) => {
     const evolution = evolutions.find((e) => e.id === Number(params.id))
     if (!evolution) {
-      return HttpResponse.json(
-        { detail: "Não encontrado." },
-        { status: 404 }
-      )
+      return HttpResponse.json({ detail: 'Não encontrado.' }, { status: 404 })
     }
     return HttpResponse.json(evolution)
   }),
@@ -302,14 +268,11 @@ export const handlers = [
    * Updates an existing evolution
    */
   http.put(`${BASE_URL}/api/evolutions/:id/`, async ({ params, request }) => {
-    const body = (await request.json()) as Partial<typeof mockEvolutions[0]>
+    const body = (await request.json()) as Partial<(typeof mockEvolutions)[0]>
     const index = evolutions.findIndex((e) => e.id === Number(params.id))
 
     if (index === -1) {
-      return HttpResponse.json(
-        { detail: "Não encontrado." },
-        { status: 404 }
-      )
+      return HttpResponse.json({ detail: 'Não encontrado.' }, { status: 404 })
     }
 
     evolutions[index] = {
@@ -349,17 +312,13 @@ export const handlers = [
    * - pending_evolutions: Count of completed sessions without evolution notes
    */
   http.get(`${BASE_URL}/api/dashboard/`, () => {
-    const today = new Date().toISOString().split("T")[0]
+    const today = new Date().toISOString().split('T')[0]
 
-    const todaySessions = sessions.filter(
-      (s) => !s.is_deleted && s.date_time.startsWith(today)
-    )
+    const todaySessions = sessions.filter((s) => !s.is_deleted && s.date_time.startsWith(today))
 
     const activePatients = patients.filter((p) => !p.is_deleted).length
 
-    const completedSessionIds = sessions
-      .filter((s) => s.status === "completed")
-      .map((s) => s.id)
+    const completedSessionIds = sessions.filter((s) => s.status === 'completed').map((s) => s.id)
 
     const evolutionSessionIds = evolutions.map((e) => e.session)
 

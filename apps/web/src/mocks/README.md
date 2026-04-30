@@ -26,8 +26,8 @@ instrumentation-client.ts  — inicializa o MSW no Next.js
 
 ## Usuários disponíveis para teste
 
-|       Email        |   Role    |
-|--------------------|-----------|
+| Email              | Role      |
+| ------------------ | --------- |
 | admin@spectra.com  | admin     |
 | ana@spectra.com    | therapist |
 | carlos@spectra.com | therapist |
