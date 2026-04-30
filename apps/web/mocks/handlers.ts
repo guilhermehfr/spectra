@@ -5,7 +5,7 @@ import { mockPatients } from "./data/patients"
 import { mockSessions } from "./data/sessions"
 import { mockEvolutions } from "./data/evolutions"
 
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000"
 
 // ─────────────────────────────────────────────────────────────────────────────
 // In-Memory State (for development)
