@@ -11,9 +11,9 @@ const BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000"
 // In-Memory State (for development)
 // ─────────────────────────────────────────────────────────────────────────────
 
-let patients = [...mockPatients] // eslint-disable-line prefer-const
-let sessions = [...mockSessions] // eslint-disable-line prefer-const
-let evolutions = [...mockEvolutions] // eslint-disable-line prefer-const
+const patients = [...mockPatients]
+const sessions = [...mockSessions]
+const evolutions = [...mockEvolutions]
 
 let nextPatientId = patients.length + 1
 let nextSessionId = sessions.length + 1
