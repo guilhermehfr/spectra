@@ -1,5 +1,5 @@
-import { ClinicLoginForm } from '@/src/components/auth/ClinicLoginForm'
+import { ClinicLoginForm } from '@/components/auth/ClinicLoginForm'
 
-export default function ClinicLogin() {
+export default async function ClinicLogin() {
   return <ClinicLoginForm />
 }

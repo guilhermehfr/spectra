@@ -6,15 +6,6 @@ type LoginActionState = {
 }
 
 export async function loginAction(state: LoginActionState, formData: FormData) {
-  const loginAllowed = Boolean(Number(process.env.ALLOW_LOGIN))
-
-  if (!loginAllowed) {
-    return {
-      username: '',
-      error: 'Login is not allowed',
-    }
-  }
-
   if (!(formData instanceof FormData)) {
     return {
       username: state.username,

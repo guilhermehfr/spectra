@@ -1,13 +1,11 @@
 export async function http<T>(
   input: string,
   options?: RequestInit & {
-    baseUrl?: string
     timeout?: number
-    token?: string
   }
 ): Promise<T> {
   const isAbsolute = /^https?:\/\//i.test(input)
-  const baseUrl = options?.baseUrl ?? process.env.NEXT_PUBLIC_API_URL ?? ''
+  const baseUrl = process.env.NEXT_PUBLIC_API_URL ?? ''
   const url = isAbsolute ? input : `${baseUrl}${input}`
 
   const controller = new AbortController()
@@ -16,11 +14,11 @@ export async function http<T>(
   try {
     const res = await fetch(url, {
       ...options,
+      credentials: 'include',
       headers: {
         ...(options?.body && !(options.body instanceof FormData)
           ? { 'Content-Type': 'application/json' }
           : {}),
-        ...(options?.token ? { Authorization: `Bearer ${options.token}` } : {}),
         ...(options?.headers || {}),
       },
       signal: controller.signal,
@@ -33,7 +31,7 @@ export async function http<T>(
       const message =
         typeof data === 'object' && data !== null && 'detail' in data
           ? (data as { detail: string }).detail
-          : `HTTP ${res.status} - ${url}`
+          : `HTTP ${res.status}`
       throw new Error(message)
     }
 
