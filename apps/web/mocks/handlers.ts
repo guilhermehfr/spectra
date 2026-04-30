@@ -317,6 +317,14 @@ export const handlers = [
   }),
 
   /**
+   * GET /api/evolutions/
+   * Lists all evolutions
+   */
+  http.get(`${BASE_URL}/api/evolutions/`, () => {
+    return HttpResponse.json(evolutions)
+  }),
+
+  /**
    * GET /api/evolutions/family/
    * Lists all evolutions released to family members
    */
