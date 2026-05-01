@@ -1,33 +1,34 @@
 'use server'
 
 type LoginActionState = {
-  username: string
-  error: string
+  email: string
+  error?: string
 }
 
-export async function loginAction(state: LoginActionState, formData: FormData) {
-  if (!(formData instanceof FormData)) {
+export async function loginAction(
+  _: LoginActionState,
+  formData: FormData
+): Promise<LoginActionState> {
+  const email = formData.get('email')?.toString().trim() || ''
+  const password = formData.get('password')?.toString().trim() || ''
+
+  if (!email || !password) {
     return {
-      username: state.username,
-      error: 'Invalid form data',
+      email,
+      error: 'Digite seu email e senha para continuar',
     }
   }
 
-  const username = formData.get('username')?.toString().trim() || ''
-  const password = formData.get('password')?.toString().trim() || ''
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
-  if (!username || !password) {
+  if (!emailRegex.test(email)) {
     return {
-      username,
-      error: 'Type both username and password to login',
+      email,
+      error: 'Formato de email inválido',
     }
   }
 
   return {
-    ok: true,
-    payload: {
-      username,
-      password,
-    },
+    email,
   }
 }

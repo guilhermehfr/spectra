@@ -3,19 +3,21 @@
 import { useEffect, useState } from 'react'
 
 export function MSWProvider({ children }: { children: React.ReactNode }) {
-  const [ready, setReady] = useState(process.env.NODE_ENV !== 'development')
+  const [mswError, setMswError] = useState(false)
 
   useEffect(() => {
-    if (process.env.NODE_ENV === 'development') {
-      import('@/mocks/browser').then(({ worker }) => {
-        worker.start({ onUnhandledRequest: 'bypass' }).then(() => {
-          setReady(true)
+    if (process.env.NODE_ENV === 'development' && !mswError) {
+      import('@/mocks/browser')
+        .then(({ worker }) => {
+          return worker.start({ onUnhandledRequest: 'bypass' })
         })
-      })
+        .catch((err) => {
+          console.error('[MSWProvider] Failed to start MSW:', err)
+          setMswError(true) // Allow app to continue without MSW
+        })
     }
-  }, [])
+  }, [mswError])
 
-  if (!ready) return null
-
+  // Always render children - don't block rendering
   return <>{children}</>
 }
