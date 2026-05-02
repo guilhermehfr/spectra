@@ -24,6 +24,7 @@ export function ClinicLoginForm() {
     if (state.error) {
       toast.error(state.error)
     }
+    console.log('Login state updated:', state)
   }, [state])
 
   const [showPassword, setShowPassword] = useState(false)
@@ -56,6 +57,7 @@ export function ClinicLoginForm() {
               placeholder="admin@email.com"
               type="text"
               autoComplete="current-email"
+              defaultValue={state.email}
             />
 
             <Input
@@ -82,7 +84,7 @@ export function ClinicLoginForm() {
             />
 
             <div className="flex justify-end -mt-2">
-              {/* TODO: Replace this HREF to a valid forgot-password page form */}
+              {/* TODO: Replace this HREF to a valid google form */}
               <Link href="#" className="text-xs text-blue-600 hover:underline">
                 Esqueci minha senha
               </Link>
@@ -100,7 +102,7 @@ export function ClinicLoginForm() {
         </form>
 
         <div className="pt-4 border-t border-slate-200 text-center">
-          {/* TODO: Replace this HREF to a valid contact page form */}
+          {/* TODO: Replace this HREF to a valid google form */}
           <p className="text-xs text-slate-500">
             Ainda não possui uma conta?
             <Link href="#" className="text-blue-600 hover:underline ml-1">
