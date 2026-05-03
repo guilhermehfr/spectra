@@ -1,6 +1,7 @@
 'use server'
 
-import { loginMock } from '@/lib/auth-mock'
+import { loginMock, logoutMock } from '@/lib/auth-mock'
+import { mockUsers } from '@/mocks/data/users'
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 
@@ -69,4 +70,29 @@ export async function loginAction(
       error: 'Credenciais inválidas',
     }
   }
+}
+
+function getRoleFromCookie(cookieValue?: string): string | null {
+  if (!cookieValue) return null
+  const userId = Number(cookieValue)
+  const user = mockUsers.find((u) => u.id === userId)
+  return user?.role ?? null
+}
+
+export async function logoutAction(): Promise<void> {
+  const cookieStore = await cookies()
+  const cookieValue = cookieStore.get('access_token')?.value
+
+  const role = getRoleFromCookie(cookieValue)
+  const redirectTo = role === 'family' ? '/login/family' : '/login/clinic'
+
+  cookieStore.delete('access_token')
+
+  try {
+    logoutMock()
+  } catch (error) {
+    console.error('Logout action failed: ', error)
+  }
+
+  redirect(redirectTo)
 }

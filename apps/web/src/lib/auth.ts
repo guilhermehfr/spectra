@@ -20,9 +20,8 @@ export async function me(): Promise<UserBasicInfo> {
   return http<UserBasicInfo>('/api/auth/me/')
 }
 
-// TODO: implementar logout no backend e descomentar essa função
-// export async function logout(): Promise<void> {
-//   await http('/api/auth/logout/', {
-//     method: 'POST',
-//   })
-// }
+export async function logout(): Promise<void> {
+  await http('/api/auth/logout/', {
+    method: 'POST',
+  })
+}

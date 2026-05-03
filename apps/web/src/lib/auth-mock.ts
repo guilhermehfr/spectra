@@ -46,3 +46,7 @@ export async function meMock(): Promise<UserBasicInfo> {
     role: user.role,
   }
 }
+
+export function logoutMock(): void {
+  currentUser = null
+}

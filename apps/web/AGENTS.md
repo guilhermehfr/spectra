@@ -75,6 +75,7 @@ src/
 ### Authentication
 
 - **Cookie**: `access_token` stores user ID after login
+- **Logout**: Use `logoutAction` from `src/app/actions/auth.ts` to logout
 - **Middleware**: `src/app/middleware.ts` handles auth checks on every route
 - **Public routes**: `/`, `/login/*` bypass auth check
 - **Protected routes**: All other routes require authentication
@@ -138,7 +139,7 @@ src/
 
 **Config Files**:
 
-- `next.config.ts` - TypeScript-based Next.js config (with `cacheComponents: true`)
+- `next.config.ts` - TypeScript-based Next.js config (with `cacheComponents: true` and security headers)
 - `tsconfig.json` - Path aliases: `@/*` maps to `./src/*`
 - `eslint.config.mjs` - Next.js core web vitals + TypeScript rules + Prettier
 - `postcss.config.mjs` - Tailwind CSS 4 plugin

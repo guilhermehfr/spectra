@@ -17,6 +17,7 @@ Parte do monorepo Spectra, esta é uma aplicação Next.js 16 construída com Re
 O sistema de autenticação usa cookies para manter a sessão do usuário:
 
 - **Cookie**: `access_token` armazena o ID do usuário após login
+- **Logout**: Use `logoutAction` de `src/app/actions/auth.ts` para encerrar a sessão
 - **Middleware**: `src/app/middleware.ts` verifica autenticação em todas as rotas
 - **Rotas públicas**: `/`, `/login/*` (acesso livre)
 - **Rotas protegidas**: `/clinic/*` e `/family/*` requerem autenticação
