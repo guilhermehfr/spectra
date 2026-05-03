@@ -16,6 +16,13 @@ Parte do monorepo Spectra, esta é uma aplicação Next.js 16 construída com Re
 
 O sistema de autenticação usa cookies para manter a sessão do usuário:
 
+- **AuthService**: Use `authService` de `@/lib/authService` para todas operações de auth
+  - `authService.login({ email, password })` - Login do usuário
+  - `authService.me()` - Obter informações do usuário atual
+  - `authService.logout()` - Encerrar sessão
+- **AuthResolver**: Use `authResolver` de `@/lib/authResolver` para resolver identidade do usuário
+  - `authResolver.getUser(cookieValue)` - Resolve usuário a partir do cookie
+- **Troca por ambiente**: Defina `NEXT_PUBLIC_DISABLE_MSW=false` para usar mock (padrão em dev), `true` para API real
 - **Cookie**: `access_token` armazena o ID do usuário após login
 - **Logout**: Use `logoutAction` de `src/app/actions/auth.ts` para encerrar a sessão
 - **Middleware**: `src/app/middleware.ts` verifica autenticação em todas as rotas
@@ -27,7 +34,15 @@ O sistema de autenticação usa cookies para manter a sessão do usuário:
 
 - Node.js (v18+ recomendado)
 - pnpm (gerenciador de pacotes)
-- Backend do Spectra rodando localmente em `http://127.0.0.1:8000`
+- Backend do Spectra rodando localmente em `http://127.0.0.1:8000` (ou configure variável)
+
+### Variáveis de Ambiente
+
+| Variável | Descrição | Padrão |
+|----------|-----------|--------|
+| `NEXT_PUBLIC_API_URL` | URL da API do backend | `http://127.0.0.1:8000` |
+| `NEXT_PUBLIC_DISABLE_MSW` | `false` = mock enabled, `true` = API real | `false` |
+| `NEXT_PUBLIC_MOCK_USER_ID` | ID do usuário mock padrão (em desenvolvimento) | `1` |
 
 ## Começando
 

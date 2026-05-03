@@ -24,7 +24,6 @@ export function ClinicLoginForm() {
     if (state.error) {
       toast.error(state.error)
     }
-    console.log('Login state updated:', state)
   }, [state])
 
   const [showPassword, setShowPassword] = useState(false)

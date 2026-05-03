@@ -7,6 +7,5 @@ export async function register() {
     await worker.start({
       onUnhandledRequest: 'bypass',
     })
-    return
   }
 }

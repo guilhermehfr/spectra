@@ -17,6 +17,13 @@ export type AuthResponse = {
   user: User
 }
 
+export type LoginCredentials = {
+  email: string
+  password: string
+}
+
+export type UserBasicInfo = Pick<User, 'id' | 'role' | 'email' | 'username'>
+
 export type Patient = {
   id: number
   name: string
