@@ -1,6 +1,7 @@
 'use server'
 
-import { loginMock, meMock } from '@/lib/auth-mock'
+import { loginMock } from '@/lib/auth-mock'
+import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 
 type LoginActionState = {
@@ -32,16 +33,17 @@ export async function loginAction(
   }
 
   try {
-    await loginMock(email, password)
-    const { id, role } = await meMock()
-    console.log(id, role)
+    const response = await loginMock(email, password)
+    const { id, role } = response.user
 
-    if (!id) {
-      return {
-        email,
-        error: 'Usuário não encontrado',
-      }
-    }
+    const cookieStore = await cookies()
+    cookieStore.set('access_token', String(id), {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 60 * 60 * 24 * 7,
+      path: '/',
+    })
 
     switch (role) {
       case 'admin':
