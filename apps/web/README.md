@@ -10,6 +10,17 @@ Parte do monorepo Spectra, esta é uma aplicação Next.js 16 construída com Re
 - **UI**: React 19, Tailwind CSS 4
 - **Linguagem**: TypeScript
 - **Linting/Formatting**: ESLint com configuração Next.js + Prettier
+- **Autenticação**: Cookie-based com middleware Next.js
+
+## Autenticação
+
+O sistema de autenticação usa cookies para manter a sessão do usuário:
+
+- **Cookie**: `access_token` armazena o ID do usuário após login
+- **Middleware**: `src/app/middleware.ts` verifica autenticação em todas as rotas
+- **Rotas públicas**: `/`, `/login/*` (acesso livre)
+- **Rotas protegidas**: `/clinic/*` e `/family/*` requerem autenticação
+- **Redirect**: Usuários não autenticados são redirecionados para `/login/clinic` ou `/login/family`
 
 ## Pré-requisitos
 
@@ -44,6 +55,7 @@ apps/web/
 │   │   ├── page.tsx              # Página inicial
 │   │   ├── layout.tsx            # Layout raiz
 │   │   ├── globals.css           # Estilos globais
+│   │   ├── middleware.ts        # Autenticação
 │   │   ├── actions/              # Server Actions
 │   │   ├── login/                # Páginas de login
 │   │   │   ├── clinic/           # Login da clínica

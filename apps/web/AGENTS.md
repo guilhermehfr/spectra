@@ -13,7 +13,7 @@ This version has breaking changes — APIs, conventions, and file structure may 
 **Framework**: Next.js 16.2.4 with React 19.2.4 and TypeScript 5
 **Architecture**: App Router with `src/` folder for all application code
 **Styling**: Tailwind CSS 4 with `@tailwindcss/postcss` (use `@import "tailwindcss"` syntax, not `tailwind.config.js`)
-**Fonts**: Geist Sans & Mono via `next/font/google`
+**Fonts**: Manrope & DM Sans via `next/font/google`
 **Formatting**: Prettier 3.x with ESLint integration
 
 ## Key Conventions
@@ -26,6 +26,7 @@ src/
 │   ├── layout.tsx              # Root layout with metadata
 │   ├── page.tsx                # Home page
 │   ├── globals.css             # Tailwind imports + CSS variables
+│   ├── middleware.ts           # Auth middleware
 │   ├── actions/                # Server Actions
 │   │   └── auth.ts             # Authentication actions
 │   ├── login/
@@ -70,6 +71,17 @@ src/
 - **React Server Components by default** - pages are async functions
 - Client components: only when interactivity needed (add `'use client'`)
 - Components organized in `src/components/` by domain (auth, layout, ui)
+
+### Authentication
+
+- **Cookie**: `access_token` stores user ID after login
+- **Middleware**: `src/app/middleware.ts` handles auth checks on every route
+- **Public routes**: `/`, `/login/*` bypass auth check
+- **Protected routes**: All other routes require authentication
+- **Redirects**:
+  - Unauthenticated → `/login/clinic` or `/login/family` based on route
+  - Authenticated on login → `/clinic/dashboard` or `/family/dashboard` based on role
+- **User roles**: `admin`/`therapist` → clinic portal, `family` → family portal
 
 ### Data Fetching
 
