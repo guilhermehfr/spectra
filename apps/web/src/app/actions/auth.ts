@@ -1,6 +1,6 @@
 'use server'
 
-import { loginMock, logoutMock } from '@/lib/auth-mock'
+import { authService } from '@/lib/authService'
 import { mockUsers } from '@/mocks/data/users'
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
@@ -34,7 +34,7 @@ export async function loginAction(
   }
 
   try {
-    const response = await loginMock(email, password)
+    const response = await authService.login({ email, password })
     const { id, role } = response.user
 
     const cookieStore = await cookies()
@@ -89,7 +89,7 @@ export async function logoutAction(): Promise<void> {
   cookieStore.delete('access_token')
 
   try {
-    logoutMock()
+    await authService.logout()
   } catch (error) {
     console.error('Logout action failed: ', error)
   }

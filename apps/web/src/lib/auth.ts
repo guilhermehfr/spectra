@@ -1,13 +1,5 @@
 import { http } from '@/lib/api/http'
-
-import type { AuthResponse, User } from '@/lib/types'
-
-export type LoginCredentials = {
-  email: string
-  password: string
-}
-
-type UserBasicInfo = Pick<User, 'id' | 'role' | 'email' | 'username'>
+import type { AuthResponse, LoginCredentials, UserBasicInfo } from './types'
 
 export async function login(credentials: LoginCredentials): Promise<AuthResponse> {
   return http<AuthResponse>('/api/auth/login/', {

@@ -1,15 +1,9 @@
 import { mockUsers, mockTokens } from '@/mocks/data/users'
+import type { AuthResponse, UserBasicInfo, UserRole } from './types'
 
-export type AuthResponse = {
-  access: string
-  refresh: string
-  user: (typeof mockUsers)[0]
-}
+type MockUser = (typeof mockUsers)[0]
 
-type UserBasicInfo = Pick<(typeof mockUsers)[0], 'id' | 'role' | 'email' | 'username'>
-
-// Module-level state to track the currently logged-in user
-let currentUser: (typeof mockUsers)[0] | null = null
+let currentUser: MockUser | null = null
 
 export function clearCurrentUser(): void {
   currentUser = null
@@ -20,7 +14,7 @@ export async function loginMock(
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   _password: string
 ): Promise<AuthResponse> {
-  const user = mockUsers.find((u) => u.email === email)
+  const user = mockUsers.find((u) => u.email === email) as MockUser | undefined
 
   if (!user) {
     throw new Error('Email não encontrado.')
@@ -31,19 +25,19 @@ export async function loginMock(
   return {
     access: mockTokens.access,
     refresh: mockTokens.refresh,
-    user,
+    user: user as AuthResponse['user'],
   }
 }
 
 export async function meMock(): Promise<UserBasicInfo> {
   const userId = Number(process.env.NEXT_PUBLIC_MOCK_USER_ID) || 0
-  const user = currentUser ?? mockUsers[userId] ?? mockUsers[0]
+  const user = (currentUser ?? mockUsers[userId] ?? mockUsers[0]) as MockUser
 
   return {
     id: user.id,
     email: user.email,
     username: user.username,
-    role: user.role,
+    role: user.role as UserRole,
   }
 }
 

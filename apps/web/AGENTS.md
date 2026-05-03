@@ -55,7 +55,11 @@ src/
 │   │   ├── http.ts             # HTTP client setup
 │   │   ├── clinic.ts           # Clinic API calls
 │   │   └── family.ts           # Family API calls
-│   └── types.ts                # Shared TypeScript types
+│   ├── types.ts                # Shared TypeScript types
+│   ├── auth.ts                 # Real auth implementation (HTTP)
+│   ├── auth-mock.ts            # Mock auth implementation
+│   ├── authService.ts          # Unified auth service (switches by env)
+│   └── authResolver.ts         # Resolves user identity from request
 └── mocks/
     ├── browser.ts              # MSW browser worker setup
     ├── handlers.ts             # Mock request handlers
@@ -74,6 +78,13 @@ src/
 
 ### Authentication
 
+- **AuthService**: Use `authService` from `@/lib/authService` for all auth operations
+  - `authService.login(credentials)` - Login user
+  - `authService.me()` - Get current user info
+  - `authService.logout()` - Logout user
+- **AuthResolver**: Use `authResolver` from `@/lib/authResolver` for user identity resolution
+  - `authResolver.getUser(cookieValue)` - Resolves user from cookie
+- **Switch by environment**: Set `NEXT_PUBLIC_DISABLE_MSW=false` to use mock (default in dev), `true` for real API
 - **Cookie**: `access_token` stores user ID after login
 - **Logout**: Use `logoutAction` from `src/app/actions/auth.ts` to logout
 - **Middleware**: `src/app/middleware.ts` handles auth checks on every route
@@ -104,6 +115,9 @@ src/
 - `.env.local` - local development (API URL: `http://127.0.0.1:8000`)
 - `.env.production` - production build
 - Both have `.example` versions
+- `NEXT_PUBLIC_DISABLE_MSW=false` - Enable mock (MSW + auth) - default in dev
+- `NEXT_PUBLIC_DISABLE_MSW=true` - Disable mock, use real API
+- `NEXT_PUBLIC_MOCK_USER_ID` - Default user ID for mock (default: 1)
 
 ## Domain Context
 
