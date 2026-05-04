@@ -1,96 +1,159 @@
-import { http } from '@/lib/api/http'
+/**
+ * Clinic API Module
+ * 
+ * Conditionally exports either mock or real API implementations based on
+ * the NEXT_PUBLIC_DISABLE_MSW environment variable.
+ * 
+ * - NEXT_PUBLIC_DISABLE_MSW=false (default in dev): Uses mock implementation
+ *   that operates on centralized in-memory state (no fetch calls)
+ * - NEXT_PUBLIC_DISABLE_MSW=true (prod/real API): Uses HTTP client to make
+ *   actual requests to the backend API
+ */
 
 import type {
   CreateEvolutionInput,
   CreatePatientInput,
   CreateSessionInput,
-  Dashboard,
-  Evolution,
-  Patient,
-  Session,
   UpdateEvolutionInput,
   UpdatePatientInput,
   UpdateSessionInput,
 } from '@/lib/types'
 
-export function getPatients() {
-  return http<Patient[]>('/api/patients/')
+const useMock = process.env.NEXT_PUBLIC_DISABLE_MSW !== 'true'
+
+// Lazy-load implementations to avoid circular dependencies and unused code
+const getImpl = async () => {
+  if (useMock) {
+    return import('@/lib/api/clinic-mock')
+  } else {
+    return import('@/lib/api/clinic-real')
+  }
 }
 
-export function getPatient(id: number) {
-  return http<Patient>(`/api/patients/${id}/`)
+/**
+ * Get all active (non-deleted) patients
+ */
+export async function getPatients() {
+  const impl = await getImpl()
+  return impl.getPatients()
 }
 
-export function createPatient(data: CreatePatientInput) {
-  return http<Patient>('/api/patients/', {
-    method: 'POST',
-    body: JSON.stringify(data),
-  })
+/**
+ * Get a specific patient by ID
+ */
+export async function getPatient(id: number) {
+  const impl = await getImpl()
+  return impl.getPatient(id)
 }
 
-export function updatePatient(id: number, data: UpdatePatientInput) {
-  return http<Patient>(`/api/patients/${id}/`, {
-    method: 'PUT',
-    body: JSON.stringify(data),
-  })
+/**
+ * Get patient by guardian email (useful for family portal)
+ */
+export async function getPatientByGuardianEmail(email: string) {
+  const impl = await getImpl()
+  return impl.getPatientByGuardianEmail(email)
 }
 
-export function deletePatient(id: number) {
-  return http(`/api/patients/${id}/`, {
-    method: 'DELETE',
-  })
+/**
+ * Create a new patient
+ */
+export async function createPatient(data: CreatePatientInput) {
+  const impl = await getImpl()
+  return impl.createPatient(data)
 }
 
-export function getSessions() {
-  return http<Session[]>('/api/sessions/')
+/**
+ * Update an existing patient
+ */
+export async function updatePatient(id: number, data: UpdatePatientInput) {
+  const impl = await getImpl()
+  return impl.updatePatient(id, data)
 }
 
-export function getSession(id: number) {
-  return http<Session>(`/api/sessions/${id}/`)
+/**
+ * Delete (soft-delete) a patient
+ */
+export async function deletePatient(id: number) {
+  const impl = await getImpl()
+  return impl.deletePatient(id)
 }
 
-export function createSession(data: CreateSessionInput) {
-  return http<Session>('/api/sessions/', {
-    method: 'POST',
-    body: JSON.stringify(data),
-  })
+/**
+ * Get all active (non-deleted) sessions
+ */
+export async function getSessions() {
+  const impl = await getImpl()
+  return impl.getSessions()
 }
 
-export function updateSession(id: number, data: UpdateSessionInput) {
-  return http<Session>(`/api/sessions/${id}/`, {
-    method: 'PUT',
-    body: JSON.stringify(data),
-  })
+/**
+ * Get a specific session by ID
+ */
+export async function getSession(id: number) {
+  const impl = await getImpl()
+  return impl.getSession(id)
 }
 
-export function deleteSession(id: number) {
-  return http(`/api/sessions/${id}/`, {
-    method: 'DELETE',
-  })
+/**
+ * Create a new therapy session
+ */
+export async function createSession(data: CreateSessionInput) {
+  const impl = await getImpl()
+  return impl.createSession(data)
 }
 
-export function getEvolutions() {
-  return http<Evolution[]>('/api/evolutions/')
+/**
+ * Update an existing session
+ */
+export async function updateSession(id: number, data: UpdateSessionInput) {
+  const impl = await getImpl()
+  return impl.updateSession(id, data)
 }
 
-export function getEvolution(id: number) {
-  return http<Evolution>(`/api/evolutions/${id}/`)
+/**
+ * Delete (soft-delete) a session
+ */
+export async function deleteSession(id: number) {
+  const impl = await getImpl()
+  return impl.deleteSession(id)
 }
 
-export function createEvolution(data: CreateEvolutionInput) {
-  return http<Evolution>('/api/evolutions/', {
-    method: 'POST',
-    body: JSON.stringify(data),
-  })
+/**
+ * Get all evolutions
+ */
+export async function getEvolutions() {
+  const impl = await getImpl()
+  return impl.getEvolutions()
 }
 
-export function updateEvolution(id: number, data: UpdateEvolutionInput) {
-  return http<Evolution>(`/api/evolutions/${id}/`, {
-    method: 'PUT',
-    body: JSON.stringify(data),
-  })
+/**
+ * Get a specific evolution by ID
+ */
+export async function getEvolution(id: number) {
+  const impl = await getImpl()
+  return impl.getEvolution(id)
 }
 
-export function getDashboard() {
-  return http<Dashboard>('/api/dashboard/')
+/**
+ * Create a new evolution (therapy notes) for a session
+ */
+export async function createEvolution(data: CreateEvolutionInput) {
+  const impl = await getImpl()
+  return impl.createEvolution(data)
+}
+
+/**
+ * Update an existing evolution
+ */
+export async function updateEvolution(id: number, data: UpdateEvolutionInput) {
+  const impl = await getImpl()
+  return impl.updateEvolution(id, data)
+}
+
+/**
+ * Get dashboard metrics
+ */
+export async function getDashboard() {
+  const impl = await getImpl()
+  return impl.getDashboard()
 }

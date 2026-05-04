@@ -1,13 +1,15 @@
-import { mockUsers, mockTokens } from '@/mocks/data/users'
-import type { AuthResponse, UserBasicInfo, UserRole } from './types'
+/**
+ * Mock Authentication Implementation
+ * 
+ * Uses centralized mock state to manage user authentication.
+ * Does not make any HTTP requests.
+ */
+
+import * as mockState from '@/mocks/state'
+import { mockUsers } from '@/mocks/data/users'
+import type { AuthResponse, UserBasicInfo, UserRole, User } from './types'
 
 type MockUser = (typeof mockUsers)[0]
-
-let currentUser: MockUser | null = null
-
-export function clearCurrentUser(): void {
-  currentUser = null
-}
 
 export async function loginMock(
   email: string,
@@ -20,17 +22,18 @@ export async function loginMock(
     throw new Error('Email não encontrado.')
   }
 
-  currentUser = user
+  mockState.setCurrentUser(user as unknown as User)
 
   return {
-    access: mockTokens.access,
-    refresh: mockTokens.refresh,
+    access: mockState.getMockTokens().access,
+    refresh: mockState.getMockTokens().refresh,
     user: user as AuthResponse['user'],
   }
 }
 
 export async function meMock(): Promise<UserBasicInfo> {
   const userId = Number(process.env.NEXT_PUBLIC_MOCK_USER_ID) || 0
+  const currentUser = mockState.getCurrentUser()
   const user = (currentUser ?? mockUsers[userId] ?? mockUsers[0]) as MockUser
 
   return {
@@ -42,5 +45,5 @@ export async function meMock(): Promise<UserBasicInfo> {
 }
 
 export function logoutMock(): void {
-  currentUser = null
+  mockState.clearCurrentUser()
 }
