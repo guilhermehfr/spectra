@@ -4,7 +4,9 @@ from rest_framework.viewsets import ModelViewSet
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK, HTTP_201_CREATED
+from rest_framework.views import APIView
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+from datetime import date
 
 from .models import Patient, CustomUser, Session, TherapeuticEvolution
 from .serializers import (
@@ -13,7 +15,8 @@ from .serializers import (
     CustomUserSerializer,
     RefreshTokenSerializer,
     SessionSerializer,
-    TherapeuticEvolutionSerializer
+    TherapeuticEvolutionSerializer,
+    DashboardSerializer
 )
 from .permissions import IsTherapistOrAdmin, IsAdminOrReadOnly
 
@@ -163,3 +166,59 @@ class TherapeuticEvolutionDetailView(RetrieveUpdateDestroyAPIView):
         if user.is_therapist():
             return TherapeuticEvolution.objects.filter(session__therapist=user)
         return TherapeuticEvolution.objects.all()
+
+
+class DashboardView(APIView):
+    """
+    GET /api/dashboard/
+    
+    Retorna dados agregados do painel:
+    - Sessões de hoje (today_sessions)
+    - Total de pacientes ativos (active_patients)
+    - Evoluções pendentes (pending_evolutions)
+    
+    Permissão: IsTherapistOrAdmin
+    - Terapeutas vêm apenas seus dados
+    - Admins vêem todos os dados
+    """
+    
+    permission_classes = [IsTherapistOrAdmin]
+    
+    def get(self, request):
+        user = request.user
+        today = date.today()
+        
+        # 1. Get today's sessions com select_related para evitar N+1 queries
+        today_sessions_qs = Session.objects.filter(
+            date_time__date=today
+        ).select_related('patient', 'therapist').order_by('date_time')
+        
+        # Filter by therapist if user is not admin
+        if not user.is_admin():
+            today_sessions_qs = today_sessions_qs.filter(therapist=user)
+        
+        # 2. Count active patients (non-deleted)
+        active_patients = Patient.objects.filter(is_deleted=False).count()
+        
+        # 3. Count pending evolutions
+        # Completed sessions without an evolution record
+        pending_evolutions_qs = Session.objects.filter(
+            status='completed',
+            evolution__isnull=True,
+            is_deleted=False
+        )
+        
+        if not user.is_admin():
+            pending_evolutions_qs = pending_evolutions_qs.filter(therapist=user)
+        
+        pending_evolutions = pending_evolutions_qs.count()
+        
+        # Serialize data
+        data = {
+            'today_sessions': today_sessions_qs,
+            'active_patients': active_patients,
+            'pending_evolutions': pending_evolutions,
+        }
+        
+        serializer = DashboardSerializer(data)
+        return Response(serializer.data, status=HTTP_200_OK)
