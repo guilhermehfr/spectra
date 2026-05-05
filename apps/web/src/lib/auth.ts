@@ -1,5 +1,5 @@
 import { http } from '@/lib/api/http'
-import type { AuthResponse, LoginCredentials, UserBasicInfo } from './types'
+import type { AuthResponse, LoginCredentials, User } from './types'
 
 export async function login(credentials: LoginCredentials): Promise<AuthResponse> {
   return http<AuthResponse>('/api/auth/login/', {
@@ -8,8 +8,8 @@ export async function login(credentials: LoginCredentials): Promise<AuthResponse
   })
 }
 
-export async function me(): Promise<UserBasicInfo> {
-  return http<UserBasicInfo>('/api/auth/me/')
+export async function me(): Promise<User> {
+  return http<User>('/api/auth/me/')
 }
 
 export async function logout(): Promise<void> {

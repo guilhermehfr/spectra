@@ -1,9 +1,9 @@
 /**
  * Mock Implementation of Family API
- * 
+ *
  * This module provides the same interface as family.ts but operates
  * directly on the centralized mock state without making HTTP requests.
- * 
+ *
  * Used when NEXT_PUBLIC_DISABLE_MSW=false (default in development).
  */
 
@@ -12,9 +12,9 @@ import type { FamilyEvolution } from '@/lib/types'
 
 export function getFamilyEvolutions(): Promise<FamilyEvolution[]> {
   const evolutions = state.getFamilyEvolutions()
-  
+
   // Map to FamilyEvolution type (excludes released_to_family field)
-  const familyEvolutions: FamilyEvolution[] = evolutions.map(e => ({
+  const familyEvolutions: FamilyEvolution[] = evolutions.map((e) => ({
     id: e.id,
     session: e.session,
     session_date: e.session_date,
@@ -32,7 +32,7 @@ export function getFamilyEvolutions(): Promise<FamilyEvolution[]> {
 
 export function getFamilyEvolution(id: number): Promise<FamilyEvolution | undefined> {
   const evolution = state.getEvolutionById(id)
-  
+
   if (!evolution) {
     return Promise.resolve(undefined)
   }

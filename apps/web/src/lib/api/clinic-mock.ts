@@ -1,9 +1,9 @@
 /**
  * Mock Implementation of Clinic API
- * 
+ *
  * This module provides the same interface as clinic.ts but operates
  * directly on the centralized mock state without making HTTP requests.
- * 
+ *
  * Used when NEXT_PUBLIC_DISABLE_MSW=false (default in development).
  */
 
@@ -70,7 +70,10 @@ export function getSession(id: number): Promise<Session | undefined> {
 
 export function createSession(data: CreateSessionInput): Promise<Session> {
   try {
-    const sessionData: Omit<Session, 'id' | 'patient_name' | 'therapist_name' | 'is_deleted' | 'created_at' | 'updated_at'> = {
+    const sessionData: Omit<
+      Session,
+      'id' | 'patient_name' | 'therapist_name' | 'is_deleted' | 'created_at' | 'updated_at'
+    > = {
       patient: data.patient,
       therapist: data.therapist,
       date_time: data.date_time,
@@ -136,7 +139,10 @@ export function createEvolution(data: CreateEvolutionInput): Promise<Evolution> 
   }
 }
 
-export function updateEvolution(id: number, data: UpdateEvolutionInput): Promise<Evolution | undefined> {
+export function updateEvolution(
+  id: number,
+  data: UpdateEvolutionInput
+): Promise<Evolution | undefined> {
   try {
     const result = state.updateEvolution(id, data)
     return Promise.resolve(result)

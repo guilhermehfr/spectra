@@ -5,11 +5,7 @@ import { usePathname } from 'next/navigation'
 import { Home, Scroll } from 'lucide-react'
 import { twMerge } from 'tailwind-merge'
 
-interface NavItem {
-  label: string
-  href: string
-  icon: React.ComponentType<{ size: number; strokeWidth: number }>
-}
+import type { NavItem } from './types'
 
 const navItems: NavItem[] = [
   {
@@ -49,7 +45,9 @@ export function FamilyNavbar() {
         <div className="text-current">
           <Icon size={20} strokeWidth={1.5} />
         </div>
-        <span className="font-manrope text-xs md:text-sm font-medium leading-normal">{item.label}</span>
+        <span className="font-manrope text-xs md:text-sm font-medium leading-normal">
+          {item.label}
+        </span>
       </Link>
     )
   }

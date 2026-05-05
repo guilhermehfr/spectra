@@ -86,7 +86,10 @@ export const handlers = [
    */
   http.put(`${BASE_URL}/api/patients/:id/`, async ({ params, request }) => {
     const body = (await request.json()) as Record<string, unknown>
-    const updated = state.updatePatient(Number(params.id), body as Parameters<typeof state.updatePatient>[1])
+    const updated = state.updatePatient(
+      Number(params.id),
+      body as Parameters<typeof state.updatePatient>[1]
+    )
 
     if (!updated) {
       return HttpResponse.json({ detail: 'Não encontrado.' }, { status: 404 })
@@ -152,7 +155,10 @@ export const handlers = [
    */
   http.put(`${BASE_URL}/api/sessions/:id/`, async ({ params, request }) => {
     const body = (await request.json()) as Record<string, unknown>
-    const updated = state.updateSession(Number(params.id), body as Parameters<typeof state.updateSession>[1])
+    const updated = state.updateSession(
+      Number(params.id),
+      body as Parameters<typeof state.updateSession>[1]
+    )
 
     if (!updated) {
       return HttpResponse.json({ detail: 'Não encontrado.' }, { status: 404 })
@@ -187,7 +193,9 @@ export const handlers = [
   http.post(`${BASE_URL}/api/evolutions/`, async ({ request }) => {
     const body = (await request.json()) as Record<string, unknown>
     try {
-      const newEvolution = state.createEvolution(body as Parameters<typeof state.createEvolution>[0])
+      const newEvolution = state.createEvolution(
+        body as Parameters<typeof state.createEvolution>[0]
+      )
       return HttpResponse.json(newEvolution, { status: 201 })
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Error creating evolution'
@@ -213,7 +221,10 @@ export const handlers = [
    */
   http.put(`${BASE_URL}/api/evolutions/:id/`, async ({ params, request }) => {
     const body = (await request.json()) as Record<string, unknown>
-    const updated = state.updateEvolution(Number(params.id), body as Parameters<typeof state.updateEvolution>[1])
+    const updated = state.updateEvolution(
+      Number(params.id),
+      body as Parameters<typeof state.updateEvolution>[1]
+    )
 
     if (!updated) {
       return HttpResponse.json({ detail: 'Não encontrado.' }, { status: 404 })

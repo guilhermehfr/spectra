@@ -1,9 +1,9 @@
 /**
  * Real Family API Implementation
- * 
+ *
  * This module uses the HTTP client to make actual requests to the backend API.
  * It's the original implementation that was in family.ts before the refactor.
- * 
+ *
  * Only loaded when NEXT_PUBLIC_DISABLE_MSW=true.
  */
 

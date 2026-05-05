@@ -18,7 +18,10 @@ interface LatestEvolutionCardProps {
  * @returns Two-letter initials (e.g., "EC")
  */
 function extractInitials(name: string): string {
-  const words = name.trim().split(/\s+/).filter((w) => w.length > 0)
+  const words = name
+    .trim()
+    .split(/\s+/)
+    .filter((w) => w.length > 0)
 
   if (words.length === 0) return '?'
   if (words.length === 1) return words[0].substring(0, 2).toUpperCase()
@@ -34,7 +37,7 @@ export function LatestEvolutionCard({ evolution, onViewFullEvolution }: LatestEv
     return date.toLocaleDateString('pt-BR', {
       day: '2-digit',
       month: 'short',
-      year: 'numeric'
+      year: 'numeric',
     })
   }
 
@@ -79,7 +82,8 @@ export function LatestEvolutionCard({ evolution, onViewFullEvolution }: LatestEv
         <div
           className="absolute left-0 right-0 top-0 h-1 rounded-t-lg"
           style={{
-            background: 'linear-gradient(90deg, rgba(219, 234, 254, 1) 0%, rgba(0, 88, 190, 1) 50%, rgba(219, 234, 254, 1) 100%)',
+            background:
+              'linear-gradient(90deg, rgba(219, 234, 254, 1) 0%, rgba(0, 88, 190, 1) 50%, rgba(219, 234, 254, 1) 100%)',
           }}
         />
 
