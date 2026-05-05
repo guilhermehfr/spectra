@@ -2,8 +2,6 @@
 
 Parte do monorepo Spectra, esta é uma aplicação Next.js 16 construída com React 19, Tailwind CSS 4 e TypeScript. Fornece uma interface web para gerenciamento de dados de pacientes, integrando-se com a API do backend do Spectra.
 
-> **Nota**: Este projeto utiliza uma versão modificada do Next.js com mudanças que quebram compatibilidade com a versão padrão. Consulte `node_modules/next/dist/docs/` para documentação específica do framework antes de contribuir.
-
 ## Tecnologias
 
 - **Framework**: Next.js 16 (App Router)
@@ -61,11 +59,11 @@ src/lib/api/
 
 ### Variáveis de Ambiente
 
-| Variável | Descrição | Padrão |
-|----------|-----------|--------|
-| `NEXT_PUBLIC_API_URL` | URL da API do backend | `http://127.0.0.1:8000` |
-| `NEXT_PUBLIC_DISABLE_MSW` | `false` = mock enabled, `true` = API real | `false` |
-| `NEXT_PUBLIC_MOCK_USER_ID` | ID do usuário mock padrão (em desenvolvimento) | `1` |
+| Variável                   | Descrição                                      | Padrão                  |
+| -------------------------- | ---------------------------------------------- | ----------------------- |
+| `NEXT_PUBLIC_API_URL`      | URL da API do backend                          | `http://127.0.0.1:8000` |
+| `NEXT_PUBLIC_DISABLE_MSW`  | `false` = mock enabled, `true` = API real      | `false`                 |
+| `NEXT_PUBLIC_MOCK_USER_ID` | ID do usuário mock padrão (em desenvolvimento) | `1`                     |
 
 ## Começando
 
@@ -114,7 +112,10 @@ apps/web/
 │   ├── lib/
 │   │   ├── api/                  # Clientes de API (mock/real)
 │   │   ├── types.ts               # Tipos TypeScript
-│   │   └── auth*.ts               # Autenticação
+│   │   ├── auth*.ts               # Autenticação
+│   │   └── utils/                # Funções utilitárias
+│   │       ├── dateUtils.ts       # Formatação de datas relativas em português
+│   │       └── stringUtils.ts     # Extração de iniciais de nomes
 │   └── mocks/                     # MSW para desenvolvimento
 │       ├── state.ts               # Estado centralizado
 │       └── data/                  # Dados mock
@@ -138,14 +139,25 @@ O portal da família inclui:
   - Mobile: Fixo na parte inferior, ícones acima do texto
   - Desktop: Fixo na parte superior, ícones ao lado do texto
 
+### Dashboard da Clínica
+
+O portal da clínica inclui:
+
+- **Layout Sidebar**: Barra lateral fixa à esquerda com navegação
+- **Header**: Logo da marca Spectra com subtítulo "Gerenciamento de Clínica"
+- **Navegação**: Links para Dashboard, Pacientes e Sessões
+- **Estado Ativo**: Estilização com gradiente azul e indicador visual
+- **Header de Usuário**: Usa o header `x-user` do middleware para contexto de autenticação
+- **Navbar Superior**: Barra de navegação fixa no topo com busca de pacientes e avatar do usuário
+
 ## Usuários Disponíveis (Mock)
 
-| Email | Role |
-|-------|------|
-| admin@spectra.com | admin |
-| ana@spectra.com | therapist |
+| Email              | Role      |
+| ------------------ | --------- |
+| admin@spectra.com  | admin     |
+| ana@spectra.com    | therapist |
 | carlos@spectra.com | therapist |
-| maria@gmail.com | family |
+| maria@gmail.com    | family    |
 
 Qualquer senha funciona no mock de login.
 

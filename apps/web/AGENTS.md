@@ -44,10 +44,22 @@ src/
 │   │   └── FamilyLoginForm.tsx
 │   ├── layout/
 │   │   ├── clinic/
-│   │   │   └── ClinicSidebar.tsx
+│   │   │   ├── ClinicLayout.tsx
+│   │   │   ├── ClinicHeader.tsx
+│   │   │   ├── ClinicNavbar.tsx
+│   │   │   ├── ClinicSearchBar.tsx
+│   │   │   ├── ClinicSidebar.tsx
+│   │   │   ├── ClinicSidebarHeader.tsx
+│   │   │   ├── ClinicSidebarNav.tsx
+│   │   │   ├── ClinicSidebarFooter.tsx
+│   │   │   ├── ClinicUserAvatar.tsx
+│   │   │   ├── index.ts
+│   │   │   └── types.ts
 │   │   └── family/
 │   │       ├── FamilyNavbar.tsx
-│   │       └── FamilySidebar.tsx
+│   │       ├── FamilyHeader.tsx
+│   │       ├── index.ts
+│   │       └── types.ts
 │   └── ui/
 │       ├── family/
 │       │   ├── FamilyDashboardStats.tsx
@@ -71,7 +83,10 @@ src/
 │   ├── auth.ts                 # Real auth implementation (HTTP)
 │   ├── auth-mock.ts            # Mock auth implementation
 │   ├── authService.ts          # Unified auth service (switches by env)
-│   └── authResolver.ts         # Resolves user identity from request
+│   ├── authResolver.ts         # Resolves user identity from request
+│   └── utils/                  # Utility functions
+│   │       ├── dateUtils.ts    # getRelativeDate() - relative date formatting in Portuguese
+│   │       └── stringUtils.ts  # extractInitials() - name to initials conversion
 └── mocks/
     ├── browser.ts              # MSW browser worker setup
     ├── state.ts                # Centralized in-memory mock state
@@ -143,6 +158,16 @@ src/
   - Mobile: Fixed at bottom, icons above text (flex-col)
   - Desktop: Fixed at top, icons beside text (flex-row)
 - **Responsive Text**: Uses `text-xs md:text-sm`, `text-sm md:text-base`, etc. for mobile/desktop
+
+### Clinic Portal (Dashboard)
+
+- **Layout**: Sidebar-based layout with header, navigation, and footer
+- **Sidebar**: Fixed left sidebar with navigation links (Dashboard, Pacientes, Sessões)
+- **Navigation**: Active state styling with gradient blue indicator
+- **Top Navbar**: Sticky navbar with search bar and user avatar
+  - `ClinicSearchBar.tsx` - Search input for patients
+  - `ClinicUserAvatar.tsx` - User initials avatar display
+- **User Header**: Uses x-user header from middleware for authentication context
 
 ## Domain Context
 
