@@ -130,7 +130,8 @@ class TherapeuticEvolutionSerializer(serializers.ModelSerializer):
     class Meta:
         model = TherapeuticEvolution
         fields = ['id', 'session', 'session_details', 'objective', 'activities', 
-                  'behavior', 'progress', 'next_steps', 'created_at', 'updated_at']
+                  'behavior', 'progress', 'next_steps', 'released_to_family',
+                  'created_at', 'updated_at']
         read_only_fields = ['id', 'created_at', 'updated_at']
         
     def validate_session(self, value):
