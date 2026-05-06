@@ -1,5 +1,4 @@
-.env
+# Virtual environment
 .venv/
-__pycache__/
-*.pyc
-db.sqlite3
+venv/
+env/

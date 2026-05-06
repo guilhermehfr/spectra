@@ -138,6 +138,7 @@ class TherapeuticEvolution(SoftDeleteModel):
     next_steps = models.TextField(verbose_name='Próximos Passos')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    released_to_family = models.BooleanField(default=False, verbose_name='Liberado para família')
 
     class Meta:
         ordering = ['-created_at']

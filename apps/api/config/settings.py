@@ -1,16 +1,23 @@
 import os
 import environ
+import dj_database_url
 from pathlib import Path
 from datetime import timedelta
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# Environment: 'local' (default), 'production'
+DJANGO_ENV = os.getenv('DJANGO_ENV', 'local')
+
 # Initialize environ
 env = environ.Env(
     DEBUG=(bool, False)
 )
-# Read .env file if it exists
-environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
+
+# Read .env file based on environment
+env_file = os.path.join(BASE_DIR, f'.env.{DJANGO_ENV}')
+if os.path.exists(env_file):
+    environ.Env.read_env(env_file)
 
 SECRET_KEY = env('SECRET_KEY', default='spectra-fallback-secret-key')
 DEBUG = env('DEBUG')
@@ -67,12 +74,19 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+DATABASE_URL = env('DATABASE_URL', default=None)
+
+if DATABASE_URL:
+    DATABASES = {
+        'default': dj_database_url.parse(DATABASE_URL)
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
 
 AUTH_PASSWORD_VALIDATORS: list[dict[str, str]] = []
 
