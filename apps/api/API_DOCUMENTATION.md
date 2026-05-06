@@ -106,6 +106,44 @@ Authorization: Bearer {access_token}
 
 ---
 
+### Obter Paciente da Família
+Obter o paciente associado ao email do responsável logado.
+
+**Endpoint:**
+```
+GET /api/patients/family/
+```
+
+**Headers:**
+```
+Authorization: Bearer {access_token}
+```
+
+**Response (200):**
+```json
+{
+  "id": 1,
+  "name": "Leonardo Silva",
+  "birth_date": "2017-03-10",
+  "guardian_name": "Maria Silva",
+  "guardian_email": "maria@spectra.com",
+  "notes": "Paciente com TEA nível 2",
+  "created_at": "2026-05-05T22:24:49Z",
+  "updated_at": "2026-05-05T22:24:49Z"
+}
+```
+
+**Response (404):**
+```json
+{
+  "detail": "Nenhum paciente encontrado para este responsável."
+}
+```
+
+**Permissões:** Apenas membros da Família (role: family)
+
+---
+
 ### Criar Paciente
 Criar um novo paciente no sistema.
 
@@ -305,16 +343,140 @@ POST /api/evolutions/
   "activities": "Brincadeiras conjuntas.",
   "behavior": "Tranquilo e focado.",
   "progress": "Muito bom.",
-  "next_steps": "Continuar com fichas."
+  "next_steps": "Continuar com fichas.",
+  "released_to_family": false
 }
 ```
+
+**Campos:**
+- `session` (required): ID da sessão completada
+- `objective` (required): Objetivo da sessão
+- `activities` (required): Atividades realizadas
+- `behavior` (required): Comportamento observado
+- `progress` (required): Progresso do paciente
+- `next_steps` (required): Próximos passos
+- `released_to_family` (optional, default: false): Se a evolução pode ser visualizada pela família
+
+**Validações:**
+- Sessão deve ter `status: "completed"`
+- Cada sessão pode ter apenas 1 evolução
+
+### Listar Evoluções (Clínica)
+Listar todas as evoluções criadas pela clínica.
+
+**Endpoint:**
+```
+GET /api/evolutions/
+```
+
+---
+
+### Listar Evoluções Liberadas para Família
+Obter lista de evoluções liberadas para visualização pela família.
+
+**Endpoint:**
+```
+GET /api/evolutions/family/
+```
+
+**Response (200):**
+```json
+{
+  "count": 2,
+  "next": null,
+  "previous": null,
+  "results": [
+    {
+      "id": 1,
+      "session": 1,
+      "session_details": {...},
+      "session_date": "2026-05-01",
+      "therapist_name": "Ana Costa",
+      "objective": "Aumentar vocabulário.",
+      "activities": "Brincadeiras conjuntas.",
+      "behavior": "Tranquilo e focado.",
+      "progress": "Muito bom.",
+      "next_steps": "Continuar com fichas.",
+      "released_to_family": true,
+      "created_at": "2026-05-01T15:00:00Z",
+      "updated_at": "2026-05-01T15:00:00Z"
+    }
+  ]
+}
+```
+
+**Paginação:**
+- A API usa paginação padrão do Django REST Framework
+- `count`: Total de registros
+- `results`: Array com os dados
+- `next`/`previous`: Links para próxima/página anterior
+
+**Filtros:**
+- Apenas retorna evoluções onde `released_to_family: true`
+- Ordenado por `created_at` (mais recente primeiro)
+
+**Permissões:** Apenas membros da Família
+
+---
 
 ### Detalhes e Edição
 `GET/PUT/DELETE /api/evolutions/{id}/`
 
+**PUT Request (atualizar evolução):**
+```json
+{
+  "objective": "Novo objetivo...",
+  "released_to_family": true
+}
+```
+
 ---
 
-## �🔑 Roles e Permissões
+## 📊 Dashboard
+
+### Estatísticas do Dashboard
+Obter dados agregados para o dashboard da clínica.
+
+**Endpoint:**
+```
+GET /api/dashboard/
+```
+
+**Headers:**
+```
+Authorization: Bearer {access_token}
+```
+
+**Response (200):**
+```json
+{
+  "today_sessions": [
+    {
+      "id": 1,
+      "patient": 1,
+      "patient_name": "Leonardo Silva",
+      "therapist": 1,
+      "therapist_name": "Ana Costa",
+      "date_time": "2026-05-05T14:00:00Z",
+      "status": "scheduled",
+      "notes": "Sessão semanal"
+    }
+  ],
+  "active_patients": 4,
+  "pending_evolutions": 2
+}
+```
+
+**Campos:**
+- `today_sessions`: Sessões de hoje (status: scheduled ou completed)
+- `active_patients`: Total de pacientes ativos (não deletados)
+- `pending_evolutions`: Sessões completadas sem evolução
+
+**Permissões:** Apenas Terapeutas e Admins
+
+---
+
+## 🔐 Roles e Permissões
 
 ### Roles Disponíveis
 
@@ -331,12 +493,14 @@ POST /api/evolutions/
 | POST `/auth/login/` | ✅ | ✅ | ✅ |
 | GET `/dashboard/` | ✅ | ✅ (Dados dele) | ❌ |
 | GET `/patients/` | ✅ | ✅ | ❌ |
+| GET `/patients/family/` | ❌ | ❌ | ✅ |
 | POST `/patients/` | ✅ | ✅ | ❌ |
 | GET `/patients/{id}/` | ✅ | ✅ | ❌ |
 | PUT `/patients/{id}/` | ✅ | ✅ | ❌ |
 | DELETE `/patients/{id}/` | ✅ | ✅ | ❌ |
 | ALL `/sessions/` | ✅ | ✅ (Apenas as dele) | ❌ |
-| ALL `/evolutions/` | ✅ | ✅ (Apenas as dele) | ❌ |
+| ALL `/evolutions/` | ✅ | ✅ (Apenas as dele) | ✅ (Apenas liberadas) |
+| GET `/evolutions/family/` | ✅ | ✅ | ✅ |
 
 ---
 
