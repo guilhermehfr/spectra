@@ -14,7 +14,7 @@ Este backend faz parte de um sistema fullstack com frontend em Next.js.
 - Python 3.x
 - Django 5.x
 - Django REST Framework
-- SQLite (ambiente local)
+- SQLite (ambiente local) / PostgreSQL (produção)
 
 ## Como rodar o projeto
 
@@ -75,8 +75,41 @@ Acessar painel:
 - `notes`
 - `created_at`
 
+## Configuração do Banco de Dados
+
+### Variáveis de Ambiente
+
+O projeto utiliza `django-environ` e `dj-database-url` para configuração do banco de dados.
+
+| Variável | Descrição | Exemplo |
+|----------|-----------|---------|
+| `DATABASE_URL` | String de conexão completa (formato: `postgresql://user:password@host:port/dbname`) | `postgresql://user:pass@localhost:5432/mydb` |
+| `DJANGO_ENV` | Ambiente de execução (`local` ou `production`) | `local` |
+
+### Desenvolvimento Local (SQLite)
+
+Por padrão, sem `DATABASE_URL`, o projeto usa SQLite:
+
+```bash
+# Não definir DATABASE_URL = usa SQLite automaticamente
+```
+
+### Produção (PostgreSQL)
+
+Defina a variável `DATABASE_URL` no arquivo `.env.production`:
+
+```bash
+DATABASE_URL=postgresql://usuario:senha@host:5432/nome_do_banco
+```
+
+Ou copie o arquivo de exemplo:
+```bash
+cp .env.production.example .env.production
+# Edite o arquivo com as credenciais do seu banco PostgreSQL
+```
+
 ## Observações
 
 - Projeto em fase de MVP
 - Banco SQLite usado apenas para desenvolvimento local
-- Estrutura preparada para migração futura para PostgreSQL
+- Produção utiliza PostgreSQL com DATABASE_URL
