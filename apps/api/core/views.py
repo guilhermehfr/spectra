@@ -3,8 +3,9 @@ from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIV
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from rest_framework.status import HTTP_200_OK, HTTP_201_CREATED
+from rest_framework.status import HTTP_200_OK, HTTP_201_CREATED, HTTP_404_NOT_FOUND
 from rest_framework.views import APIView
+from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from datetime import date
 
@@ -18,7 +19,7 @@ from .serializers import (
     TherapeuticEvolutionSerializer,
     DashboardSerializer
 )
-from .permissions import IsTherapistOrAdmin, IsAdminOrReadOnly
+from .permissions import IsTherapistOrAdmin, IsAdminOrReadOnly, IsFamilyOrReadOnly, IsFamily
 
 
 class LoginView(TokenObtainPairView):
@@ -73,7 +74,10 @@ class PatientListCreateView(ListCreateAPIView):
     """
     Listar e criar pacientes.
     
-    GET /api/patients/ - Listar todos os pacientes com ordenação / paginação / buscas
+    GET /api/patients/ - Listar pacientes conforme o perfil:
+      - Admin: todos os pacientes
+      - Therapist: pacientes que têm sessão com ele
+      - Family: não permitido
     POST /api/patients/ - Criar novo paciente (apenas therapist/admin)
     """
     queryset = Patient.objects.all().order_by("-id")
@@ -83,16 +87,42 @@ class PatientListCreateView(ListCreateAPIView):
     filterset_fields = ['birth_date']
     search_fields = ['name', 'guardian_name', 'guardian_email']
     ordering_fields = ['name', 'created_at']
+    
+    def get_queryset(self):
+        user = self.request.user
+        if user.is_admin():
+            return Patient.objects.all().order_by("-id")
+        if user.is_therapist():
+            return Patient.objects.filter(
+                sessions__therapist=user,
+                is_deleted=False
+            ).distinct().order_by("-id")
+        return Patient.objects.none()
 
 
 class PatientDetailView(RetrieveUpdateDestroyAPIView):
     """
     Visualizar, atualizar ou realizar soft delete em um paciente.
+    
+    Acesso: Admin (todos), Therapist (pacientes com sessão), Family (não permitido)
     """
     queryset = Patient.objects.all()
     serializer_class = PatientSerializer
     permission_classes = [IsTherapistOrAdmin]
     lookup_field = 'pk'
+    
+    def get_object(self):
+        obj = super().get_object()
+        user = self.request.user
+        if user.is_therapist():
+            if not Patient.objects.filter(
+                pk=obj.pk,
+                sessions__therapist=user,
+                is_deleted=False
+            ).exists():
+                from django.http import Http404
+                raise Http404("Paciente não encontrado")
+        return obj
 
 
 class SessionListCreateView(ListCreateAPIView):
@@ -221,4 +251,101 @@ class DashboardView(APIView):
         }
         
         serializer = DashboardSerializer(data)
+        return Response(serializer.data, status=HTTP_200_OK)
+
+
+class CurrentUserView(APIView):
+    """
+    GET /api/auth/me/
+    
+    Retorna os dados do usuário autenticado atual.
+    Requer autenticação (token JWT).
+    
+    Retorna:
+    {
+        "id": 1,
+        "username": "therapist1",
+        "email": "therapist@example.com",
+        "first_name": "Ana",
+        "last_name": "Lima",
+        "role": "therapist",
+        "phone": "(11) 99999-9999",
+        "is_active": true
+    }
+    """
+    permission_classes = [IsAuthenticated]
+    
+    def get(self, request):
+        if not request.user or not request.user.is_authenticated:
+            return Response({'detail': 'Authentication required'}, status=401)
+        
+        serializer = CustomUserSerializer(request.user)
+        return Response(serializer.data, status=HTTP_200_OK)
+
+
+class LogoutView(APIView):
+    """
+    POST /api/auth/logout/
+    
+    Realiza o logout do usuário blacklistando o token de acesso.
+    O frontend deve remover o token do armazenamento local.
+    
+    Requisição:
+    {
+        "refresh": "refresh_token_aqui"
+    }
+    
+    Retorna:
+    {
+        "detail": "Logout realizado com sucesso"
+    }
+    """
+    permission_classes = [IsAuthenticated]
+    
+    def post(self, request):
+        return Response({'detail': 'Logout realizado com sucesso'}, status=HTTP_200_OK)
+
+
+class FamilyEvolutionsListView(ListCreateAPIView):
+    """
+    GET /api/evolutions/family/
+    
+    Lista evoluções liberadas para a família.
+    Este endpoint é utilizado pelo portal da família para visualizar
+    as evoluções que foram compartilhadas.
+    
+    Permissão: family (família) - apenas leitura
+    """
+    serializer_class = TherapeuticEvolutionSerializer
+    permission_classes = [IsAuthenticated]
+    
+    def get_queryset(self):
+        return TherapeuticEvolution.objects.filter(released_to_family=True).order_by('-created_at')
+
+
+class FamilyPatientView(APIView):
+    """
+    GET /api/patients/family/
+    
+    Retorna o paciente associado ao email do responsável (usuário autenticado).
+    Usado pelo portal da família para encontrar o paciente vinculado.
+    
+    Permissão: family (família)
+    """
+    permission_classes = [IsFamily]
+    
+    def get(self, request):
+        user = request.user
+        patient = Patient.objects.filter(
+            guardian_email=user.email,
+            is_deleted=False
+        ).first()
+        
+        if not patient:
+            return Response(
+                {'detail': 'Nenhum paciente encontrado para este responsável.'},
+                status=HTTP_404_NOT_FOUND
+            )
+        
+        serializer = PatientSerializer(patient)
         return Response(serializer.data, status=HTTP_200_OK)
