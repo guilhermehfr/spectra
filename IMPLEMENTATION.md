@@ -167,6 +167,48 @@ apps/api/core/
 
 ## 📝 Histórico de Mudanças
 
+### ✅ Seed Management Command (05/05/2026)
+
+**Mudanças Implementadas:**
+
+1. **Model Evolution**
+   - Added `released_to_family` field to TherapeuticEvolution model
+   - Field: `BooleanField(default=False, verbose_name='Liberado para família')`
+
+2. **API Endpoints**
+   - `/api/evolutions/` now includes `released_to_family` field in responses
+   - `/api/evolutions/family/` returns only evolutions where `released_to_family=True`
+   - `/api/dashboard/` endpoint for clinic dashboard statistics
+
+3. **Seed Command**
+   - Created management command: `python manage.py seed`
+   - Location: `apps/api/core/management/commands/seed.py`
+   - Idempotent: clears and recreates all data
+   - Creates: 4 users, 4 patients, 9 sessions, 4 evolutions
+
+4. **Database**
+   - Fresh database with seed data for development
+   - All migrations applied successfully
+
+**Arquivos Criados/Modificados:**
+```
+✨ apps/api/core/models.py (modificado - added released_to_family)
+✨ apps/api/core/serializers.py (modificado - added field)
+✨ apps/api/core/migrations/0003_therapeuticevolution_released_to_family.py (novo)
+✨ apps/api/core/management/commands/seed.py (novo)
+✨ apps/api/API_DOCUMENTATION.md (atualizado)
+```
+
+**Test Users:**
+| Email | Password | Role |
+|------|----------|------|
+| admin@spectra.com | admin123 | admin |
+| ana@spectra.com | therapist123 | therapist |
+| carlos@spectra.com | therapist123 | therapist |
+| maria@spectra.com | family123 | family |
+
+---
+
 ### ✅ Fase 1: Autenticação JWT e Roles (29/04/2026)
 
 **Commit:** `43e74e1`

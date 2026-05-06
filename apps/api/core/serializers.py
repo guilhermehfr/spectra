@@ -130,7 +130,8 @@ class TherapeuticEvolutionSerializer(serializers.ModelSerializer):
     class Meta:
         model = TherapeuticEvolution
         fields = ['id', 'session', 'session_details', 'objective', 'activities', 
-                  'behavior', 'progress', 'next_steps', 'created_at', 'updated_at']
+                  'behavior', 'progress', 'next_steps', 'released_to_family',
+                  'created_at', 'updated_at']
         read_only_fields = ['id', 'created_at', 'updated_at']
         
     def validate_session(self, value):
@@ -141,3 +142,38 @@ class TherapeuticEvolutionSerializer(serializers.ModelSerializer):
             if value.status != 'completed':
                 raise serializers.ValidationError('A sessão precisa estar marcada como "Realizada" para registrar a evolução.')
         return value
+
+
+class PatientMinimalSerializer(serializers.ModelSerializer):
+    """Serializer minimal do Paciente para uso em relacionamentos."""
+    
+    class Meta:
+        model = Patient
+        fields = ['id', 'name']
+
+
+class TherapistMinimalSerializer(serializers.ModelSerializer):
+    """Serializer minimal do Terapeuta para uso em relacionamentos."""
+    
+    class Meta:
+        model = CustomUser
+        fields = ['id', 'username']
+
+
+class SessionDetailSerializer(serializers.ModelSerializer):
+    """Serializer detalhado de Sessão com Patient e Therapist relacionados."""
+    
+    patient = PatientMinimalSerializer(read_only=True)
+    therapist = TherapistMinimalSerializer(read_only=True)
+    
+    class Meta:
+        model = Session
+        fields = ['id', 'patient', 'therapist', 'date_time', 'status', 'notes']
+
+
+class DashboardSerializer(serializers.Serializer):
+    """Serializer para resposta agregada do Dashboard."""
+    
+    today_sessions = SessionDetailSerializer(many=True, read_only=True)
+    active_patients = serializers.IntegerField(read_only=True)
+    pending_evolutions = serializers.IntegerField(read_only=True)

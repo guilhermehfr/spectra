@@ -28,4 +28,5 @@ urlpatterns = [
     # Evolution endpoints
     path('evolutions/', TherapeuticEvolutionListCreateView.as_view(), name='evolution-list-create'),
     path('evolutions/<int:pk>/', TherapeuticEvolutionDetailView.as_view(), name='evolution-detail'),
+    path('evolutions/family/', FamilyEvolutionsListView.as_view(), name='evolution-family-list'),
 ]
