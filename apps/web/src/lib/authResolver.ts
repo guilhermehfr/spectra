@@ -5,9 +5,7 @@ import type { User, UserRole } from './types'
 
 const COOKIE_NAME = 'access_token'
 
-function getUseMock(): boolean {
-  return process.env.NEXT_PUBLIC_DISABLE_MSW !== 'true'
-}
+import { getUseMock } from '@/lib/envUtils'
 
 function getMockUser(userId: number): User | null {
   const user = mockUsers.find((u) => u.id === userId)
@@ -34,9 +32,8 @@ const getUserUncached = async (cookieValue?: string): Promise<User | null> => {
     return null
   }
 
-  const userId = Number(cookieValue)
-
   if (getUseMock()) {
+    const userId = Number(cookieValue)
     return getMockUser(userId)
   }
 

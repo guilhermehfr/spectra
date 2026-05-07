@@ -40,14 +40,14 @@ export function FamilyDashboardStats({ totalSessions, lastSession }: FamilyDashb
   return (
     <div className="flex w-full gap-2">
       <StatCard
-        label="Total de Sessões"
+        label="Total de Evoluções"
         value={totalSessions}
         icon={Calendar}
         iconBgColor="bg-blue-100"
       />
 
       <StatCard
-        label="Última Sessão"
+        label="Última Evolução"
         value={lastSession}
         icon={Calendar}
         iconBgColor="bg-purple-100"

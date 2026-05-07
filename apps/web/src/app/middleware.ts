@@ -8,9 +8,7 @@ const MOCK_USER_IDS = {
   family: 4,
 }
 
-function getUseMock(): boolean {
-  return process.env.NEXT_PUBLIC_DISABLE_MSW !== 'true'
-}
+import { getUseMock } from '@/lib/envUtils'
 
 function getMockUserForRoute(pathname: string): User | null {
   const isFamily = pathname.startsWith('/family')
@@ -42,11 +40,11 @@ async function getUserFromCookie(request: NextRequest, pathname: string) {
 }
 
 function isPublicRoute(pathname: string) {
-  return pathname === '/' || pathname.startsWith('/login/')
+  return pathname.startsWith('/login/')
 }
 
-function isFamilyRoute(pathname: string) {
-  return pathname.startsWith('/family')
+function isRootRoute(pathname: string) {
+  return pathname === '/'
 }
 
 export async function middleware(request: NextRequest) {
@@ -56,12 +54,20 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next()
   }
 
+  if (isRootRoute(pathname)) {
+    const user = await getUserFromCookie(request, pathname)
+    if (user?.role) {
+      const destination = user.role === 'family' ? '/family/dashboard' : '/clinic/dashboard'
+      return NextResponse.redirect(new URL(destination, request.url))
+    }
+    return NextResponse.redirect(new URL('/login/clinic', request.url))
+  }
+
   const user = await getUserFromCookie(request, pathname)
   const userRole = user?.role
 
   if (!user || !userRole) {
-    const redirectUrl = isFamilyRoute(pathname) ? '/login/family' : '/login/clinic'
-    return NextResponse.redirect(new URL(redirectUrl, request.url))
+    return NextResponse.redirect(new URL('/', request.url))
   }
 
   if (pathname.startsWith('/login/')) {

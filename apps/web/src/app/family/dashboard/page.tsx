@@ -1,10 +1,7 @@
-import { redirect } from 'next/navigation'
-import { headers } from 'next/headers'
-
-import type { User } from '@/lib/types'
-import type { FamilyEvolution } from '@/lib/types'
-import { getFamilyEvolutions } from '@/lib/api/family'
+import { resolveUserWithRole } from '@/lib/utils/userUtils'
 import { getPatientByGuardianEmail } from '@/lib/api/clinic'
+import { getFamilyEvolutions } from '@/lib/api/family'
+import type { FamilyEvolution } from '@/lib/types'
 
 import { FamilyDashboardStats } from '@/components/ui/family/FamilyDashboardStats'
 import { LatestEvolutionCard } from '@/components/ui/family/LatestEvolutionCard'
@@ -13,15 +10,8 @@ import { FamilyNavbar } from '@/components/layout/family'
 import { getRelativeDate } from '@/lib/utils/dateUtils'
 import { extractInitials } from '@/lib/utils/stringUtils'
 
-// TODO: Review clinic dashboard for caching strategy (should we apply same approach?)
-
 export default async function FamilyDashboard() {
-  const requestHeaders = await headers()
-  const user = JSON.parse(requestHeaders.get('x-user') ?? '{}') as User
-
-  if (!user || user.role !== 'family') {
-    redirect('/login/family')
-  }
+  const user = await resolveUserWithRole('family')
 
   let patient = null
   try {
@@ -58,11 +48,8 @@ export default async function FamilyDashboard() {
       : null
 
   const totalSessions = evolutions.length
-  const guardianName = patient.guardian_name
-  const patientName = patient.name
-  const patientInitials = extractInitials(patientName)
+  const patientInitials = extractInitials(patient.name)
   const lastSessionDate = latestEvolution?.session_date || null
-
   const lastSessionRelative = lastSessionDate ? getRelativeDate(lastSessionDate) : 'Sem sessões'
 
   return (
@@ -84,10 +71,10 @@ export default async function FamilyDashboard() {
 
           <div className="flex flex-col gap-1">
             <p className="font-manrope text-xs md:text-sm font-normal text-slate-500">
-              Olá, {guardianName}
+              Olá, {patient.guardian_name}
             </p>
             <h1 className="font-manrope text-2xl md:text-3xl font-medium tracking-tight text-slate-900">
-              Histórico de <span className="text-blue-600">{patientName}</span>
+              Histórico de <span className="text-blue-600">{patient.name}</span>
             </h1>
           </div>
         </div>
@@ -106,7 +93,7 @@ export default async function FamilyDashboard() {
           {latestEvolution ? (
             <LatestEvolutionCard evolution={latestEvolution} />
           ) : (
-            <div className="rounded-lg border border-slate-200 bg-white p-8 border-slate-200 bg-white p-8 text-center">
+            <div className="rounded-lg border border-slate-200 bg-white p-8 text-center">
               <p className="font-manrope text-sm md:text-base text-slate-500">
                 Nenhum registro de evolução ainda. Volte em breve!
               </p>
