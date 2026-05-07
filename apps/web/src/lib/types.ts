@@ -92,8 +92,17 @@ export type CreateEvolutionInput = {
 
 export type UpdateEvolutionInput = Partial<Omit<CreateEvolutionInput, 'session'>>
 
+export type DashboardSession = {
+  id: number
+  patient: { id: number; name: string }
+  therapist: { id: number; username: string }
+  date_time: string
+  status: SessionStatus
+  notes: string
+}
+
 export type Dashboard = {
-  today_sessions: Session[]
+  today_sessions: DashboardSession[]
   active_patients: number
   pending_evolutions: number
 }
@@ -110,4 +119,4 @@ export type FamilyEvolution = Pick<
   | 'progress'
   | 'next_steps'
   | 'created_at'
->
+> & { released_to_family: boolean }

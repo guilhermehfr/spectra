@@ -13,19 +13,21 @@ import type { FamilyEvolution } from '@/lib/types'
 export function getFamilyEvolutions(): Promise<FamilyEvolution[]> {
   const evolutions = state.getFamilyEvolutions()
 
-  // Map to FamilyEvolution type (excludes released_to_family field)
-  const familyEvolutions: FamilyEvolution[] = evolutions.map((e) => ({
-    id: e.id,
-    session: e.session,
-    session_date: e.session_date,
-    therapist_name: e.therapist_name,
-    objective: e.objective,
-    activities: e.activities,
-    behavior: e.behavior,
-    progress: e.progress,
-    next_steps: e.next_steps,
-    created_at: e.created_at,
-  }))
+  const familyEvolutions: FamilyEvolution[] = evolutions
+    .filter((e) => e.released_to_family)
+    .map((e) => ({
+      id: e.id,
+      session: e.session,
+      session_date: e.session_date,
+      therapist_name: e.therapist_name,
+      objective: e.objective,
+      activities: e.activities,
+      behavior: e.behavior,
+      progress: e.progress,
+      next_steps: e.next_steps,
+      created_at: e.created_at,
+      released_to_family: e.released_to_family,
+    }))
 
   return Promise.resolve(familyEvolutions)
 }
@@ -53,6 +55,7 @@ export function getFamilyEvolution(id: number): Promise<FamilyEvolution | undefi
     progress: evolution.progress,
     next_steps: evolution.next_steps,
     created_at: evolution.created_at,
+    released_to_family: evolution.released_to_family,
   }
 
   return Promise.resolve(familyEvolution)

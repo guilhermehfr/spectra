@@ -11,8 +11,9 @@ import { http } from '@/lib/api/http'
 
 import type { FamilyEvolution } from '@/lib/types'
 
-export function getFamilyEvolutions() {
-  return http<FamilyEvolution[]>('/api/evolutions/family/')
+export async function getFamilyEvolutions() {
+  const response = await http<{ results: FamilyEvolution[] }>('/api/evolutions/family/')
+  return response.results.filter((e) => e.released_to_family === true)
 }
 
 export function getFamilyEvolution(id: number) {
