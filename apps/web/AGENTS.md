@@ -33,13 +33,30 @@ src/
 │   │   ├── clinic/page.tsx     # Clinic staff login
 │   │   └── family/page.tsx     # Family login
 │   ├── clinic/                 # Clinic portal routes
-│   │   └── dashboard/
-│   │       └── page.tsx        # Clinic dashboard
+│   │   ├── dashboard/
+│   │   │   └── page.tsx        # Clinic dashboard
+│   │   ├── patients/
+│   │   │   ├── page.tsx        # Patients list
+│   │   │   ├── new/
+│   │   │   │   └── page.tsx     # Add new patient
+│   │   │   └── [id]/
+│   │   │       └── page.tsx        # Edit patient
+│   │   └── sessions/
+│   │       ├── page.tsx          # Sessions list
+│   │       ├── new/
+│   │       │   └── page.tsx      # Schedule new session
+│   │       └── [id]/
+│   │           └── page.tsx        # Edit/cancel session
 │   └── family/                 # Family portal routes
-│       └── dashboard/
-│           └── page.tsx        # Family dashboard
+│       ├── dashboard/
+│       │   └── page.tsx        # Family dashboard
+│       └── evolutions/
+│           └── [id]/
+│               └── page.tsx      # View evolution
 ├── components/
 │   ├── auth/                   # Login form components
+│   │   ├── index.ts             # Barrel export
+│   │   ├── BaseLoginForm.tsx   # Shared login form (use for new portals)
 │   │   ├── ClinicLoginForm.tsx
 │   │   └── FamilyLoginForm.tsx
 │   ├── layout/
@@ -65,6 +82,7 @@ src/
 │       │   ├── FamilyDashboardStats.tsx
 │       │   └── LatestEvolutionCard.tsx
 │       └── shared/             # Reusable UI components
+│           ├── index.ts            # Barrel export
 │           ├── Avatar.tsx
 │           ├── Button.tsx
 │           ├── Input.tsx
@@ -85,8 +103,15 @@ src/
 │   ├── authService.ts          # Unified auth service (switches by env)
 │   ├── authResolver.ts         # Resolves user identity from request
 │   └── utils/                  # Utility functions
-│   │       ├── dateUtils.ts    # getRelativeDate() - relative date formatting in Portuguese
-│   │       └── stringUtils.ts  # extractInitials() - name to initials conversion
+│       │   ├── index.ts        # Barrel export for all utilities
+│       │   ├── dateUtils.ts    # getRelativeDate() - relative date formatting in Portuguese
+│       │   ├── stringUtils.ts  # extractInitials() - name to initials conversion
+│       │   ├── userUtils.ts    # resolveUser(), resolveUserWithRole()
+│       │   ├── greetingUtils.ts# getGreeting()
+│       │   ├── dateRangeUtils.ts# getTodayRange(), getDaysAgo(), aggregateByDayOfWeek()
+│       │   ├── statsUtils.ts   # calculateClinicStats(), filterRecentSessions()
+│       │   ├── envUtils.ts     # getUseMock()
+│       │   └── redirectUtils.ts# getDashboardUrl(), getLoginUrl()
 └── mocks/
     ├── browser.ts              # MSW browser worker setup
     ├── state.ts                # Centralized in-memory mock state
@@ -113,7 +138,8 @@ src/
 - **AuthResolver**: Use `authResolver` from `@/lib/authResolver` for user identity resolution
   - `authResolver.getUser(cookieValue)` - Resolves user from cookie
 - **Switch by environment**: Set `NEXT_PUBLIC_DISABLE_MSW=false` to use mock (default in dev), `true` for real API
-- **Cookie**: `access_token` stores user ID after login
+- **Cookie**: `access_token` stores JWT token after login (not user ID)
+- **HTTP Authorization**: All API calls automatically include `Authorization: Bearer {token}` header via `src/lib/api/http.ts`
 - **Logout**: Use `logoutAction` from `src/app/actions/auth.ts` to logout
 - **Middleware**: `src/app/middleware.ts` handles auth checks on every route
 - **Public routes**: `/`, `/login/*` bypass auth check
@@ -122,6 +148,48 @@ src/
   - Unauthenticated → `/login/clinic` or `/login/family` based on route
   - Authenticated on login → `/clinic/dashboard` or `/family/dashboard` based on role
 - **User roles**: `admin`/`therapist` → clinic portal, `family` → family portal
+
+### Preferred Patterns
+
+**User Resolution in Pages**:
+
+- Always use `resolveUser()` from `@/lib/utils/userUtils` instead of manual `headers()` + JSON parsing
+- For role-protected pages, use `resolveUserWithRole(requiredRole)` which auto-redirects on failure
+
+**Environment Checks**:
+
+- Use `getUseMock()` from `@/lib/utils/envUtils` instead of inline `process.env.NEXT_PUBLIC_DISABLE_MSW`
+
+**Role-Based Redirects**:
+
+- Use `getDashboardUrl(role)` and `getLoginUrl(role)` from `@/lib/utils/redirectUtils`
+- Example: `redirect(getDashboardUrl(user.role))`
+
+**Login Forms**:
+
+- New login portals should extend `BaseLoginForm` component
+- Pass `subtitle` and optional `startIcon` props
+
+**Component Imports (Barrel Exports)**:
+
+- All component folders have barrel exports (`index.ts`) for cleaner imports
+- Use barrel path instead of individual file paths:
+  ```tsx
+  // ✅ Correct - use barrel export
+  import { Button, Container } from '@/components/ui/shared'
+  import { ClinicLoginForm } from '@/components/auth'
+
+  // ❌ Avoid - direct file import
+  import { Button } from '@/components/ui/shared/Button'
+  ```
+
+- Barrel exports exist in: `auth/`, `layout/clinic/`, `layout/family/`, `ui/clinic/`, `ui/shared/`
+
+**Creating New Utilities**:
+
+- Put in `src/lib/utils/` with descriptive filename
+- Export from `index.ts` barrel file
+- Create when logic repeats in 2+ files
 
 ### Data Fetching
 
@@ -149,9 +217,24 @@ src/
 - `NEXT_PUBLIC_DISABLE_MSW=true` - Disable mock, use real API
 - `NEXT_PUBLIC_MOCK_USER_ID` - Default user ID for mock (default: 1)
 
+### Authentication
+
+- **JWT Token Storage**: The access token returned from `/api/auth/login/` is stored in an `access_token` cookie
+- **HTTP Client**: All API calls automatically include `Authorization: Bearer {token}` header via `src/lib/api/http.ts`
+- **Cookie Configuration**: HttpOnly, secure in production, sameSite: lax, 7-day expiry
+- **Logout**: Deletes the `access_token` cookie and calls `/api/auth/logout/`
+
+**Auth Flow**:
+
+1. User submits login form → `loginAction` in `src/app/actions/auth.ts`
+2. Server calls `authService.login()` → receives JWT `access` token
+3. Token stored in cookie → subsequent requests include Bearer token automatically
+4. Middleware (`src/app/middleware.ts`) reads cookie, validates via `authResolver.getUser()`
+5. User info passed to pages via `x-user` header
+
 ### Family Portal (Dashboard)
 
-- **Stats Cards**: "Total de Sessões" and "Última Sessão" with relative dates in Portuguese (Hoje, Ontem, Há 2 dias, etc.)
+- **Stats Cards**: "Total de Evoluções" and "Última Evolução" with relative dates in Portuguese (Hoje, Ontem, Há 2 dias, etc.)
 - **Avatar**: Patient initials with Spectra blue brand color
 - **Evolution Card**: Shows latest evolution with therapist name prefixed "Terapeuta. "
 - **Navbar**:
