@@ -1,9 +1,10 @@
 'use server'
 
 import { authService } from '@/lib/authService'
-import { mockUsers } from '@/mocks/data/users'
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
+import { getDashboardUrl, getLoginUrl } from '@/lib/utils/redirectUtils'
+import type { UserRole } from '@/lib/types'
 
 type LoginActionState = {
   email: string
@@ -35,10 +36,11 @@ export async function loginAction(
 
   try {
     const response = await authService.login({ email, password })
-    const { id, role } = response.user
+    const { access, user } = response
+    const { role } = user
 
     const cookieStore = await cookies()
-    cookieStore.set('access_token', String(id), {
+    cookieStore.set('access_token', access, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
@@ -46,17 +48,13 @@ export async function loginAction(
       path: '/',
     })
 
-    switch (role) {
-      case 'admin':
-      case 'therapist':
-        return redirect('/clinic/dashboard')
-      case 'family':
-        return redirect('/family/dashboard')
-      default:
-        return {
-          email,
-          error: 'Função de usuário desconhecida',
-        }
+    if (role === 'admin' || role === 'therapist' || role === 'family') {
+      return redirect(getDashboardUrl(role))
+    }
+
+    return {
+      email,
+      error: 'Função de usuário desconhecida',
     }
   } catch (error) {
     const digest = (error as Error & { digest?: string }).digest
@@ -72,21 +70,20 @@ export async function loginAction(
   }
 }
 
-function getRoleFromCookie(cookieValue?: string): string | null {
-  if (!cookieValue) return null
-  const userId = Number(cookieValue)
-  const user = mockUsers.find((u) => u.id === userId)
-  return user?.role ?? null
-}
-
 export async function logoutAction(): Promise<void> {
+  let role: UserRole | null = null
+
+  try {
+    const user = await authService.me()
+    role = user.role
+  } catch (error) {
+    console.error('Failed to get user during logout: ', error)
+  }
+
   const cookieStore = await cookies()
-  const cookieValue = cookieStore.get('access_token')?.value
-
-  const role = getRoleFromCookie(cookieValue)
-  const redirectTo = role === 'family' ? '/login/family' : '/login/clinic'
-
   cookieStore.delete('access_token')
+
+  const redirectTo = role ? getLoginUrl(role) : getLoginUrl('clinic')
 
   try {
     await authService.logout()

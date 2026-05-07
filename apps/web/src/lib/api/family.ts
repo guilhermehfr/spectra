@@ -14,9 +14,10 @@
 
 import { cache } from 'react'
 
-const useMock = process.env.NEXT_PUBLIC_DISABLE_MSW !== 'true'
+import { getUseMock } from '@/lib/envUtils'
 
 const getImpl = async () => {
+  const useMock = getUseMock()
   if (useMock) {
     return import('@/lib/api/family-mock')
   } else {

@@ -22,8 +22,9 @@ import type {
   UpdateSessionInput,
 } from '@/lib/types'
 
-export function getPatients() {
-  return http<Patient[]>('/api/patients/')
+export async function getPatients() {
+  const response = await http<{ results: Patient[] }>('/api/patients/')
+  return response.results
 }
 
 export function getPatient(id: number) {
@@ -31,8 +32,7 @@ export function getPatient(id: number) {
 }
 
 export async function getPatientByGuardianEmail(email: string) {
-  const patients = await getPatients()
-  return patients.find((p) => p.guardian_email === email) || null
+  return http<Patient | null>(`/api/patients/family/?guardian_email=${encodeURIComponent(email)}`)
 }
 
 export function createPatient(data: CreatePatientInput) {
@@ -55,8 +55,9 @@ export function deletePatient(id: number) {
   })
 }
 
-export function getSessions() {
-  return http<Session[]>('/api/sessions/')
+export async function getSessions() {
+  const response = await http<{ results: Session[] }>('/api/sessions/')
+  return response.results
 }
 
 export function getSession(id: number) {
@@ -83,8 +84,9 @@ export function deleteSession(id: number) {
   })
 }
 
-export function getEvolutions() {
-  return http<Evolution[]>('/api/evolutions/')
+export async function getEvolutions() {
+  const response = await http<{ results: Evolution[] }>('/api/evolutions/')
+  return response.results
 }
 
 export function getEvolution(id: number) {

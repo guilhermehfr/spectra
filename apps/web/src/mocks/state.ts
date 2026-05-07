@@ -227,7 +227,17 @@ export function updateEvolution(id: number, data: Partial<Evolution>): Evolution
 
 export function getDashboardMetrics() {
   const today = new Date().toISOString().split('T')[0]
-  const todaySessions = sessions.filter((s) => !s.is_deleted && s.date_time.startsWith(today))
+  const todaySessions = sessions
+    .filter((s) => !s.is_deleted && s.date_time.startsWith(today))
+    .map((s) => ({
+      id: s.id,
+      patient: { id: s.patient, name: s.patient_name },
+      therapist: { id: s.therapist, username: s.therapist_name },
+      date_time: s.date_time,
+      status: s.status,
+      notes: s.notes,
+    }))
+
   const activePatients = patients.filter((p) => !p.is_deleted).length
 
   const completedSessionIds = sessions.filter((s) => s.status === 'completed').map((s) => s.id)

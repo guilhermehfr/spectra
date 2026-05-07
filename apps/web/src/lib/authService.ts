@@ -2,7 +2,9 @@ import { login as loginReal, me as meReal, logout as logoutReal } from './auth'
 import { loginMock, meMock, logoutMock } from './auth-mock'
 import type { LoginCredentials, AuthResponse, User } from './types'
 
-export const useMock = process.env.NEXT_PUBLIC_DISABLE_MSW !== 'true'
+import { getUseMock } from '@/lib/envUtils'
+
+export const useMock = getUseMock()
 
 export const authService = useMock
   ? {

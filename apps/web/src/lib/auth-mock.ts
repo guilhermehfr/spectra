@@ -25,7 +25,7 @@ export async function loginMock(
   mockState.setCurrentUser(user as unknown as User)
 
   return {
-    access: mockState.getMockTokens().access,
+    access: String(user.id),
     refresh: mockState.getMockTokens().refresh,
     user: user as AuthResponse['user'],
   }
@@ -34,7 +34,7 @@ export async function loginMock(
 export async function meMock(): Promise<User> {
   const userId = Number(process.env.NEXT_PUBLIC_MOCK_USER_ID) || 0
   const currentUser = mockState.getCurrentUser()
-  const user = (currentUser ?? mockUsers[userId] ?? mockUsers[0]) as MockUser
+  const user = (currentUser ?? mockUsers.find((u) => u.id === userId) ?? mockUsers[0]) as MockUser
 
   return {
     id: user.id,

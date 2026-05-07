@@ -11,6 +11,10 @@ export async function http<T>(
   const controller = new AbortController()
   const timeout = setTimeout(() => controller.abort(), options?.timeout ?? 10000)
 
+  const { cookies } = await import('next/headers')
+  const cookieStore = await cookies()
+  const accessToken = cookieStore.get('access_token')?.value
+
   try {
     const res = await fetch(url, {
       ...options,
@@ -19,6 +23,7 @@ export async function http<T>(
         ...(options?.body && !(options.body instanceof FormData)
           ? { 'Content-Type': 'application/json' }
           : {}),
+        ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
         ...(options?.headers || {}),
       },
       signal: controller.signal,

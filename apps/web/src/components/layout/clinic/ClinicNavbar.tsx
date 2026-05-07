@@ -1,5 +1,6 @@
 'use client'
 
+import Link from 'next/link'
 import { User } from '@/lib/types'
 import { ClinicSearchBar } from './ClinicSearchBar'
 import { ClinicUserAvatar } from './ClinicUserAvatar'
@@ -19,7 +20,12 @@ export function ClinicNavbar({ user }: ClinicNavbarProps) {
       <div className="flex items-center h-16 px-4 md:px-6">
         {/* Logo */}
         <div className="flex-shrink-0">
-          <span className="text-2xl font-bold text-blue-600">Spectra</span>
+          <Link
+            href="/clinic/dashboard"
+            className="text-2xl font-bold text-blue-600 hover:text-blue-700 transition-colors"
+          >
+            Spectra
+          </Link>
         </div>
 
         {/* Search Bar */}

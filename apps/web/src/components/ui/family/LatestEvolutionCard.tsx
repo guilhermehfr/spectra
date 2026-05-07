@@ -1,10 +1,10 @@
 'use client'
 
+import { useRouter } from 'next/navigation'
 import { ArrowRight } from 'lucide-react'
 import { twMerge } from 'tailwind-merge'
 
-import { Button } from '@/components/ui/shared/Button'
-import { Container } from '@/components/ui/shared/Container'
+import { Button, Container } from '@/components/ui/shared'
 import type { FamilyEvolution } from '@/lib/types'
 
 interface LatestEvolutionCardProps {
@@ -17,7 +17,8 @@ interface LatestEvolutionCardProps {
  * @param name - Full name (e.g., "Dr. Emily Chen")
  * @returns Two-letter initials (e.g., "EC")
  */
-function extractInitials(name: string): string {
+function extractInitials(name: string | undefined | null): string {
+  if (!name) return '?'
   const words = name
     .trim()
     .split(/\s+/)
@@ -30,7 +31,13 @@ function extractInitials(name: string): string {
 }
 
 export function LatestEvolutionCard({ evolution, onViewFullEvolution }: LatestEvolutionCardProps) {
-  const initials = extractInitials(evolution.therapist_name)
+  const router = useRouter()
+  const therapistName =
+    evolution.therapist_name ||
+    (evolution as unknown as { session_details?: { therapist_name?: string } }).session_details
+      ?.therapist_name ||
+    ''
+  const initials = extractInitials(therapistName)
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString)
@@ -44,6 +51,8 @@ export function LatestEvolutionCard({ evolution, onViewFullEvolution }: LatestEv
   const handleViewFullEvolution = () => {
     if (onViewFullEvolution) {
       onViewFullEvolution(evolution.id)
+    } else {
+      router.push(`/family/evolutions/${evolution.id}`)
     }
   }
 

@@ -1,0 +1,53 @@
+import { Container } from '@/components/ui/shared'
+import { Users, Calendar, FileText } from 'lucide-react'
+
+interface ClinicDashboardStatsProps {
+  activePatients: number
+  todaySessions: number
+  pendingEvolutions: number
+}
+
+export function ClinicDashboardStats({
+  activePatients,
+  todaySessions,
+  pendingEvolutions,
+}: ClinicDashboardStatsProps) {
+  const stats = [
+    {
+      label: 'Pacientes Ativos',
+      value: activePatients,
+      icon: Users,
+      iconBg: 'bg-blue-50',
+    },
+    {
+      label: 'Sessões de hoje',
+      value: todaySessions,
+      icon: Calendar,
+      iconBg: 'bg-blue-50',
+    },
+    {
+      label: 'Evoluções pendentes',
+      value: pendingEvolutions,
+      icon: FileText,
+      iconBg: 'bg-orange-50',
+    },
+  ]
+
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      {stats.map((stat, index) => (
+        <Container key={index} className="flex flex-col gap-3">
+          <div className="flex items-center justify-between">
+            <span className="text-sm font-medium text-slate-500">{stat.label}</span>
+            <div className={`p-2 rounded-full ${stat.iconBg}`}>
+              <stat.icon className="w-4 h-4 text-slate-600" />
+            </div>
+          </div>
+          <span className="text-3xl font-bold text-slate-900">
+            {stat.value.toString().padStart(2, '0')}
+          </span>
+        </Container>
+      ))}
+    </div>
+  )
+}

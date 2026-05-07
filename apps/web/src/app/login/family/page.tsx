@@ -1,4 +1,4 @@
-import { FamilyLoginForm } from '@/components/auth/FamilyLoginForm'
+import { FamilyLoginForm } from '@/components/auth'
 
 export default function FamilyLogin() {
   return <FamilyLoginForm />

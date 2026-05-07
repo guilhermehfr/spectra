@@ -21,15 +21,54 @@ O sistema de autenticação usa cookies para manter a sessão do usuário:
   - `authService.logout()` - Encerrar sessão
 - **AuthResolver**: Use `authResolver` de `@/lib/authResolver` para resolver identidade do usuário
   - `authResolver.getUser(cookieValue)` - Resolve usuário a partir do cookie
+- **Utilitários Recomendados**: Use as funções de `@/lib/utils/` para padrões comuns:
+  - `resolveUser()` - Resolve usuário em páginas (evita parsing manual)
+  - `resolveUserWithRole(role)` - Resolve usuário com validação de role
+  - `getDashboardUrl(role)` - Obtém URL do dashboard baseada na role
+  - `getLoginUrl(role)` - Obtém URL de login baseada na role
+  - `getUseMock()` - Verifica modo mock vs real
 - **Troca por ambiente**: Defina `NEXT_PUBLIC_DISABLE_MSW=false` para usar mock (padrão em dev), `true` para API real
-- **Cookie**: `access_token` armazena o ID do usuário após login
+- **Cookie**: `access_token` armazena o token JWT após login
+- **Autorização**: Todas as chamadas de API incluem automaticamente o header `Authorization: Bearer {token}` via `src/lib/api/http.ts`
 - **Logout**: Use `logoutAction` de `src/app/actions/auth.ts` para encerrar a sessão
 - **Middleware**: `src/app/middleware.ts` verifica autenticação em todas as rotas
 - **Rotas públicas**: `/`, `/login/*` (acesso livre)
 - **Rotas protegidas**: `/clinic/*` e `/family/*` requerem autenticação
-- **Redirect**: Usuários não autenticados são redirecionados para `/login/clinic` ou `/login/family`
+- **Redirect**: Usuários não autenticados são redirecionados para `/` (página inicial)
+
+### Formulários de Login
+
+Novos portais de login devem extender `BaseLoginForm` em `src/components/auth/BaseLoginForm.tsx`:
+
+```tsx
+import { BaseLoginForm } from '@/components/auth/BaseLoginForm'
+import { CustomIcon } from 'lucide-react'
+
+export function NewPortalLoginForm() {
+  return (
+    <BaseLoginForm
+      subtitle="Descrição do portal"
+      startIcon={<CustomIcon size={25} className="text-blue-600" />}
+    />
+  )
+}
 
 ## Arquitetura de API
+
+### Respostas Paginadas
+
+A API real retorna respostas paginadas no formato Django REST Framework:
+
+```json
+{
+  "count": 10,
+  "next": null,
+  "previous": null,
+  "results": [...]
+}
+```
+
+O cliente HTTP (`src/lib/api/clinic-real.ts`, `src/lib/api/family-real.ts`) automaticamente unwraps o array `results` para retornar apenas os dados.
 
 ### Estado Centralizado de Mock
 
@@ -42,14 +81,16 @@ O projeto utiliza um sistema de estado mock centralizado em `src/mocks/state.ts`
 ### Estrutura de API
 
 ```
+
 src/lib/api/
-├── clinic.ts           # Dispatcher (lazy-load)
-├── clinic-mock.ts      # Implementação mock
-├── clinic-real.ts      # Implementação HTTP real
-├── family.ts           # Dispatcher (lazy-load)
-├── family-mock.ts     # Implementação mock
-└── family-real.ts     # Implementação HTTP real
-```
+├── clinic.ts # Dispatcher (lazy-load)
+├── clinic-mock.ts # Implementação mock
+├── clinic-real.ts # Implementação HTTP real
+├── family.ts # Dispatcher (lazy-load)
+├── family-mock.ts # Implementação mock
+└── family-real.ts # Implementação HTTP real
+
+````
 
 ## Pré-requisitos
 
@@ -71,7 +112,7 @@ Primeiro, certifique-se de que o backend do Spectra está rodando. Em seguida, i
 
 ```bash
 pnpm dev
-```
+````
 
 Abra [http://localhost:3000](http://localhost:3000) no seu navegador para ver o resultado.
 
@@ -107,6 +148,7 @@ apps/web/
 │   │   │   ├── clinic/            # Layout da clínica
 │   │   │   └── family/            # Layout da família (Navbar)
 │   │   └── ui/                    # Componentes UI
+│   │       ├── clinic/            # Componentes específicos da clínica
 │   │       ├── family/            # Componentes específicos da família
 │   │       └── shared/            # Componentes compartilhados
 │   ├── lib/
@@ -114,8 +156,15 @@ apps/web/
 │   │   ├── types.ts               # Tipos TypeScript
 │   │   ├── auth*.ts               # Autenticação
 │   │   └── utils/                # Funções utilitárias
+│   │       ├── index.ts           # Exportação barrel
 │   │       ├── dateUtils.ts       # Formatação de datas relativas em português
-│   │       └── stringUtils.ts     # Extração de iniciais de nomes
+│   │       ├── stringUtils.ts     # Extração de iniciais de nomes
+│   │       ├── userUtils.ts       # Resolução de usuário (resolveUser)
+│   │       ├── greetingUtils.ts   # Geração de saudações
+│   │       ├── dateRangeUtils.ts  # Cálculos de intervalo de datas
+│   │       ├── statsUtils.ts      # Cálculos de estatísticas
+│   │       ├── envUtils.ts        # Verificações de ambiente
+│   │       └── redirectUtils.ts   # Redirects por role
 │   └── mocks/                     # MSW para desenvolvimento
 │       ├── state.ts               # Estado centralizado
 │       └── data/                  # Dados mock
@@ -150,16 +199,27 @@ O portal da clínica inclui:
 - **Header de Usuário**: Usa o header `x-user` do middleware para contexto de autenticação
 - **Navbar Superior**: Barra de navegação fixa no topo com busca de pacientes e avatar do usuário
 
-## Usuários Disponíveis (Mock)
+## Usuários Disponíveis
 
-| Email              | Role      |
-| ------------------ | --------- |
-| admin@spectra.com  | admin     |
-| ana@spectra.com    | therapist |
-| carlos@spectra.com | therapist |
-| maria@gmail.com    | family    |
+### Mock (NEXT_PUBLIC_DISABLE_MSW=false)
 
-Qualquer senha funciona no mock de login.
+| Email              | Role      | Senha              |
+| ------------------ | --------- | ------------------ |
+| admin@spectra.com  | admin     | qualquer senha    |
+| ana@spectra.com    | therapist | qualquer senha   |
+| carlos@spectra.com | therapist | qualquer senha  |
+| maria@gmail.com    | family    | qualquer senha   |
+
+### Real API (NEXT_PUBLIC_DISABLE_MSW=true)
+
+| Email              | Role      | Senha         |
+| ------------------ | --------- | ------------- |
+| admin@spectra.com  | admin     | admin123      |
+| ana@spectra.com    | therapist | therapist123  |
+| carlos@spectra.com | therapist | therapist123 |
+| maria@spectra.com | family    | family123    |
+
+**Nota**: Execute `python manage.py seed` no backend para criar os usuários na API real.
 
 ## Endpoints Mockados
 
@@ -183,3 +243,13 @@ A maneira mais fácil de fazer o deploy é usando a [Plataforma Vercel](https://
 - [Documentação do Next.js](https://nextjs.org/docs)
 - [Documentação do Tailwind CSS 4](https://tailwindcss.com/docs)
 - [Documentação do React 19](https://react.dev)
+
+## Documentação Interna
+
+Veja a pasta `docs/` para guias adicionais:
+
+- `docs/CODING_CONVENTIONS.md` - Convenções e padrões do projeto
+- `docs/COMPONENT_STRUCTURE.md` - Estrutura e criação de componentes
+- `docs/UTILITY_USAGE.md` - Referência de utilitários existentes
+- `docs/PAGE_TEMPLATE.md` - Templates padrão para páginas
+- `docs/mock/` - Documentação completa do sistema de mock
