@@ -1,96 +1,113 @@
-import { http } from '@/lib/api/http'
+/**
+ * Clinic API Module
+ *
+ * Conditionally exports either mock or real API implementations based on
+ * the NEXT_PUBLIC_DISABLE_MSW environment variable.
+ *
+ * - NEXT_PUBLIC_DISABLE_MSW=false (default in dev): Uses mock implementation
+ *   that operates on centralized in-memory state (no fetch calls)
+ * - NEXT_PUBLIC_DISABLE_MSW=true (prod/real API): Uses HTTP client to make
+ *   actual requests to the backend API
+ *
+ * All functions are wrapped with React cache() for request-scoped memoization.
+ */
 
+import { cache } from 'react'
 import type {
   CreateEvolutionInput,
   CreatePatientInput,
   CreateSessionInput,
-  Dashboard,
-  Evolution,
-  Patient,
-  Session,
   UpdateEvolutionInput,
   UpdatePatientInput,
   UpdateSessionInput,
 } from '@/lib/types'
 
-export function getPatients() {
-  return http<Patient[]>('/api/patients/')
+const useMock = process.env.NEXT_PUBLIC_DISABLE_MSW !== 'true'
+
+const getImpl = async () => {
+  if (useMock) {
+    return import('@/lib/api/clinic-mock')
+  } else {
+    return import('@/lib/api/clinic-real')
+  }
 }
 
-export function getPatient(id: number) {
-  return http<Patient>(`/api/patients/${id}/`)
+export const getPatients = cache(async () => {
+  const impl = await getImpl()
+  return impl.getPatients()
+})
+
+export const getPatient = cache(async (id: number) => {
+  const impl = await getImpl()
+  return impl.getPatient(id)
+})
+
+export const getPatientByGuardianEmail = cache(async (email: string) => {
+  const impl = await getImpl()
+  return impl.getPatientByGuardianEmail(email)
+})
+
+export async function createPatient(data: CreatePatientInput) {
+  const impl = await getImpl()
+  return impl.createPatient(data)
 }
 
-export function createPatient(data: CreatePatientInput) {
-  return http<Patient>('/api/patients/', {
-    method: 'POST',
-    body: JSON.stringify(data),
-  })
+export async function updatePatient(id: number, data: UpdatePatientInput) {
+  const impl = await getImpl()
+  return impl.updatePatient(id, data)
 }
 
-export function updatePatient(id: number, data: UpdatePatientInput) {
-  return http<Patient>(`/api/patients/${id}/`, {
-    method: 'PUT',
-    body: JSON.stringify(data),
-  })
+export async function deletePatient(id: number) {
+  const impl = await getImpl()
+  return impl.deletePatient(id)
 }
 
-export function deletePatient(id: number) {
-  return http(`/api/patients/${id}/`, {
-    method: 'DELETE',
-  })
+export const getSessions = cache(async () => {
+  const impl = await getImpl()
+  return impl.getSessions()
+})
+
+export const getSession = cache(async (id: number) => {
+  const impl = await getImpl()
+  return impl.getSession(id)
+})
+
+export async function createSession(data: CreateSessionInput) {
+  const impl = await getImpl()
+  return impl.createSession(data)
 }
 
-export function getSessions() {
-  return http<Session[]>('/api/sessions/')
+export async function updateSession(id: number, data: UpdateSessionInput) {
+  const impl = await getImpl()
+  return impl.updateSession(id, data)
 }
 
-export function getSession(id: number) {
-  return http<Session>(`/api/sessions/${id}/`)
+export async function deleteSession(id: number) {
+  const impl = await getImpl()
+  return impl.deleteSession(id)
 }
 
-export function createSession(data: CreateSessionInput) {
-  return http<Session>('/api/sessions/', {
-    method: 'POST',
-    body: JSON.stringify(data),
-  })
+export const getEvolutions = cache(async () => {
+  const impl = await getImpl()
+  return impl.getEvolutions()
+})
+
+export const getEvolution = cache(async (id: number) => {
+  const impl = await getImpl()
+  return impl.getEvolution(id)
+})
+
+export async function createEvolution(data: CreateEvolutionInput) {
+  const impl = await getImpl()
+  return impl.createEvolution(data)
 }
 
-export function updateSession(id: number, data: UpdateSessionInput) {
-  return http<Session>(`/api/sessions/${id}/`, {
-    method: 'PUT',
-    body: JSON.stringify(data),
-  })
+export async function updateEvolution(id: number, data: UpdateEvolutionInput) {
+  const impl = await getImpl()
+  return impl.updateEvolution(id, data)
 }
 
-export function deleteSession(id: number) {
-  return http(`/api/sessions/${id}/`, {
-    method: 'DELETE',
-  })
-}
-
-export function getEvolutions() {
-  return http<Evolution[]>('/api/evolutions/')
-}
-
-export function getEvolution(id: number) {
-  return http<Evolution>(`/api/evolutions/${id}/`)
-}
-
-export function createEvolution(data: CreateEvolutionInput) {
-  return http<Evolution>('/api/evolutions/', {
-    method: 'POST',
-    body: JSON.stringify(data),
-  })
-}
-
-export function updateEvolution(id: number, data: UpdateEvolutionInput) {
-  return http<Evolution>(`/api/evolutions/${id}/`, {
-    method: 'PUT',
-    body: JSON.stringify(data),
-  })
-}
-
-export function getDashboard() {
-  return http<Dashboard>('/api/dashboard/')
-}
+export const getDashboard = cache(async () => {
+  const impl = await getImpl()
+  return impl.getDashboard()
+})

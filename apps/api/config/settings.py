@@ -1,11 +1,32 @@
+import os
+import environ
+import dj_database_url
 from pathlib import Path
+from datetime import timedelta
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = 'change-me-later'
-DEBUG = True
+# Environment: 'local' (default), 'production'
+DJANGO_ENV = os.getenv('DJANGO_ENV', 'local')
 
-ALLOWED_HOSTS = ["*"]
+# Initialize environ
+env = environ.Env(
+    DEBUG=(bool, False)
+)
+
+# Read .env file based on environment
+env_file = os.path.join(BASE_DIR, f'.env.{DJANGO_ENV}')
+if os.path.exists(env_file):
+    environ.Env.read_env(env_file)
+
+SECRET_KEY = env('SECRET_KEY')
+DEBUG = env('DEBUG')
+
+# ALLOWED_HOSTS - only allow '*' in DEBUG mode
+if DEBUG:
+    ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=['*'])
+else:
+    ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=['localhost', '127.0.0.1'])
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -17,7 +38,9 @@ INSTALLED_APPS = [
 
     # libs
     'rest_framework',
+    'rest_framework_simplejwt',
     'corsheaders',
+    'django_filters',
 
     # apps
     'core',
@@ -25,6 +48,8 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 
     'corsheaders.middleware.CorsMiddleware',
 
@@ -55,14 +80,21 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
+DATABASE_URL = env('DATABASE_URL', default=None)
 
-AUTH_PASSWORD_VALIDATORS = []
+if DATABASE_URL:
+    DATABASES = {
+        'default': dj_database_url.parse(DATABASE_URL)
+    }
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
+
+AUTH_PASSWORD_VALIDATORS: list[dict[str, str]] = []
 
 LANGUAGE_CODE = 'pt-br'
 
@@ -73,14 +105,40 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",
-]
+CORS_ALLOWED_ORIGINS = env.list('CORS_ALLOWED_ORIGINS', default=["http://localhost:3000"])
 
 REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+    ),
     "DEFAULT_PERMISSION_CLASSES": [
-        "rest_framework.permissions.AllowAny"
-    ]
+        "rest_framework.permissions.IsAuthenticated"
+    ],
+    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
+    "PAGE_SIZE": 20,
+    "DEFAULT_FILTER_BACKENDS": [
+        "django_filters.rest_framework.DjangoFilterBackend",
+        "rest_framework.filters.SearchFilter",
+        "rest_framework.filters.OrderingFilter",
+    ],
+}
+
+AUTH_USER_MODEL = 'core.CustomUser'
+
+from datetime import timedelta
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(hours=24),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
+    'ROTATE_REFRESH_TOKENS': False,
+    'BLACKLIST_AFTER_ROTATION': False,
+    'UPDATE_LAST_LOGIN': False,
+    'ALGORITHM': 'HS256',
+    'SIGNING_KEY': SECRET_KEY,
 }

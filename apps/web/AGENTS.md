@@ -33,35 +33,63 @@ src/
 │   │   ├── clinic/page.tsx     # Clinic staff login
 │   │   └── family/page.tsx     # Family login
 │   ├── clinic/                 # Clinic portal routes
+│   │   └── dashboard/
+│   │       └── page.tsx        # Clinic dashboard
 │   └── family/                 # Family portal routes
+│       └── dashboard/
+│           └── page.tsx        # Family dashboard
 ├── components/
 │   ├── auth/                   # Login form components
 │   │   ├── ClinicLoginForm.tsx
 │   │   └── FamilyLoginForm.tsx
 │   ├── layout/
-│   │   ├── clinic/             # Clinic layout components
+│   │   ├── clinic/
+│   │   │   ├── ClinicLayout.tsx
 │   │   │   ├── ClinicHeader.tsx
-│   │   │   └── ClinicSidebar.tsx
-│   │   └── family/             # Family layout components
+│   │   │   ├── ClinicNavbar.tsx
+│   │   │   ├── ClinicSearchBar.tsx
+│   │   │   ├── ClinicSidebar.tsx
+│   │   │   ├── ClinicSidebarHeader.tsx
+│   │   │   ├── ClinicSidebarNav.tsx
+│   │   │   ├── ClinicSidebarFooter.tsx
+│   │   │   ├── ClinicUserAvatar.tsx
+│   │   │   ├── index.ts
+│   │   │   └── types.ts
+│   │   └── family/
+│   │       ├── FamilyNavbar.tsx
 │   │       ├── FamilyHeader.tsx
-│   │       └── FamilySidebar.tsx
+│   │       ├── index.ts
+│   │       └── types.ts
 │   └── ui/
+│       ├── family/
+│       │   ├── FamilyDashboardStats.tsx
+│       │   └── LatestEvolutionCard.tsx
 │       └── shared/             # Reusable UI components
 │           ├── Avatar.tsx
 │           ├── Button.tsx
-│           └── Input.tsx
+│           ├── Input.tsx
+│           ├── Container.tsx
+│           └── IconButton.tsx
 ├── lib/
 │   ├── api/
 │   │   ├── http.ts             # HTTP client setup
-│   │   ├── clinic.ts           # Clinic API calls
-│   │   └── family.ts           # Family API calls
+│   │   ├── clinic.ts           # Clinic API dispatcher (lazy-load)
+│   │   ├── clinic-mock.ts      # Clinic mock implementation
+│   │   ├── clinic-real.ts      # Clinic real implementation
+│   │   ├── family.ts           # Family API dispatcher (lazy-load)
+│   │   ├── family-mock.ts     # Family mock implementation
+│   │   └── family-real.ts     # Family real implementation
 │   ├── types.ts                # Shared TypeScript types
 │   ├── auth.ts                 # Real auth implementation (HTTP)
 │   ├── auth-mock.ts            # Mock auth implementation
 │   ├── authService.ts          # Unified auth service (switches by env)
-│   └── authResolver.ts         # Resolves user identity from request
+│   ├── authResolver.ts         # Resolves user identity from request
+│   └── utils/                  # Utility functions
+│   │       ├── dateUtils.ts    # getRelativeDate() - relative date formatting in Portuguese
+│   │       └── stringUtils.ts  # extractInitials() - name to initials conversion
 └── mocks/
     ├── browser.ts              # MSW browser worker setup
+    ├── state.ts                # Centralized in-memory mock state
     ├── handlers.ts             # Mock request handlers
     └── data/                   # Mock data files
         ├── users.ts
@@ -104,6 +132,8 @@ src/
 
 ### API Mocking (Development)
 
+- **Centralized Mock State**: Use `src/mocks/state.ts` for all mock data (no fetch calls in mock mode)
+- **Lazy-Load Architecture**: Mock/real implementations loaded dynamically based on `NEXT_PUBLIC_DISABLE_MSW`
 - **MSW v2.14.2** integrated via `instrumentation-client.ts`
 - Auto-activates in `NODE_ENV=development`
 - Browser worker setup in `src/mocks/browser.ts`
@@ -118,6 +148,26 @@ src/
 - `NEXT_PUBLIC_DISABLE_MSW=false` - Enable mock (MSW + auth) - default in dev
 - `NEXT_PUBLIC_DISABLE_MSW=true` - Disable mock, use real API
 - `NEXT_PUBLIC_MOCK_USER_ID` - Default user ID for mock (default: 1)
+
+### Family Portal (Dashboard)
+
+- **Stats Cards**: "Total de Sessões" and "Última Sessão" with relative dates in Portuguese (Hoje, Ontem, Há 2 dias, etc.)
+- **Avatar**: Patient initials with Spectra blue brand color
+- **Evolution Card**: Shows latest evolution with therapist name prefixed "Terapeuta. "
+- **Navbar**:
+  - Mobile: Fixed at bottom, icons above text (flex-col)
+  - Desktop: Fixed at top, icons beside text (flex-row)
+- **Responsive Text**: Uses `text-xs md:text-sm`, `text-sm md:text-base`, etc. for mobile/desktop
+
+### Clinic Portal (Dashboard)
+
+- **Layout**: Sidebar-based layout with header, navigation, and footer
+- **Sidebar**: Fixed left sidebar with navigation links (Dashboard, Pacientes, Sessões)
+- **Navigation**: Active state styling with gradient blue indicator
+- **Top Navbar**: Sticky navbar with search bar and user avatar
+  - `ClinicSearchBar.tsx` - Search input for patients
+  - `ClinicUserAvatar.tsx` - User initials avatar display
+- **User Header**: Uses x-user header from middleware for authentication context
 
 ## Domain Context
 
@@ -139,7 +189,7 @@ src/
 - Soft deletes via `is_deleted` flag
 - Brazilian Portuguese in UI/mock data
 - ISO 8601 date strings
-- In-memory MSW state with incremental IDs
+- In-memory mock state with incremental IDs
 
 ## Development
 

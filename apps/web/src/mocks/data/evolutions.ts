@@ -7,7 +7,7 @@ export const mockEvolutions = [
     objective: 'Aumentar tempo de atenção compartilhada.',
     activities: 'Brincadeira com blocos e encaixe. Leitura compartilhada de livro de dinossauros.',
     behavior:
-      'Tranquilo e focado durante a maior parte da sessão. Pequena resistência ao encerramento.',
+      'Tranquilo e focado durante a maior parte da sessão. Pequena resistência ao encerramento. Demonstrou grande interesse nas atividades propostas pelo terapeuta. Manteve contato visual por períodos prolongados durante a leitura compartilhada. Participou ativamente das brincadeiras com blocos e mostrou habilidade crescente nos exercícios de encaixe. Apresentou alguns momentos de frustração quando a atividade foi alterada, mas logo se acalmou e aceitou a nova atividade com entusiasmo.',
     progress: 'Ótimo avanço. Manteve atenção por 12 minutos seguidos, recorde pessoal.',
     next_steps: 'Introduzir atividade com mais de uma etapa sequencial na próxima sessão.',
     released_to_family: true,

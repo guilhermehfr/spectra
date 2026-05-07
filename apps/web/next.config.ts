@@ -1,7 +1,7 @@
 import type { NextConfig } from 'next'
 
 const nextConfig: NextConfig = {
-  cacheComponents: true,
+  cacheComponents: false, // Disabled to allow dynamic routes for auth pages
   async headers() {
     return [
       {

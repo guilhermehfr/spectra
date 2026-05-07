@@ -1,23 +1,9 @@
 import { http, HttpResponse } from 'msw'
 
-import { mockUsers, mockTokens } from './data/users'
-import { mockPatients } from './data/patients'
-import { mockSessions } from './data/sessions'
-import { mockEvolutions } from './data/evolutions'
+import { mockUsers as users, mockTokens as tokens } from './data/users'
+import * as state from './state'
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000'
-
-// ─────────────────────────────────────────────────────────────────────────────
-// In-Memory State (for development)
-// ─────────────────────────────────────────────────────────────────────────────
-
-const patients = [...mockPatients]
-const sessions = [...mockSessions]
-const evolutions = [...mockEvolutions]
-
-let nextPatientId = patients.length + 1
-let nextSessionId = sessions.length + 1
-let nextEvolutionId = evolutions.length + 1
 
 // ─────────────────────────────────────────────────────────────────────────────
 // MSW Handlers
@@ -34,15 +20,15 @@ export const handlers = [
    */
   http.post(`${BASE_URL}/api/auth/login/`, async ({ request }) => {
     const body = (await request.json()) as { email: string; password: string }
-    const user = mockUsers.find((u) => u.email === body.email)
+    const user = users.find((u) => u.email === body.email)
 
     if (!user) {
       return HttpResponse.json({ detail: 'Email não encontrado.' }, { status: 400 })
     }
 
     return HttpResponse.json({
-      access: mockTokens.access,
-      refresh: mockTokens.refresh,
+      access: tokens.access,
+      refresh: tokens.refresh,
       user,
     })
   }),
@@ -52,7 +38,7 @@ export const handlers = [
    * Refreshes authentication token
    */
   http.post(`${BASE_URL}/api/auth/refresh/`, () => {
-    return HttpResponse.json({ access: mockTokens.access })
+    return HttpResponse.json({ access: tokens.access })
   }),
 
   // ═══════════════════════════════════════════════════════════════════════════
@@ -64,7 +50,7 @@ export const handlers = [
    * Lists all active patients (non-deleted)
    */
   http.get(`${BASE_URL}/api/patients/`, () => {
-    return HttpResponse.json(patients.filter((p) => !p.is_deleted))
+    return HttpResponse.json(state.getPatients())
   }),
 
   /**
@@ -72,16 +58,14 @@ export const handlers = [
    * Creates a new patient
    */
   http.post(`${BASE_URL}/api/patients/`, async ({ request }) => {
-    const body = (await request.json()) as (typeof mockPatients)[0]
-    const newPatient = {
-      ...body,
-      id: nextPatientId++,
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
-      is_deleted: false,
+    const body = (await request.json()) as Record<string, unknown>
+    try {
+      const newPatient = state.createPatient(body as Parameters<typeof state.createPatient>[0])
+      return HttpResponse.json(newPatient, { status: 201 })
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Error creating patient'
+      return HttpResponse.json({ detail: message }, { status: 400 })
     }
-    patients.push(newPatient)
-    return HttpResponse.json(newPatient, { status: 201 })
   }),
 
   /**
@@ -89,7 +73,7 @@ export const handlers = [
    * Retrieves a specific patient by ID
    */
   http.get(`${BASE_URL}/api/patients/:id/`, ({ params }) => {
-    const patient = patients.find((p) => p.id === Number(params.id) && !p.is_deleted)
+    const patient = state.getPatientById(Number(params.id))
     if (!patient) {
       return HttpResponse.json({ detail: 'Não encontrado.' }, { status: 404 })
     }
@@ -101,20 +85,17 @@ export const handlers = [
    * Updates an existing patient
    */
   http.put(`${BASE_URL}/api/patients/:id/`, async ({ params, request }) => {
-    const body = (await request.json()) as Partial<(typeof mockPatients)[0]>
-    const index = patients.findIndex((p) => p.id === Number(params.id) && !p.is_deleted)
+    const body = (await request.json()) as Record<string, unknown>
+    const updated = state.updatePatient(
+      Number(params.id),
+      body as Parameters<typeof state.updatePatient>[1]
+    )
 
-    if (index === -1) {
+    if (!updated) {
       return HttpResponse.json({ detail: 'Não encontrado.' }, { status: 404 })
     }
 
-    patients[index] = {
-      ...patients[index],
-      ...body,
-      updated_at: new Date().toISOString(),
-    }
-
-    return HttpResponse.json(patients[index])
+    return HttpResponse.json(updated)
   }),
 
   /**
@@ -122,11 +103,10 @@ export const handlers = [
    * Soft-deletes a patient (marks as deleted)
    */
   http.delete(`${BASE_URL}/api/patients/:id/`, ({ params }) => {
-    const index = patients.findIndex((p) => p.id === Number(params.id))
-    if (index === -1) {
+    const deleted = state.deletePatient(Number(params.id))
+    if (!deleted) {
       return HttpResponse.json({ detail: 'Não encontrado.' }, { status: 404 })
     }
-    patients[index].is_deleted = true
     return new HttpResponse(null, { status: 204 })
   }),
 
@@ -139,7 +119,7 @@ export const handlers = [
    * Lists all active sessions (non-deleted)
    */
   http.get(`${BASE_URL}/api/sessions/`, () => {
-    return HttpResponse.json(sessions.filter((s) => !s.is_deleted))
+    return HttpResponse.json(state.getSessions())
   }),
 
   /**
@@ -147,22 +127,14 @@ export const handlers = [
    * Creates a new therapy session
    */
   http.post(`${BASE_URL}/api/sessions/`, async ({ request }) => {
-    const body = (await request.json()) as (typeof mockSessions)[0]
-    const patient = patients.find((p) => p.id === body.patient)
-    const therapist = mockUsers.find((u) => u.id === body.therapist)
-
-    const newSession = {
-      ...body,
-      id: nextSessionId++,
-      patient_name: patient?.name || '',
-      therapist_name: therapist ? `${therapist.first_name} ${therapist.last_name}` : '',
-      status: 'scheduled',
-      is_deleted: false,
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
+    const body = (await request.json()) as Record<string, unknown>
+    try {
+      const newSession = state.createSession(body as Parameters<typeof state.createSession>[0])
+      return HttpResponse.json(newSession, { status: 201 })
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Error creating session'
+      return HttpResponse.json({ detail: message }, { status: 400 })
     }
-    sessions.push(newSession)
-    return HttpResponse.json(newSession, { status: 201 })
   }),
 
   /**
@@ -170,7 +142,7 @@ export const handlers = [
    * Retrieves a specific session by ID
    */
   http.get(`${BASE_URL}/api/sessions/:id/`, ({ params }) => {
-    const session = sessions.find((s) => s.id === Number(params.id) && !s.is_deleted)
+    const session = state.getSessionById(Number(params.id))
     if (!session) {
       return HttpResponse.json({ detail: 'Não encontrado.' }, { status: 404 })
     }
@@ -182,19 +154,17 @@ export const handlers = [
    * Updates an existing session
    */
   http.put(`${BASE_URL}/api/sessions/:id/`, async ({ params, request }) => {
-    const body = (await request.json()) as Partial<(typeof mockSessions)[0]>
-    const index = sessions.findIndex((s) => s.id === Number(params.id) && !s.is_deleted)
+    const body = (await request.json()) as Record<string, unknown>
+    const updated = state.updateSession(
+      Number(params.id),
+      body as Parameters<typeof state.updateSession>[1]
+    )
 
-    if (index === -1) {
+    if (!updated) {
       return HttpResponse.json({ detail: 'Não encontrado.' }, { status: 404 })
     }
 
-    sessions[index] = {
-      ...sessions[index],
-      ...body,
-      updated_at: new Date().toISOString(),
-    }
-    return HttpResponse.json(sessions[index])
+    return HttpResponse.json(updated)
   }),
 
   /**
@@ -202,11 +172,10 @@ export const handlers = [
    * Soft-deletes a session (marks as deleted)
    */
   http.delete(`${BASE_URL}/api/sessions/:id/`, ({ params }) => {
-    const index = sessions.findIndex((s) => s.id === Number(params.id))
-    if (index === -1) {
+    const deleted = state.deleteSession(Number(params.id))
+    if (!deleted) {
       return HttpResponse.json({ detail: 'Não encontrado.' }, { status: 404 })
     }
-    sessions[index].is_deleted = true
     return new HttpResponse(null, { status: 204 })
   }),
 
@@ -222,33 +191,16 @@ export const handlers = [
    * - Only one evolution per session
    */
   http.post(`${BASE_URL}/api/evolutions/`, async ({ request }) => {
-    const body = (await request.json()) as (typeof mockEvolutions)[0]
-    const session = sessions.find((s) => s.id === body.session)
-
-    if (!session || session.status !== 'completed') {
-      return HttpResponse.json(
-        { detail: 'A sessão precisa estar com status completed.' },
-        { status: 400 }
+    const body = (await request.json()) as Record<string, unknown>
+    try {
+      const newEvolution = state.createEvolution(
+        body as Parameters<typeof state.createEvolution>[0]
       )
+      return HttpResponse.json(newEvolution, { status: 201 })
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Error creating evolution'
+      return HttpResponse.json({ detail: message }, { status: 400 })
     }
-
-    const alreadyExists = evolutions.find((e) => e.session === body.session)
-    if (alreadyExists) {
-      return HttpResponse.json(
-        { detail: 'Já existe uma evolução para esta sessão.' },
-        { status: 400 }
-      )
-    }
-
-    const newEvolution = {
-      ...body,
-      id: nextEvolutionId++,
-      released_to_family: body.released_to_family ?? false,
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
-    }
-    evolutions.push(newEvolution)
-    return HttpResponse.json(newEvolution, { status: 201 })
   }),
 
   /**
@@ -256,7 +208,7 @@ export const handlers = [
    * Retrieves a specific evolution by ID
    */
   http.get(`${BASE_URL}/api/evolutions/:id/`, ({ params }) => {
-    const evolution = evolutions.find((e) => e.id === Number(params.id))
+    const evolution = state.getEvolutionById(Number(params.id))
     if (!evolution) {
       return HttpResponse.json({ detail: 'Não encontrado.' }, { status: 404 })
     }
@@ -268,19 +220,17 @@ export const handlers = [
    * Updates an existing evolution
    */
   http.put(`${BASE_URL}/api/evolutions/:id/`, async ({ params, request }) => {
-    const body = (await request.json()) as Partial<(typeof mockEvolutions)[0]>
-    const index = evolutions.findIndex((e) => e.id === Number(params.id))
+    const body = (await request.json()) as Record<string, unknown>
+    const updated = state.updateEvolution(
+      Number(params.id),
+      body as Parameters<typeof state.updateEvolution>[1]
+    )
 
-    if (index === -1) {
+    if (!updated) {
       return HttpResponse.json({ detail: 'Não encontrado.' }, { status: 404 })
     }
 
-    evolutions[index] = {
-      ...evolutions[index],
-      ...body,
-      updated_at: new Date().toISOString(),
-    }
-    return HttpResponse.json(evolutions[index])
+    return HttpResponse.json(updated)
   }),
 
   /**
@@ -288,7 +238,7 @@ export const handlers = [
    * Lists all evolutions
    */
   http.get(`${BASE_URL}/api/evolutions/`, () => {
-    return HttpResponse.json(evolutions)
+    return HttpResponse.json(state.getEvolutions())
   }),
 
   /**
@@ -296,8 +246,7 @@ export const handlers = [
    * Lists all evolutions released to family members
    */
   http.get(`${BASE_URL}/api/evolutions/family/`, () => {
-    const familyEvolutions = evolutions.filter((e) => e.released_to_family)
-    return HttpResponse.json(familyEvolutions)
+    return HttpResponse.json(state.getFamilyEvolutions())
   }),
 
   // ═══════════════════════════════════════════════════════════════════════════
@@ -312,24 +261,6 @@ export const handlers = [
    * - pending_evolutions: Count of completed sessions without evolution notes
    */
   http.get(`${BASE_URL}/api/dashboard/`, () => {
-    const today = new Date().toISOString().split('T')[0]
-
-    const todaySessions = sessions.filter((s) => !s.is_deleted && s.date_time.startsWith(today))
-
-    const activePatients = patients.filter((p) => !p.is_deleted).length
-
-    const completedSessionIds = sessions.filter((s) => s.status === 'completed').map((s) => s.id)
-
-    const evolutionSessionIds = evolutions.map((e) => e.session)
-
-    const pendingEvolutions = completedSessionIds.filter(
-      (id) => !evolutionSessionIds.includes(id)
-    ).length
-
-    return HttpResponse.json({
-      today_sessions: todaySessions,
-      active_patients: activePatients,
-      pending_evolutions: pendingEvolutions,
-    })
+    return HttpResponse.json(state.getDashboardMetrics())
   }),
 ]
