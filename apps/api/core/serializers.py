@@ -32,25 +32,14 @@ class LoginSerializer(serializers.Serializer):
         email = attrs.get('email')
         password = attrs.get('password')
         
-        # Tenta autenticar com email ou username
         user = CustomUser.objects.filter(email=email).first()
         
-        if not user:
-            raise serializers.ValidationError({
-                'email': 'Usuário não encontrado.'
-            })
-        
-        if not user.check_password(password):
-            raise serializers.ValidationError({
-                'password': 'Senha incorreta.'
-            })
+        if not user or not user.check_password(password):
+            raise serializers.ValidationError('Credenciais inválidas')
         
         if not user.is_active:
-            raise serializers.ValidationError({
-                'detail': 'Este usuário foi desativado.'
-            })
+            raise serializers.ValidationError('Conta desativada')
         
-        # Gerar tokens
         refresh = RefreshToken.for_user(user)
         
         return {
@@ -66,20 +55,12 @@ class RefreshTokenSerializer(serializers.Serializer):
     refresh = serializers.CharField(write_only=True)
     access = serializers.CharField(read_only=True)
     
-    def validate_refresh(self, value):
-        """Validar se o refresh token é válido."""
+    def validate(self, attrs):
         try:
-            token = RefreshToken(value)
-        except Exception as e:
-            raise serializers.ValidationError(f'Token inválido: {str(e)}')
-        return value
-    
-    def create(self, validated_data):
-        """Gerar novo access token a partir do refresh token."""
-        refresh = RefreshToken(validated_data['refresh'])
-        return {
-            'access': str(refresh.access_token)
-        }
+            refresh = RefreshToken(attrs['refresh'])
+            return {'access': str(refresh.access_token)}
+        except Exception:
+            raise serializers.ValidationError('Token inválido ou expirado')
 
 
 class PatientSerializer(serializers.ModelSerializer):

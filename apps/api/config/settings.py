@@ -19,10 +19,14 @@ env_file = os.path.join(BASE_DIR, f'.env.{DJANGO_ENV}')
 if os.path.exists(env_file):
     environ.Env.read_env(env_file)
 
-SECRET_KEY = env('SECRET_KEY', default='spectra-fallback-secret-key')
+SECRET_KEY = env('SECRET_KEY')
 DEBUG = env('DEBUG')
 
-ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=['*'])
+# ALLOWED_HOSTS - only allow '*' in DEBUG mode
+if DEBUG:
+    ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=['*'])
+else:
+    ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=['localhost', '127.0.0.1'])
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -44,6 +48,8 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 
     'corsheaders.middleware.CorsMiddleware',
 
@@ -98,6 +104,10 @@ USE_I18N = True
 USE_TZ = True
 
 STATIC_URL = 'static/'
+
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
