@@ -23,7 +23,7 @@ import type {
 } from '@/lib/types'
 
 export async function getPatients() {
-  const response = await http<{ results: Patient[] }>('/api/patients/')
+  const response = await http<{ results: Patient[] }>('/api/patients/', { tag: 'patients' })
   return response.results
 }
 

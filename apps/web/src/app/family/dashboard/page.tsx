@@ -3,9 +3,9 @@ import { getPatientByGuardianEmail } from '@/lib/api/clinic'
 import { getFamilyEvolutions } from '@/lib/api/family'
 import type { FamilyEvolution } from '@/lib/types'
 
-import { FamilyDashboardStats } from '@/components/ui/family/FamilyDashboardStats'
+import { DashboardStats } from '@/components/ui/family/DashboardStats'
 import { LatestEvolutionCard } from '@/components/ui/family/LatestEvolutionCard'
-import { FamilyNavbar } from '@/components/layout/family'
+import { Navbar } from '@/components/layout/family'
 
 import { getRelativeDate } from '@/lib/utils/dateUtils'
 import { extractInitials } from '@/lib/utils/stringUtils'
@@ -79,7 +79,7 @@ export default async function FamilyDashboard() {
           </div>
         </div>
         <div className="mb-8">
-          <FamilyDashboardStats totalSessions={totalSessions} lastSession={lastSessionRelative} />
+          <DashboardStats totalSessions={totalSessions} lastSession={lastSessionRelative} />
         </div>
         <div className="mb-8">
           <div className="mb-4 flex items-center justify-between">
@@ -101,7 +101,7 @@ export default async function FamilyDashboard() {
           )}
         </div>
       </div>
-      <FamilyNavbar />
+      <Navbar />
     </div>
   )
 }

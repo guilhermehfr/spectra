@@ -9,10 +9,9 @@
  * - NEXT_PUBLIC_DISABLE_MSW=true (prod/real API): Uses HTTP client to make
  *   actual requests to the backend API
  *
- * All functions are wrapped with React cache() for request-scoped memoization.
+ * Note: React cache() was removed to fix caching issues.
+ * Each call now fetches fresh data from the API.
  */
-
-import { cache } from 'react'
 
 import { getUseMock } from '@/lib/envUtils'
 
@@ -25,12 +24,12 @@ const getImpl = async () => {
   }
 }
 
-export const getFamilyEvolutions = cache(async () => {
+export async function getFamilyEvolutions() {
   const impl = await getImpl()
   return impl.getFamilyEvolutions()
-})
+}
 
-export const getFamilyEvolution = cache(async (id: number) => {
+export async function getFamilyEvolution(id: number) {
   const impl = await getImpl()
   return impl.getFamilyEvolution(id)
-})
+}
