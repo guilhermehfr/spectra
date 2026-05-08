@@ -20,7 +20,7 @@ const navItems: NavItem[] = [
   },
 ]
 
-export function FamilyNavbar() {
+export function Navbar() {
   const pathname = usePathname()
 
   const isActive = (href: string): boolean => {

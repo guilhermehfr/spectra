@@ -3,11 +3,11 @@
 import { Button } from '@/components/ui/shared'
 import { Plus } from 'lucide-react'
 
-interface ClinicPatientsPageHeaderProps {
+interface PatientsPageHeaderProps {
   onAddPatient?: () => void
 }
 
-export function ClinicPatientsPageHeader({ onAddPatient }: ClinicPatientsPageHeaderProps) {
+export function PatientsPageHeader({ onAddPatient }: PatientsPageHeaderProps) {
   return (
     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
       <div>

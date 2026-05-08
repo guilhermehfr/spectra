@@ -15,11 +15,11 @@ interface WeeklyChartData {
   sessions: number
 }
 
-interface ClinicWeeklyChartProps {
+interface WeeklyChartProps {
   data: WeeklyChartData[]
 }
 
-export function ClinicWeeklyChart({ data }: ClinicWeeklyChartProps) {
+export function WeeklyChart({ data }: WeeklyChartProps) {
   return (
     <div className="w-full">
       <ResponsiveContainer width="100%" height={220}>

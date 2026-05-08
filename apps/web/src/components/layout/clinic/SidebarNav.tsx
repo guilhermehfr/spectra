@@ -4,12 +4,12 @@ import Link from 'next/link'
 import { twMerge } from 'tailwind-merge'
 import type { SidebarNavItem } from './types'
 
-interface ClinicSidebarNavProps {
+interface SidebarNavProps {
   items: SidebarNavItem[]
   currentPath: string
 }
 
-export function ClinicSidebarNav({ items, currentPath }: ClinicSidebarNavProps) {
+export function SidebarNav({ items, currentPath }: SidebarNavProps) {
   const isActive = (href: string): boolean => {
     return currentPath === href || currentPath.startsWith(href + '/')
   }

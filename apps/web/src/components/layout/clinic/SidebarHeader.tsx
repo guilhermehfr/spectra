@@ -1,19 +1,19 @@
 import Image from 'next/image'
 import { Brain } from 'lucide-react'
 
-interface ClinicSidebarHeaderProps {
+interface SidebarHeaderProps {
   logoSrc?: string
   brandName?: string
   subtitle?: string
   logoBackgroundColor?: string
 }
 
-export function ClinicSidebarHeader({
+export function SidebarHeader({
   logoSrc,
   brandName = 'Spectra',
   subtitle = 'Gerenciamento de Clínica',
   logoBackgroundColor = 'bg-blue-100',
-}: ClinicSidebarHeaderProps) {
+}: SidebarHeaderProps) {
   return (
     <div className="px-4 py-4 pb-8 border-b border-slate-200">
       <div className="flex items-center gap-4">

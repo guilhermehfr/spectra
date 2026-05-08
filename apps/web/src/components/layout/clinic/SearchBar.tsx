@@ -3,15 +3,15 @@
 import { Search } from 'lucide-react'
 import { useState } from 'react'
 
-interface ClinicSearchBarProps {
+interface SearchBarProps {
   placeholder?: string
   onSearch?: (query: string) => void
 }
 
-export function ClinicSearchBar({
+export function SearchBar({
   placeholder = 'Pesquisar pacientes...',
   onSearch,
-}: ClinicSearchBarProps) {
+}: SearchBarProps) {
   const [query, setQuery] = useState('')
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {

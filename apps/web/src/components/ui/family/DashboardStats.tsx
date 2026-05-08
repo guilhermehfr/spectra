@@ -3,7 +3,7 @@
 import { Calendar } from 'lucide-react'
 import { twMerge } from 'tailwind-merge'
 
-interface FamilyDashboardStatsProps {
+interface DashboardStatsProps {
   totalSessions: number
   lastSession: string
 }
@@ -36,7 +36,7 @@ function StatCard({ label, value, icon: Icon, iconBgColor }: StatCardProps) {
   )
 }
 
-export function FamilyDashboardStats({ totalSessions, lastSession }: FamilyDashboardStatsProps) {
+export function DashboardStats({ totalSessions, lastSession }: DashboardStatsProps) {
   return (
     <div className="flex w-full gap-2">
       <StatCard

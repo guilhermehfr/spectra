@@ -5,10 +5,14 @@ import { twMerge } from 'tailwind-merge'
 import type { Session, SessionStatus } from '@/lib/types'
 
 function formatDateTime(dateString: string): string {
-  const date = new Date(dateString)
-  const dateStr = date.toLocaleDateString('pt-BR')
-  const timeStr = date.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })
-  return `${dateStr} às ${timeStr}`
+  const [datePart, timePart] = dateString.split('T')
+  if (timePart) {
+    const [year, month, day] = datePart.split('-')
+    const [hour, minute] = timePart.split(':')
+    return `${day}/${month}/${year} às ${hour}:${minute}`
+  }
+  const [year, month, day] = dateString.split('-')
+  return `${day}/${month}/${year}`
 }
 
 const statusConfig: Record<SessionStatus, { label: string; className: string }> = {
@@ -52,14 +56,14 @@ function SessionCard({ session, onEdit, onDelete }: SessionCardProps) {
       <div className="flex items-center gap-2 pt-2 border-t border-slate-100">
         <button
           onClick={() => onEdit(session)}
-          className="flex items-center gap-1 px-3 py-1.5 text-xs font-medium text-slate-600 hover:text-slate-700 hover:bg-slate-50 rounded-md transition-colors"
+          className="flex items-center gap-1 px-3 py-1.5 text-xs font-medium text-slate-600 hover:text-slate-700 hover:bg-slate-50 rounded-md transition-colors cursor-pointer"
         >
           <Pencil className="w-3.5 h-3.5" />
           Editar
         </button>
         <button
           onClick={() => onDelete(session)}
-          className="flex items-center gap-1 px-3 py-1.5 text-xs font-medium text-red-600 hover:text-red-700 hover:bg-red-50 rounded-md transition-colors"
+          className="flex items-center gap-1 px-3 py-1.5 text-xs font-medium text-red-600 hover:text-red-700 hover:bg-red-50 rounded-md transition-colors cursor-pointer"
         >
           <Trash2 className="w-3.5 h-3.5" />
           Excluir
@@ -94,14 +98,14 @@ function SessionRow({ session, onEdit, onDelete }: SessionRowProps) {
         <div className="flex items-center gap-1">
           <button
             onClick={() => onEdit(session)}
-            className="p-1.5 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-md transition-colors"
+            className="p-1.5 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-md transition-colors cursor-pointer"
             title="Editar"
           >
             <Pencil className="w-4 h-4" />
           </button>
           <button
             onClick={() => onDelete(session)}
-            className="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-md transition-colors"
+            className="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-md transition-colors cursor-pointer"
             title="Excluir"
           >
             <Trash2 className="w-4 h-4" />
@@ -112,19 +116,19 @@ function SessionRow({ session, onEdit, onDelete }: SessionRowProps) {
   )
 }
 
-interface ClinicPatientSessionsSectionProps {
+interface PatientSessionsSectionProps {
   sessions: Session[]
   onEdit: (session: Session) => void
   onDelete: (session: Session) => void
   onAdd: () => void
 }
 
-export function ClinicPatientSessionsSection({
+export function PatientSessionsSection({
   sessions,
   onEdit,
   onDelete,
   onAdd,
-}: ClinicPatientSessionsSectionProps) {
+}: PatientSessionsSectionProps) {
   const sortedSessions = [...sessions].sort(
     (a, b) => new Date(b.date_time).getTime() - new Date(a.date_time).getTime()
   )
@@ -135,7 +139,7 @@ export function ClinicPatientSessionsSection({
         <h2 className="text-lg md:text-xl font-semibold text-slate-900">Sessões</h2>
         <button
           onClick={onAdd}
-          className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-white bg-[linear-gradient(90deg,#2563EB,#4648D4)] rounded-lg hover:opacity-90 transition-opacity"
+          className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-white bg-[linear-gradient(90deg,#2563EB,#4648D4)] rounded-lg hover:opacity-90 transition-opacity cursor-pointer"
         >
           <Plus className="w-4 h-4" />
           Nova Sessão

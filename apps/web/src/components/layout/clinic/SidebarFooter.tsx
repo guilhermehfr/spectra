@@ -5,14 +5,15 @@ import { HelpCircle, LogOut } from 'lucide-react'
 import { twMerge } from 'tailwind-merge'
 import { logoutAction } from '@/app/actions/auth'
 
-export function ClinicSidebarFooter() {
+export function SidebarFooter() {
   const handleLogout = async () => {
     await logoutAction()
   }
 
   const footerItemClass = twMerge(
     'flex items-center gap-4 px-2 py-2 rounded-lg transition-all duration-150',
-    'text-sm font-manrope font-normal text-slate-600 hover:bg-slate-50'
+    'text-sm font-manrope font-normal text-slate-600 hover:bg-slate-50',
+    'cursor-pointer'
   )
 
   return (

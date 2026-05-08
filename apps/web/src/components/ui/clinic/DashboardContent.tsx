@@ -2,8 +2,8 @@
 
 import { useRouter } from 'next/navigation'
 import { Container, Button } from '@/components/ui/shared'
-import { ClinicWeeklyChart } from './ClinicWeeklyChart'
-import { ClinicDashboardStats } from './ClinicDashboardStats'
+import { WeeklyChart } from './WeeklyChart'
+import { DashboardStats } from './DashboardStats'
 import { UserPlus, Calendar } from 'lucide-react'
 
 interface WeeklyChartData {
@@ -11,7 +11,7 @@ interface WeeklyChartData {
   sessions: number
 }
 
-interface ClinicDashboardContentProps {
+interface DashboardContentProps {
   greeting: string
   subtitle: string
   activePatients: number
@@ -22,7 +22,7 @@ interface ClinicDashboardContentProps {
   onScheduleSession?: () => void
 }
 
-export function ClinicDashboardContent({
+export function DashboardContent({
   greeting,
   subtitle,
   activePatients,
@@ -31,7 +31,7 @@ export function ClinicDashboardContent({
   weeklyData,
   onAddPatient,
   onScheduleSession,
-}: ClinicDashboardContentProps) {
+}: DashboardContentProps) {
   const router = useRouter()
 
   const handleAddPatient = () => {
@@ -59,7 +59,7 @@ export function ClinicDashboardContent({
 
       {/* Stats Cards Section */}
       <section>
-        <ClinicDashboardStats
+        <DashboardStats
           activePatients={activePatients}
           todaySessions={todaySessions}
           pendingEvolutions={pendingEvolutions}
@@ -73,7 +73,7 @@ export function ClinicDashboardContent({
           <div className="flex items-center justify-between">
             <h2 className="text-lg font-semibold text-slate-900 font-manrope">Visão semanal</h2>
           </div>
-          <ClinicWeeklyChart data={weeklyData} />
+          <WeeklyChart data={weeklyData} />
         </Container>
 
         {/* Quick Actions */}

@@ -23,8 +23,16 @@ function calculateAge(birthDate: string): number {
 }
 
 function formatDate(dateString: string): string {
-  const date = new Date(dateString)
-  return date.toLocaleDateString('pt-BR')
+  const [year, month, day] = dateString.split('-')
+  return `${day}/${month}/${year}`
+}
+
+function formatDateTime(dateString: string): string {
+  const [datePart, timePart] = dateString.split('T')
+  const [year, month, day] = datePart.split('-')
+  const timeOnly = timePart.split('.')[0]
+  const [hour, minute] = timeOnly.split(':')
+  return `${day}/${month}/${year} ${hour}:${minute}`
 }
 
 const avatarColors = [
@@ -40,11 +48,11 @@ function getAvatarColor(id: number): string {
   return avatarColors[id % avatarColors.length]
 }
 
-interface ClinicPatientInfoCardProps {
+interface PatientInfoCardProps {
   patient: Patient
 }
 
-export function ClinicPatientInfoCard({ patient }: ClinicPatientInfoCardProps) {
+export function PatientInfoCard({ patient }: PatientInfoCardProps) {
   const initials = getInitials(patient.name)
   const age = calculateAge(patient.birth_date)
   const avatarColor = getAvatarColor(patient.id)
@@ -106,9 +114,9 @@ export function ClinicPatientInfoCard({ patient }: ClinicPatientInfoCardProps) {
 
           <div className="sm:col-span-2 pt-2 border-t border-slate-100">
             <p className="text-xs text-slate-500">
-              Cadastrado em {formatDate(patient.created_at)}
+              Cadastrado em {formatDateTime(patient.created_at)}
               {patient.updated_at !== patient.created_at && (
-                <> · Última atualização em {formatDate(patient.updated_at)}</>
+                <> · Última atualização em {formatDateTime(patient.updated_at)}</>
               )}
             </p>
           </div>

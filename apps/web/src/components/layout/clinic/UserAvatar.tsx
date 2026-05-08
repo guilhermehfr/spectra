@@ -2,7 +2,7 @@
 
 import { User } from '@/lib/types'
 
-interface ClinicUserAvatarProps {
+interface UserAvatarProps {
   user?: User
 }
 
@@ -15,7 +15,7 @@ function getInitials(firstName?: string, lastName?: string): string {
   return (firstInitial + lastInitial).slice(0, 2)
 }
 
-export function ClinicUserAvatar({ user }: ClinicUserAvatarProps) {
+export function UserAvatar({ user }: UserAvatarProps) {
   const initials = getInitials(user?.first_name, user?.last_name)
 
   return (

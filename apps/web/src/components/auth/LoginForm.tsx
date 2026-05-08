@@ -3,7 +3,7 @@
 import { BaseLoginForm } from './BaseLoginForm'
 import { UserRound } from 'lucide-react'
 
-export function ClinicLoginForm() {
+export function LoginForm() {
   return (
     <BaseLoginForm
       subtitle="Portal de gerenciamento clínico"

@@ -1,17 +1,17 @@
 import { Container } from '@/components/ui/shared'
 import { Users, Calendar, FileText } from 'lucide-react'
 
-interface ClinicDashboardStatsProps {
+interface DashboardStatsProps {
   activePatients: number
   todaySessions: number
   pendingEvolutions: number
 }
 
-export function ClinicDashboardStats({
+export function DashboardStats({
   activePatients,
   todaySessions,
   pendingEvolutions,
-}: ClinicDashboardStatsProps) {
+}: DashboardStatsProps) {
   const stats = [
     {
       label: 'Pacientes Ativos',

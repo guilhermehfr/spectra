@@ -2,14 +2,14 @@
 
 import Link from 'next/link'
 import { User } from '@/lib/types'
-import { ClinicSearchBar } from './ClinicSearchBar'
-import { ClinicUserAvatar } from './ClinicUserAvatar'
+import { SearchBar } from './SearchBar'
+import { UserAvatar } from './UserAvatar'
 
-interface ClinicNavbarProps {
+interface NavbarProps {
   user?: User
 }
 
-export function ClinicNavbar({ user }: ClinicNavbarProps) {
+export function Navbar({ user }: NavbarProps) {
   const handleSearch = (query: string) => {
     // TODO: Implement patient search functionality
     console.log('Search query:', query)
@@ -29,11 +29,11 @@ export function ClinicNavbar({ user }: ClinicNavbarProps) {
         </div>
 
         {/* Search Bar */}
-        <ClinicSearchBar placeholder="Pesquisar pacientes..." onSearch={handleSearch} />
+        <SearchBar placeholder="Pesquisar pacientes..." onSearch={handleSearch} />
 
         {/* User Avatar */}
         <div className="flex-shrink-0">
-          <ClinicUserAvatar user={user} />
+          <UserAvatar user={user} />
         </div>
       </div>
     </nav>

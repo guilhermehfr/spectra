@@ -3,7 +3,7 @@
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { twMerge } from 'tailwind-merge'
 
-interface ClinicPaginationNavProps {
+interface PaginationNavProps {
   currentPage: number
   totalPages: number
   totalItems: number
@@ -11,13 +11,13 @@ interface ClinicPaginationNavProps {
   onPageChange?: (page: number) => void
 }
 
-export function ClinicPaginationNav({
+export function PaginationNav({
   currentPage,
   totalPages,
   totalItems,
   itemsPerPage,
   onPageChange,
-}: ClinicPaginationNavProps) {
+}: PaginationNavProps) {
   const startItem = (currentPage - 1) * itemsPerPage + 1
   const endItem = Math.min(currentPage * itemsPerPage, totalItems)
 
@@ -26,7 +26,7 @@ export function ClinicPaginationNav({
   return (
     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mt-4 px-4 py-3 bg-white border-t border-slate-100">
       <span className="text-sm text-slate-500">
-        Showing {startItem} to {endItem} of {totalItems} results
+        Mostrando {startItem} a {endItem} de {totalItems} resultados
       </span>
 
       {showPagination && (

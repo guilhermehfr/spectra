@@ -77,7 +77,7 @@ function EvolutionCard({ evolution, onEdit, onRelease }: EvolutionCardProps) {
       <div className="flex flex-wrap items-center gap-2 mt-4 pt-4 border-t border-slate-100">
         <button
           onClick={() => onEdit(evolution)}
-          className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-slate-600 hover:text-slate-700 hover:bg-slate-50 rounded-md transition-colors"
+          className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-slate-600 hover:text-slate-700 hover:bg-slate-50 rounded-md transition-colors cursor-pointer"
         >
           <Pencil className="w-3.5 h-3.5" />
           Editar
@@ -85,7 +85,7 @@ function EvolutionCard({ evolution, onEdit, onRelease }: EvolutionCardProps) {
         {!isReleased && (
           <button
             onClick={() => onRelease(evolution)}
-            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-green-700 hover:bg-green-50 rounded-md transition-colors"
+            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-green-700 hover:bg-green-50 rounded-md transition-colors cursor-pointer"
           >
             <Share2 className="w-3.5 h-3.5" />
             Compartilhar com Família
@@ -96,19 +96,19 @@ function EvolutionCard({ evolution, onEdit, onRelease }: EvolutionCardProps) {
   )
 }
 
-interface ClinicPatientEvolutionsSectionProps {
+interface PatientEvolutionsSectionProps {
   evolutions: Evolution[]
   onEdit: (evolution: Evolution) => void
   onRelease: (evolution: Evolution) => void
   onAdd: () => void
 }
 
-export function ClinicPatientEvolutionsSection({
+export function PatientEvolutionsSection({
   evolutions,
   onEdit,
   onRelease,
   onAdd,
-}: ClinicPatientEvolutionsSectionProps) {
+}: PatientEvolutionsSectionProps) {
   const sortedEvolutions = [...evolutions].sort(
     (a, b) => new Date(b.session_date).getTime() - new Date(a.session_date).getTime()
   )
@@ -119,7 +119,7 @@ export function ClinicPatientEvolutionsSection({
         <h2 className="text-lg md:text-xl font-semibold text-slate-900">Evoluções</h2>
         <button
           onClick={onAdd}
-          className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-white bg-[linear-gradient(90deg,#2563EB,#4648D4)] rounded-lg hover:opacity-90 transition-opacity"
+          className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-white bg-[linear-gradient(90deg,#2563EB,#4648D4)] rounded-lg hover:opacity-90 transition-opacity cursor-pointer"
         >
           <Plus className="w-4 h-4" />
           Nova Evolução
