@@ -876,10 +876,14 @@ NODE_ENV=development           # Still useful for other things
 #### Family Dashboard
 
 - `src/app/family/dashboard/page.tsx` - Family dashboard page
-- `src/components/ui/family/FamilyDashboardStats.tsx` - Stats display
-- `src/components/ui/family/LatestEvolutionCard.tsx` - Evolution card
-- `src/components/layout/family/FamilyNavbar.tsx` - Responsive navigation
-- `src/components/layout/family/FamilyHeader.tsx` - Header component
+- `src/app/family/evolutions/page.tsx` - Family evolutions list page
+- `src/components/ui/family/DashboardStats.tsx` - Stats display
+- `src/components/ui/family/LatestEvolutionCard.tsx` - Latest evolution card
+- `src/components/ui/family/TherapistCard.tsx` - Therapist info display
+- `src/components/ui/family/EvolutionSection.tsx` - Evolution list section
+- `src/components/ui/family/EvolutionCard.tsx` - Evolution card component
+- `src/components/layout/family/Navbar.tsx` - Responsive navigation
+- `src/components/layout/family/Header.tsx` - Header component
 - `src/components/layout/family/types.ts` - TypeScript types for family layout
 
 ### Types
