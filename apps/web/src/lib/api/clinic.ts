@@ -9,10 +9,10 @@
  * - NEXT_PUBLIC_DISABLE_MSW=true (prod/real API): Uses HTTP client to make
  *   actual requests to the backend API
  *
- * All functions are wrapped with React cache() for request-scoped memoization.
+ * Note: React cache() was removed to fix caching issues with new patient creation.
+ * Each call now fetches fresh data from the API.
  */
 
-import { cache } from 'react'
 import type {
   CreateEvolutionInput,
   CreatePatientInput,
@@ -33,20 +33,20 @@ const getImpl = async () => {
   }
 }
 
-export const getPatients = cache(async () => {
+export async function getPatients() {
   const impl = await getImpl()
   return impl.getPatients()
-})
+}
 
-export const getPatient = cache(async (id: number) => {
+export async function getPatient(id: number) {
   const impl = await getImpl()
   return impl.getPatient(id)
-})
+}
 
-export const getPatientByGuardianEmail = cache(async (email: string) => {
+export async function getPatientByGuardianEmail(email: string) {
   const impl = await getImpl()
   return impl.getPatientByGuardianEmail(email)
-})
+}
 
 export async function createPatient(data: CreatePatientInput) {
   const impl = await getImpl()
@@ -63,15 +63,15 @@ export async function deletePatient(id: number) {
   return impl.deletePatient(id)
 }
 
-export const getSessions = cache(async () => {
+export async function getSessions() {
   const impl = await getImpl()
   return impl.getSessions()
-})
+}
 
-export const getSession = cache(async (id: number) => {
+export async function getSession(id: number) {
   const impl = await getImpl()
   return impl.getSession(id)
-})
+}
 
 export async function createSession(data: CreateSessionInput) {
   const impl = await getImpl()
@@ -88,15 +88,15 @@ export async function deleteSession(id: number) {
   return impl.deleteSession(id)
 }
 
-export const getEvolutions = cache(async () => {
+export async function getEvolutions() {
   const impl = await getImpl()
   return impl.getEvolutions()
-})
+}
 
-export const getEvolution = cache(async (id: number) => {
+export async function getEvolution(id: number) {
   const impl = await getImpl()
   return impl.getEvolution(id)
-})
+}
 
 export async function createEvolution(data: CreateEvolutionInput) {
   const impl = await getImpl()
@@ -108,7 +108,7 @@ export async function updateEvolution(id: number, data: UpdateEvolutionInput) {
   return impl.updateEvolution(id, data)
 }
 
-export const getDashboard = cache(async () => {
+export async function getDashboard() {
   const impl = await getImpl()
   return impl.getDashboard()
-})
+}

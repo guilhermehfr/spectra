@@ -1,7 +1,10 @@
+import { updateTag } from 'next/cache'
+
 export async function http<T>(
   input: string,
   options?: RequestInit & {
     timeout?: number
+    tag?: string
   }
 ): Promise<T> {
   const isAbsolute = /^https?:\/\//i.test(input)
@@ -18,6 +21,8 @@ export async function http<T>(
   try {
     const res = await fetch(url, {
       ...options,
+      cache: 'no-store',
+      next: options?.tag ? { tags: [options.tag] } : undefined,
       credentials: 'include',
       headers: {
         ...(options?.body && !(options.body instanceof FormData)
@@ -44,4 +49,12 @@ export async function http<T>(
   } finally {
     clearTimeout(timeout)
   }
+}
+
+export function revalidatePatients() {
+  updateTag('patients')
+}
+
+export function revalidateFamilyEvolutions() {
+  updateTag('family-evolutions')
 }

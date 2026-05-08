@@ -67,7 +67,9 @@ export async function middleware(request: NextRequest) {
   const userRole = user?.role
 
   if (!user || !userRole) {
-    return NextResponse.redirect(new URL('/', request.url))
+    const isFamily = pathname.startsWith('/family')
+    const loginPage = isFamily ? '/login/family' : '/login/clinic'
+    return NextResponse.redirect(new URL(loginPage, request.url))
   }
 
   if (pathname.startsWith('/login/')) {

@@ -4,18 +4,18 @@ interface PageProps {
   params: Promise<{ id: string }>
 }
 
-export default async function EditSessionPage({ params }: PageProps) {
+export default async function EditEvolutionPage({ params }: PageProps) {
   const { id } = await params
-  const sessionId = parseInt(id, 10)
+  const evolutionId = parseInt(id, 10)
 
-  if (isNaN(sessionId)) {
+  if (isNaN(evolutionId)) {
     notFound()
   }
 
   return (
     <div className="min-h-screen bg-[#EEF3FB] p-4">
       <h1 className="font-manrope text-2xl font-bold text-slate-900">
-        Editar Sessão {sessionId} - Em desenvolvimento
+        Editar Evolução {evolutionId} - Em desenvolvimento
       </h1>
     </div>
   )

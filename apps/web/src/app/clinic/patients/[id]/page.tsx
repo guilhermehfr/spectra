@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation'
-import { ClinicLayout } from '@/components/layout/clinic'
-import { ClinicPatientDetailContent } from '@/components/ui/clinic'
+import { Layout } from '@/components/layout/clinic'
+import { PatientDetailContent } from '@/components/ui/clinic'
 import { getPatient, getSessions, getEvolutions } from '@/lib/api/clinic'
 import { resolveUser } from '@/lib/utils/userUtils'
 
@@ -31,14 +31,14 @@ export default async function ClinicPatientDetailPage({ params }: PageProps) {
   const patientEvolutions = allEvolutions.filter((e) => sessionIds.has(e.session))
 
   return (
-    <ClinicLayout user={user}>
+    <Layout user={user}>
       <div className="mx-auto max-w-4xl px-4 py-8 md:px-6 md:pt-24">
-        <ClinicPatientDetailContent
+        <PatientDetailContent
           patient={patient}
           sessions={patientSessions}
           evolutions={patientEvolutions}
         />
       </div>
-    </ClinicLayout>
+    </Layout>
   )
 }

@@ -1,5 +1,5 @@
-import { ClinicLayout } from '@/components/layout/clinic'
-import { ClinicDashboardContent } from '@/components/ui/clinic'
+import { Layout } from '@/components/layout/clinic'
+import { DashboardContent } from '@/components/ui/clinic'
 import { getPatients, getSessions, getEvolutions } from '@/lib/api/clinic'
 import { resolveUser } from '@/lib/utils/userUtils'
 import { getGreeting } from '@/lib/utils/greetingUtils'
@@ -20,9 +20,9 @@ export default async function ClinicDashboard() {
   const weeklyData = aggregateByDayOfWeek(recentSessions)
 
   return (
-    <ClinicLayout user={user}>
+    <Layout user={user}>
       <div className="mx-auto max-w-6xl px-4 py-8 md:px-6 md:pt-24">
-        <ClinicDashboardContent
+        <DashboardContent
           greeting={getGreeting(user.first_name)}
           subtitle="Aqui está sua visão geral da clínica para hoje"
           activePatients={stats.activePatients}
@@ -31,6 +31,6 @@ export default async function ClinicDashboard() {
           weeklyData={weeklyData}
         />
       </div>
-    </ClinicLayout>
+    </Layout>
   )
 }

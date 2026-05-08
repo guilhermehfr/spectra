@@ -93,20 +93,17 @@ class PatientListCreateView(ListCreateAPIView):
     def get_queryset(self):
         user = self.request.user
         if user.is_admin():
-            return Patient.objects.all().order_by("-id")
+            return Patient.objects.filter(is_deleted=False).order_by("-id")
         if user.is_therapist():
-            return Patient.objects.filter(
-                sessions__therapist=user,
-                is_deleted=False
-            ).distinct().order_by("-id")
+            return Patient.objects.filter(is_deleted=False).order_by("-id")
         return Patient.objects.none()
 
 
 class PatientDetailView(RetrieveUpdateDestroyAPIView):
     """
-    Visualizar, atualizar ou realizar soft delete em um paciente.
+    Visualizar, atualizar ou realizar soft delete em paciente.
     
-    Acesso: Admin (todos), Therapist (pacientes com sessão), Family (não permitido)
+    Acesso: Admin (todos), Therapist (todos os pacientes ativos), Family (não permitido)
     """
     queryset = Patient.objects.all()
     serializer_class = PatientSerializer
@@ -115,16 +112,12 @@ class PatientDetailView(RetrieveUpdateDestroyAPIView):
     
     def get_object(self):
         obj = super().get_object()
-        user = self.request.user
-        if user.is_therapist():
-            if not Patient.objects.filter(
-                pk=obj.pk,
-                sessions__therapist=user,
-                is_deleted=False
-            ).exists():
-                from django.http import Http404
-                raise Http404("Paciente não encontrado")
         return obj
+    
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        instance.delete()  # Uses model's soft delete (sets is_deleted=True)
+        return Response(status=204)
 
 
 class SessionListCreateView(ListCreateAPIView):
