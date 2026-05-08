@@ -46,9 +46,12 @@ src/components/
     │   ├── PatientForm.tsx
     │   ├── PaginationNav.tsx
     │   └── index.ts           # Barrel export
-    ├── family/              # Family-specific UI components
+├── family/              # Family-specific UI components
     │   ├── DashboardStats.tsx
-    │   └── LatestEvolutionCard.tsx
+    │   ├── LatestEvolutionCard.tsx
+    │   ├── TherapistCard.tsx
+    │   ├── EvolutionSection.tsx
+    │   └── EvolutionCard.tsx
     └── shared/              # Reusable UI components
         ├── index.ts            # Barrel export
         ├── Avatar.tsx

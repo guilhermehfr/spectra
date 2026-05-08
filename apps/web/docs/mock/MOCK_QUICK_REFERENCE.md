@@ -332,8 +332,12 @@ async function FamilyDashboard() {
 - `src/components/layout/clinic/types.ts` - Sidebar TypeScript types
 
 - `src/app/family/dashboard/page.tsx` - Family dashboard
-- `src/components/ui/family/FamilyDashboardStats.tsx`
+- `src/app/family/evolutions/page.tsx` - Family evolutions list
+- `src/components/ui/family/DashboardStats.tsx`
 - `src/components/ui/family/LatestEvolutionCard.tsx`
+- `src/components/ui/family/TherapistCard.tsx`
+- `src/components/ui/family/EvolutionSection.tsx`
+- `src/components/ui/family/EvolutionCard.tsx`
 
 ---
 

@@ -1,3 +1,21 @@
+export function formatDate(dateString: string): string {
+  const date = new Date(dateString)
+  return date.toLocaleDateString('pt-BR', {
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric',
+  }).replace('.', '')
+}
+
+export function formatDateTime(dateString: string): string {
+  const date = new Date(dateString)
+  return date.toLocaleDateString('pt-BR', {
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric',
+  }).replace('.', '') + ' • 10:00'
+}
+
 export function getRelativeDate(dateString: string | null): string {
   if (!dateString) return 'Sem sessões'
 

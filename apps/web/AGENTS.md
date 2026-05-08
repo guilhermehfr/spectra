@@ -61,6 +61,7 @@ src/
 │       ├── dashboard/
 │       │   └── page.tsx        # Family dashboard
 │       └── evolutions/
+│           ├── page.tsx        # List all evolutions
 │           └── [id]/
 │               └── page.tsx      # View evolution
 ├── components/
@@ -104,7 +105,10 @@ src/
 │       │   └── index.ts
 │       ├── family/
 │       │   ├── DashboardStats.tsx
-│       │   └── LatestEvolutionCard.tsx
+│       │   ├── LatestEvolutionCard.tsx
+│       │   ├── TherapistCard.tsx    # Therapist info display
+│       │   ├── EvolutionSection.tsx # Evolution list section
+│       │   └── EvolutionCard.tsx     # Evolution card component
 │       └── shared/             # Reusable UI components
 │           ├── index.ts            # Barrel export
 │           ├── Avatar.tsx

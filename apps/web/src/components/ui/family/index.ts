@@ -1,2 +1,5 @@
 export { DashboardStats } from './DashboardStats'
 export { LatestEvolutionCard } from './LatestEvolutionCard'
+export { EvolutionCard } from './EvolutionCard'
+export { Section } from './EvolutionSection'
+export { TherapistCard } from './TherapistCard'
