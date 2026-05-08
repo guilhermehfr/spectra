@@ -863,15 +863,14 @@ NODE_ENV=development           # Still useful for other things
 #### Clinic Dashboard
 
 - `src/app/clinic/dashboard/page.tsx` - Clinic dashboard page
-- `src/components/layout/clinic/ClinicLayout.tsx` - Layout wrapper with sidebar
-- `src/components/layout/clinic/ClinicHeader.tsx` - Simple header placeholder
-- `src/components/layout/clinic/ClinicNavbar.tsx` - Top navigation bar with search and user avatar
-- `src/components/layout/clinic/ClinicSearchBar.tsx` - Search input with lucide icon
-- `src/components/layout/clinic/ClinicUserAvatar.tsx` - User initials avatar display
-- `src/components/layout/clinic/ClinicSidebar.tsx` - Main sidebar component
-- `src/components/layout/clinic/ClinicSidebarHeader.tsx` - Header with Spectra logo
-- `src/components/layout/clinic/ClinicSidebarNav.tsx` - Navigation links with active states
-- `src/components/layout/clinic/ClinicSidebarFooter.tsx` - Footer content
+- `src/components/layout/clinic/Layout.tsx` - Layout wrapper with sidebar
+- `src/components/layout/clinic/Navbar.tsx` - Top navigation bar with search and user avatar
+- `src/components/layout/clinic/SearchBar.tsx` - Search input with lucide icon
+- `src/components/layout/clinic/UserAvatar.tsx` - User initials avatar display
+- `src/components/layout/clinic/Sidebar.tsx` - Main sidebar component
+- `src/components/layout/clinic/SidebarHeader.tsx` - Header with Spectra logo
+- `src/components/layout/clinic/SidebarNav.tsx` - Navigation links with active states
+- `src/components/layout/clinic/SidebarFooter.tsx` - Footer content
 - `src/components/layout/clinic/types.ts` - TypeScript types for sidebar
 
 #### Family Dashboard

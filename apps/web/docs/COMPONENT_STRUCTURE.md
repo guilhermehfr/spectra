@@ -11,44 +11,55 @@ src/components/
 ├── auth/                     # Authentication
 │   ├── index.ts               # Barrel export
 │   ├── BaseLoginForm.tsx     # Shared login form base
-│   ├── ClinicLoginForm.tsx   # Clinic login portal
+│   ├── LoginForm.tsx         # Main login form component
 │   └── FamilyLoginForm.tsx   # Family login portal
 ├── layout/
 │   ├── clinic/
-│   │   ├── ClinicLayout.tsx         # Main clinic layout wrapper
-│   │   ├── ClinicHeader.tsx          # Top header component
-│   │   ├── ClinicNavbar.tsx          # Navigation bar
-│   │   ├── ClinicSidebar.tsx         # Sidebar container
-│   │   ├── ClinicSidebarHeader.tsx   # Sidebar header
-│   │   ├── ClinicSidebarNav.tsx      # Sidebar navigation
-│   │   ├── ClinicSidebarFooter.tsx   # Sidebar footer
-│   │   ├── ClinicSearchBar.tsx       # Patient search
-│   │   ├── ClinicUserAvatar.tsx      # User avatar display
-│   │   ├── index.ts                  # Barrel export
-│   │   └── types.ts                  # Layout-specific types
+│   │   ├── Layout.tsx         # Main clinic layout wrapper
+│   │   ├── Navbar.tsx         # Top navigation bar
+│   │   ├── SearchBar.tsx      # Patient search
+│   │   ├── Sidebar.tsx        # Sidebar container
+│   │   ├── SidebarHeader.tsx  # Sidebar header
+│   │   ├── SidebarNav.tsx     # Sidebar navigation
+│   │   ├── SidebarFooter.tsx # Sidebar footer
+│   │   ├── UserAvatar.tsx     # User avatar display
+│   │   ├── index.ts           # Barrel export
+│   │   └── types.ts           # Layout-specific types
 │   └── family/
-│       ├── FamilyHeader.tsx          # Family portal header
-│       ├── FamilyNavbar.tsx          # Family navigation
-│       ├── index.ts                  # Barrel export
-│       └── types.ts                  # Layout-specific types
+│       ├── Header.tsx         # Family portal header
+│       ├── Navbar.tsx         # Family navigation
+│       ├── index.ts            # Barrel export
+│       └── types.ts           # Layout-specific types
 └── ui/
     ├── clinic/              # Clinic-specific UI components
-    │   ├── ClinicDashboardContent.tsx
-    │   ├── ClinicDashboardStats.tsx
-    │   ├── ClinicPatientDetailContent.tsx
-    │   ├── ClinicPatientsContent.tsx
-    │   ├── ClinicPatientsTable.tsx
-    │   └── ...
+    │   ├── DashboardContent.tsx
+    │   ├── DashboardStats.tsx
+    │   ├── WeeklyChart.tsx
+    │   ├── PatientsContent.tsx
+    │   ├── PatientsTable.tsx
+    │   ├── PatientsPageHeader.tsx
+    │   ├── PatientDetailContent.tsx
+    │   ├── PatientDetailHeader.tsx
+    │   ├── PatientInfoCard.tsx
+    │   ├── PatientSessionsSection.tsx
+    │   ├── PatientEvolutionsSection.tsx
+    │   ├── PatientForm.tsx
+    │   ├── PaginationNav.tsx
+    │   └── index.ts           # Barrel export
     ├── family/              # Family-specific UI components
-    │   ├── FamilyDashboardStats.tsx
+    │   ├── DashboardStats.tsx
     │   └── LatestEvolutionCard.tsx
     └── shared/              # Reusable UI components
         ├── index.ts            # Barrel export
         ├── Avatar.tsx
         ├── Button.tsx
+        ├── Input.tsx
+        ├── InputField.tsx      # Form input with label
+        ├── SelectField.tsx    # Form select dropdown
+        ├── TextareaField.tsx  # Form textarea
+        ├── BaseForm.tsx       # Base form wrapper
         ├── Container.tsx
-        ├── IconButton.tsx
-        └── Input.tsx
+        └── IconButton.tsx
 ```
 
 ---

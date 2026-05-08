@@ -321,15 +321,14 @@ async function FamilyDashboard() {
 ### Dashboard
 
 - `src/app/clinic/dashboard/page.tsx` - Clinic dashboard
-- `src/components/layout/clinic/ClinicLayout.tsx` - Clinic layout wrapper
-- `src/components/layout/clinic/ClinicHeader.tsx` - Simple header placeholder
-- `src/components/layout/clinic/ClinicNavbar.tsx` - Top navigation bar with search and avatar
-- `src/components/layout/clinic/ClinicSearchBar.tsx` - Search input with icon
-- `src/components/layout/clinic/ClinicUserAvatar.tsx` - User initials avatar
-- `src/components/layout/clinic/ClinicSidebar.tsx` - Clinic sidebar component
-- `src/components/layout/clinic/ClinicSidebarHeader.tsx` - Sidebar header with logo
-- `src/components/layout/clinic/ClinicSidebarNav.tsx` - Sidebar navigation links
-- `src/components/layout/clinic/ClinicSidebarFooter.tsx` - Sidebar footer
+- `src/components/layout/clinic/Layout.tsx` - Clinic layout wrapper
+- `src/components/layout/clinic/Navbar.tsx` - Top navigation bar with search and avatar
+- `src/components/layout/clinic/SearchBar.tsx` - Search input with icon
+- `src/components/layout/clinic/Sidebar.tsx` - Clinic sidebar component
+- `src/components/layout/clinic/SidebarHeader.tsx` - Sidebar header with logo
+- `src/components/layout/clinic/SidebarNav.tsx` - Sidebar navigation links
+- `src/components/layout/clinic/SidebarFooter.tsx` - Sidebar footer
+- `src/components/layout/clinic/UserAvatar.tsx` - User initials avatar
 - `src/components/layout/clinic/types.ts` - Sidebar TypeScript types
 
 - `src/app/family/dashboard/page.tsx` - Family dashboard

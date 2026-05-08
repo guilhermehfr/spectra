@@ -28,7 +28,9 @@ src/
 │   ├── globals.css             # Tailwind imports + CSS variables
 │   ├── middleware.ts           # Auth middleware
 │   ├── actions/                # Server Actions
-│   │   └── auth.ts             # Authentication actions
+│   │   ├── auth.ts             # Authentication actions
+│   │   ├── patient.ts          # Patient CRUD actions
+│   │   └── session.ts          # Session delete action
 │   ├── login/
 │   │   ├── clinic/page.tsx     # Clinic staff login
 │   │   └── family/page.tsx     # Family login
@@ -40,13 +42,21 @@ src/
 │   │   │   ├── new/
 │   │   │   │   └── page.tsx     # Add new patient
 │   │   │   └── [id]/
-│   │   │       └── page.tsx        # Edit patient
-│   │   └── sessions/
-│   │       ├── page.tsx          # Sessions list
+│   │   │       ├── page.tsx        # Patient detail
+│   │   │       └── edit/
+│   │   │           └── page.tsx     # Edit patient
+│   │   ├── sessions/
+│   │   │   ├── page.tsx          # Sessions list
+│   │   │   ├── new/
+│   │   │   │   └── page.tsx      # Schedule new session
+│   │   │   └── [id]/
+│   │   │       └── page.tsx        # Edit session
+│   │   └── evolutions/
 │   │       ├── new/
-│   │       │   └── page.tsx      # Schedule new session
+│   │       │   └── page.tsx      # New evolution
 │   │       └── [id]/
-│   │           └── page.tsx        # Edit/cancel session
+│   │           └── edit/
+│   │               └── page.tsx  # Edit evolution
 │   └── family/                 # Family portal routes
 │       ├── dashboard/
 │       │   └── page.tsx        # Family dashboard
@@ -57,35 +67,53 @@ src/
 │   ├── auth/                   # Login form components
 │   │   ├── index.ts             # Barrel export
 │   │   ├── BaseLoginForm.tsx   # Shared login form (use for new portals)
-│   │   ├── ClinicLoginForm.tsx
+│   │   ├── LoginForm.tsx       # Main login form component
 │   │   └── FamilyLoginForm.tsx
 │   ├── layout/
 │   │   ├── clinic/
-│   │   │   ├── ClinicLayout.tsx
-│   │   │   ├── ClinicHeader.tsx
-│   │   │   ├── ClinicNavbar.tsx
-│   │   │   ├── ClinicSearchBar.tsx
-│   │   │   ├── ClinicSidebar.tsx
-│   │   │   ├── ClinicSidebarHeader.tsx
-│   │   │   ├── ClinicSidebarNav.tsx
-│   │   │   ├── ClinicSidebarFooter.tsx
-│   │   │   ├── ClinicUserAvatar.tsx
+│   │   │   ├── Layout.tsx       # Main clinic layout wrapper
+│   │   │   ├── Navbar.tsx       # Top navigation bar
+│   │   │   ├── SearchBar.tsx    # Patient search input
+│   │   │   ├── Sidebar.tsx      # Sidebar container
+│   │   │   ├── SidebarHeader.tsx# Sidebar header
+│   │   │   ├── SidebarNav.tsx   # Sidebar navigation
+│   │   │   ├── SidebarFooter.tsx# Sidebar footer
+│   │   │   ├── UserAvatar.tsx   # User initials avatar
 │   │   │   ├── index.ts
 │   │   │   └── types.ts
 │   │   └── family/
-│   │       ├── FamilyNavbar.tsx
-│   │       ├── FamilyHeader.tsx
+│   │       ├── Navbar.tsx       # Family navigation
+│   │       ├── Header.tsx       # Family header
 │   │       ├── index.ts
 │   │       └── types.ts
 │   └── ui/
+│       ├── clinic/              # Clinic-specific UI components
+│       │   ├── DashboardContent.tsx
+│       │   ├── DashboardStats.tsx
+│       │   ├── WeeklyChart.tsx
+│       │   ├── PatientsContent.tsx
+│       │   ├── PatientsTable.tsx
+│       │   ├── PatientsPageHeader.tsx
+│       │   ├── PatientDetailContent.tsx
+│       │   ├── PatientDetailHeader.tsx
+│       │   ├── PatientInfoCard.tsx
+│       │   ├── PatientSessionsSection.tsx
+│       │   ├── PatientEvolutionsSection.tsx
+│       │   ├── PatientForm.tsx
+│       │   ├── PaginationNav.tsx
+│       │   └── index.ts
 │       ├── family/
-│       │   ├── FamilyDashboardStats.tsx
+│       │   ├── DashboardStats.tsx
 │       │   └── LatestEvolutionCard.tsx
 │       └── shared/             # Reusable UI components
 │           ├── index.ts            # Barrel export
 │           ├── Avatar.tsx
 │           ├── Button.tsx
 │           ├── Input.tsx
+│           ├── InputField.tsx     # Form input with label
+│           ├── SelectField.tsx    # Form select dropdown
+│           ├── TextareaField.tsx  # Form textarea
+│           ├── BaseForm.tsx       # Base form wrapper
 │           ├── Container.tsx
 │           └── IconButton.tsx
 ├── lib/
