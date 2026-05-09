@@ -32,11 +32,12 @@ media/
 
 # Environment
 .env
-.env.*
-!.env.example
+.env.local
+.env.production
+!.env.local.example
+!.env.production.example
 
 # IDE / OS
-.vscode/
 .idea/
 .DS_Store
 Thumbs.db

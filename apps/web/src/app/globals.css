@@ -1,0 +1,44 @@
+@import 'tailwindcss';
+
+/* Global styles and theme variables */
+@theme inline {
+  --color-surface-soft: #eef3fb;
+  --color-slate-50: #f8fafc;
+  --color-slate-200: #e2e8f0;
+  --color-slate-250: #c2c6d6;
+  --color-slate-300: #cbd5e1;
+  --color-slate-500: #64748b;
+  --color-slate-900: #0f172a;
+  --color-white-0: #ffffff;
+  --color-blue-600: #2563eb;
+  --font-sans: var(--font-manrope);
+  --font-dm-sans: var(--font-dm-sans);
+}
+
+/* Gradient classes */
+.bg-gradient-blue-indigo-500 {
+  background-image: linear-gradient(90deg, #3b82f6, #6366f1);
+}
+
+.bg-gradient-blue-indigo-100 {
+  background-image: linear-gradient(135deg, #dbeafe, #e0e7ff);
+}
+
+.bg-gradient-blue-indigo-700 {
+  background-image: linear-gradient(90deg, #2563eb, #4648d4);
+}
+
+.text-gradient-blue-indigo-500 {
+  background-image: linear-gradient(90deg, #3b82f6, #6366f1);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+/* Base styles for Tailwind v4 */
+body {
+  background-color: var(--color-surface-soft);
+  color: var(--color-slate-500);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
