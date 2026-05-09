@@ -331,6 +331,32 @@ async function FamilyDashboard() {
 - `src/components/layout/clinic/UserAvatar.tsx` - User initials avatar
 - `src/components/layout/clinic/types.ts` - Sidebar TypeScript types
 
+### Patients
+
+- `src/app/clinic/patients/page.tsx` - Patients list
+- `src/app/clinic/patients/new/page.tsx` - Add new patient
+- `src/app/clinic/patients/[id]/page.tsx` - Patient detail
+- `src/app/clinic/patients/[id]/edit/page.tsx` - Edit patient
+
+### Sessions
+
+- `src/app/clinic/sessions/page.tsx` - Sessions list
+- `src/app/clinic/sessions/new/page.tsx` - Schedule new session
+- `src/app/clinic/sessions/[id]/page.tsx` - Session detail
+- `src/app/clinic/sessions/[id]/edit/page.tsx` - Edit session
+- `src/app/clinic/sessions/[id]/evolution/page.tsx` - Create/view evolution for session
+- `src/components/ui/clinic/SessionsContent.tsx` - Sessions list page wrapper
+- `src/components/ui/clinic/SessionsTable.tsx` - Sessions table
+- `src/components/ui/clinic/SessionForm.tsx` - Session create/edit form
+
+### Evolutions
+
+- `src/app/clinic/evolutions/new/page.tsx` - New evolution
+- `src/app/clinic/evolutions/[id]/edit/page.tsx` - Edit evolution
+- `src/components/ui/clinic/EvolutionForm.tsx` - Evolution create/edit form
+
+### Family
+
 - `src/app/family/dashboard/page.tsx` - Family dashboard
 - `src/app/family/evolutions/page.tsx` - Family evolutions list
 - `src/components/ui/family/DashboardStats.tsx`

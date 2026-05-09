@@ -8,16 +8,13 @@ interface SearchBarProps {
   onSearch?: (query: string) => void
 }
 
-export function SearchBar({
-  placeholder = 'Pesquisar pacientes...',
-  onSearch,
-}: SearchBarProps) {
+export function SearchBar({ placeholder = 'Pesquisar pacientes...', onSearch }: SearchBarProps) {
   const [query, setQuery] = useState('')
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.currentTarget.value
-    setQuery(value)
-    onSearch?.(value)
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter' && query.trim()) {
+      onSearch?.(query.trim())
+    }
   }
 
   return (
@@ -32,7 +29,8 @@ export function SearchBar({
           type="text"
           placeholder={placeholder}
           value={query}
-          onChange={handleChange}
+          onChange={(e) => setQuery(e.currentTarget.value)}
+          onKeyDown={handleKeyDown}
           className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 bg-white text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
         />
       </div>

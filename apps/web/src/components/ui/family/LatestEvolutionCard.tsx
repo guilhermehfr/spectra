@@ -6,28 +6,12 @@ import { twMerge } from 'tailwind-merge'
 
 import { Button, Container } from '@/components/ui/shared'
 import type { FamilyEvolution } from '@/lib/types'
+import { extractInitials } from '@/lib/utils/stringUtils'
+import { formatDateShort } from '@/lib/utils/dateUtils'
 
 interface LatestEvolutionCardProps {
   evolution: FamilyEvolution
   onViewFullEvolution?: (evolutionId: number) => void
-}
-
-/**
- * Extracts initials from a full name
- * @param name - Full name (e.g., "Dr. Emily Chen")
- * @returns Two-letter initials (e.g., "EC")
- */
-function extractInitials(name: string | undefined | null): string {
-  if (!name) return '?'
-  const words = name
-    .trim()
-    .split(/\s+/)
-    .filter((w) => w.length > 0)
-
-  if (words.length === 0) return '?'
-  if (words.length === 1) return words[0].substring(0, 2).toUpperCase()
-
-  return (words[0][0] + words[words.length - 1][0]).toUpperCase()
 }
 
 export function LatestEvolutionCard({ evolution, onViewFullEvolution }: LatestEvolutionCardProps) {
@@ -38,15 +22,6 @@ export function LatestEvolutionCard({ evolution, onViewFullEvolution }: LatestEv
       ?.therapist_name ||
     ''
   const initials = extractInitials(therapistName)
-
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString)
-    return date.toLocaleDateString('pt-BR', {
-      day: '2-digit',
-      month: 'short',
-      year: 'numeric',
-    })
-  }
 
   const handleViewFullEvolution = () => {
     if (onViewFullEvolution) {
@@ -81,7 +56,7 @@ export function LatestEvolutionCard({ evolution, onViewFullEvolution }: LatestEv
 
         {/* Right side - Date */}
         <span className="font-manrope text-xs md:text-sm text-slate-500">
-          {formatDate(evolution.created_at)}
+          {formatDateShort(evolution.created_at)}
         </span>
       </div>
 

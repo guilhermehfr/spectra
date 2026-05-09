@@ -1,9 +1,17 @@
 'use client'
 
-import { Pencil, Plus, Trash2 } from 'lucide-react'
+import { Pencil, Trash2, Eye } from 'lucide-react'
 import { twMerge } from 'tailwind-merge'
 import type { Session, SessionStatus } from '@/lib/types'
 import { formatDateTimeISO } from '@/lib/utils/dateUtils'
+
+interface SessionsTableProps {
+  sessions: Session[]
+  isLoading?: boolean
+  onView?: (session: Session) => void
+  onEdit?: (session: Session) => void
+  onDelete?: (session: Session) => void
+}
 
 const statusConfig: Record<SessionStatus, { label: string; className: string }> = {
   scheduled: {
@@ -22,11 +30,12 @@ const statusConfig: Record<SessionStatus, { label: string; className: string }> 
 
 interface SessionCardProps {
   session: Session
+  onView: (session: Session) => void
   onEdit: (session: Session) => void
   onDelete: (session: Session) => void
 }
 
-function SessionCard({ session, onEdit, onDelete }: SessionCardProps) {
+function SessionCard({ session, onView, onEdit, onDelete }: SessionCardProps) {
   const status = statusConfig[session.status]
 
   return (
@@ -36,7 +45,8 @@ function SessionCard({ session, onEdit, onDelete }: SessionCardProps) {
           <p className="text-sm font-medium text-slate-900">
             {formatDateTimeISO(session.date_time)}
           </p>
-          <p className="text-sm text-slate-600">{session.therapist_name}</p>
+          <p className="text-sm text-slate-600">{session.patient_name}</p>
+          <p className="text-xs text-slate-500">{session.therapist_name}</p>
         </div>
         <span
           className={twMerge('px-2.5 py-1 rounded-md text-xs font-medium border', status.className)}
@@ -46,6 +56,13 @@ function SessionCard({ session, onEdit, onDelete }: SessionCardProps) {
       </div>
       {session.notes && <p className="text-sm text-slate-600">{session.notes}</p>}
       <div className="flex items-center gap-2 pt-2 border-t border-slate-100">
+        <button
+          onClick={() => onView(session)}
+          className="flex items-center gap-1 px-3 py-1.5 text-xs font-medium text-slate-600 hover:text-slate-700 hover:bg-slate-50 rounded-md transition-colors cursor-pointer"
+        >
+          <Eye className="w-3.5 h-3.5" />
+          Ver
+        </button>
         <button
           onClick={() => onEdit(session)}
           className="flex items-center gap-1 px-3 py-1.5 text-xs font-medium text-slate-600 hover:text-slate-700 hover:bg-slate-50 rounded-md transition-colors cursor-pointer"
@@ -67,16 +84,18 @@ function SessionCard({ session, onEdit, onDelete }: SessionCardProps) {
 
 interface SessionRowProps {
   session: Session
+  onView: (session: Session) => void
   onEdit: (session: Session) => void
   onDelete: (session: Session) => void
 }
 
-function SessionRow({ session, onEdit, onDelete }: SessionRowProps) {
+function SessionRow({ session, onView, onEdit, onDelete }: SessionRowProps) {
   const status = statusConfig[session.status]
 
   return (
     <tr className="border-b border-slate-100 hover:bg-slate-50/50 transition-colors">
       <td className="py-3 px-4 text-sm text-slate-700">{formatDateTimeISO(session.date_time)}</td>
+      <td className="py-3 px-4 text-sm text-slate-700">{session.patient_name}</td>
       <td className="py-3 px-4 text-sm text-slate-700">{session.therapist_name}</td>
       <td className="py-3 px-4">
         <span
@@ -88,6 +107,13 @@ function SessionRow({ session, onEdit, onDelete }: SessionRowProps) {
       <td className="py-3 px-4 text-sm text-slate-600 max-w-xs truncate">{session.notes || '-'}</td>
       <td className="py-3 px-4">
         <div className="flex items-center gap-1">
+          <button
+            onClick={() => onView(session)}
+            className="p-1.5 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-md transition-colors cursor-pointer"
+            title="Ver"
+          >
+            <Eye className="w-4 h-4" />
+          </button>
           <button
             onClick={() => onEdit(session)}
             className="p-1.5 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-md transition-colors cursor-pointer"
@@ -108,45 +134,42 @@ function SessionRow({ session, onEdit, onDelete }: SessionRowProps) {
   )
 }
 
-interface PatientSessionsSectionProps {
-  sessions: Session[]
-  onEdit: (session: Session) => void
-  onDelete: (session: Session) => void
-  onAdd: () => void
-}
-
-export function PatientSessionsSection({
+export function SessionsTable({
   sessions,
+  isLoading = false,
+  onView,
   onEdit,
   onDelete,
-  onAdd,
-}: PatientSessionsSectionProps) {
+}: SessionsTableProps) {
   const sortedSessions = [...sessions].sort(
     (a, b) => new Date(b.date_time).getTime() - new Date(a.date_time).getTime()
   )
 
+  if (isLoading) {
+    return (
+      <div className="bg-white rounded-lg border border-slate-200 p-12 text-center">
+        <p className="text-sm text-slate-500">Carregando sessões...</p>
+      </div>
+    )
+  }
+
   return (
     <div className="bg-white rounded-lg border border-slate-200 overflow-hidden">
-      <div className="flex items-center justify-between px-4 md:px-6 py-4 border-b border-slate-200">
-        <h2 className="text-lg md:text-xl font-semibold text-slate-900">Sessões</h2>
-        <button
-          onClick={onAdd}
-          className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-white bg-[linear-gradient(90deg,#2563EB,#4648D4)] rounded-lg hover:opacity-90 transition-opacity cursor-pointer"
-        >
-          <Plus className="w-4 h-4" />
-          Nova Sessão
-        </button>
-      </div>
-
       {sessions.length === 0 ? (
         <div className="px-4 md:px-6 py-12 text-center">
-          <p className="text-sm text-slate-500">Nenhuma sessão registrada para este paciente.</p>
+          <p className="text-sm text-slate-500">Nenhuma sessão encontrada.</p>
         </div>
       ) : (
         <>
           <div className="md:hidden p-4 space-y-3">
             {sortedSessions.map((session) => (
-              <SessionCard key={session.id} session={session} onEdit={onEdit} onDelete={onDelete} />
+              <SessionCard
+                key={session.id}
+                session={session}
+                onView={onView!}
+                onEdit={onEdit!}
+                onDelete={onDelete!}
+              />
             ))}
           </div>
 
@@ -156,6 +179,9 @@ export function PatientSessionsSection({
                 <tr>
                   <th className="py-3 px-4 text-left text-xs font-semibold uppercase text-slate-500">
                     Data / Horário
+                  </th>
+                  <th className="py-3 px-4 text-left text-xs font-semibold uppercase text-slate-500">
+                    Paciente
                   </th>
                   <th className="py-3 px-4 text-left text-xs font-semibold uppercase text-slate-500">
                     Terapeuta
@@ -176,8 +202,9 @@ export function PatientSessionsSection({
                   <SessionRow
                     key={session.id}
                     session={session}
-                    onEdit={onEdit}
-                    onDelete={onDelete}
+                    onView={onView!}
+                    onEdit={onEdit!}
+                    onDelete={onDelete!}
                   />
                 ))}
               </tbody>

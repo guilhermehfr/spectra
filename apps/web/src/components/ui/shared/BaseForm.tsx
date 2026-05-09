@@ -53,21 +53,11 @@ export function BaseForm({
       <Container className="w-full max-w-2xl">
         <div className="space-y-6">
           <div className="space-y-1">
-            <h1 className="font-manrope text-[28px] font-bold text-slate-900">
-              {title}
-            </h1>
-            {description && (
-              <p className="font-manrope text-sm text-slate-500">
-                {description}
-              </p>
-            )}
+            <h1 className="font-manrope text-[28px] font-bold text-slate-900">{title}</h1>
+            {description && <p className="font-manrope text-sm text-slate-500">{description}</p>}
           </div>
 
-          <form
-            ref={formRef}
-            action={action}
-            className="space-y-6"
-          >
+          <form ref={formRef} action={action} className="space-y-6">
             {children}
 
             <div className="h-px w-full bg-slate-200" />
@@ -91,11 +81,7 @@ export function BaseForm({
                 </button>
               )}
 
-              <Button
-                type="submit"
-                loading={isSubmitting}
-                disabled={submitDisabled}
-              >
+              <Button type="submit" loading={isSubmitting} disabled={submitDisabled}>
                 {submitLabel}
               </Button>
             </div>

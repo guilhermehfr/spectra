@@ -2,15 +2,7 @@
 
 import { Check, Lock, Pencil, Plus, Share2 } from 'lucide-react'
 import type { Evolution } from '@/lib/types'
-
-function formatDate(dateString: string): string {
-  const date = new Date(dateString)
-  return date.toLocaleDateString('pt-BR', {
-    day: '2-digit',
-    month: 'long',
-    year: 'numeric',
-  })
-}
+import { formatDate } from '@/lib/utils/dateUtils'
 
 interface EvolutionFieldProps {
   label: string
@@ -31,16 +23,21 @@ interface EvolutionCardProps {
   evolution: Evolution
   onEdit: (evolution: Evolution) => void
   onRelease: (evolution: Evolution) => void
+  isReleasing?: boolean
 }
 
-function EvolutionCard({ evolution, onEdit, onRelease }: EvolutionCardProps) {
+function EvolutionCard({ evolution, onEdit, onRelease, isReleasing }: EvolutionCardProps) {
   const isReleased = evolution.released_to_family
 
   return (
     <div className="bg-white rounded-lg border border-slate-200 p-4 md:p-6">
       <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 mb-4">
         <div>
-          <p className="text-sm font-medium text-slate-900">{formatDate(evolution.session_date)}</p>
+          <p className="text-sm font-medium text-slate-900">
+            {evolution.session_date
+              ? formatDate(evolution.session_date)
+              : formatDate(evolution.created_at)}
+          </p>
           <p className="text-sm text-slate-600">Terapeuta: {evolution.therapist_name}</p>
         </div>
         <div className="flex items-center gap-2">
@@ -85,7 +82,8 @@ function EvolutionCard({ evolution, onEdit, onRelease }: EvolutionCardProps) {
         {!isReleased && (
           <button
             onClick={() => onRelease(evolution)}
-            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-green-700 hover:bg-green-50 rounded-md transition-colors cursor-pointer"
+            disabled={isReleasing}
+            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-green-700 hover:bg-green-50 rounded-md transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <Share2 className="w-3.5 h-3.5" />
             Compartilhar com Família
@@ -101,6 +99,7 @@ interface PatientEvolutionsSectionProps {
   onEdit: (evolution: Evolution) => void
   onRelease: (evolution: Evolution) => void
   onAdd: () => void
+  isReleasing?: boolean
 }
 
 export function PatientEvolutionsSection({
@@ -108,6 +107,7 @@ export function PatientEvolutionsSection({
   onEdit,
   onRelease,
   onAdd,
+  isReleasing = false,
 }: PatientEvolutionsSectionProps) {
   const sortedEvolutions = [...evolutions].sort(
     (a, b) => new Date(b.session_date).getTime() - new Date(a.session_date).getTime()
@@ -138,6 +138,7 @@ export function PatientEvolutionsSection({
               evolution={evolution}
               onEdit={onEdit}
               onRelease={onRelease}
+              isReleasing={isReleasing}
             />
           ))}
         </div>

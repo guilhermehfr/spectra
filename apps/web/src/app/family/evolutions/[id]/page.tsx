@@ -69,9 +69,7 @@ export default async function FamilyEvolutionPage({ params }: PageProps) {
         </div>
 
         <div className="mb-6">
-          <h1 className="font-manrope text-2xl md:text-3xl font-bold text-slate-900">
-            Evolução
-          </h1>
+          <h1 className="font-manrope text-2xl md:text-3xl font-bold text-slate-900">Evolução</h1>
         </div>
 
         <div className="space-y-6">
@@ -81,11 +79,7 @@ export default async function FamilyEvolutionPage({ params }: PageProps) {
           />
 
           <div className="flex flex-col gap-6 rounded-xl border border-slate-200 bg-white p-5">
-            <Section
-              icon={<Target size={16} />}
-              title="Objetivo"
-              content={evolution.objective}
-            />
+            <Section icon={<Target size={16} />} title="Objetivo" content={evolution.objective} />
             <Section
               icon={<Activity size={16} />}
               title="Atividades"

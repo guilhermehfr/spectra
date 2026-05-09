@@ -30,7 +30,8 @@ src/
 │   ├── actions/                # Server Actions
 │   │   ├── auth.ts             # Authentication actions
 │   │   ├── patient.ts          # Patient CRUD actions
-│   │   └── session.ts          # Session delete action
+│   │   ├── session.ts          # Session CRUD actions
+│   │   └── evolution.ts        # Evolution CRUD actions
 │   ├── login/
 │   │   ├── clinic/page.tsx     # Clinic staff login
 │   │   └── family/page.tsx     # Family login
@@ -50,7 +51,11 @@ src/
 │   │   │   ├── new/
 │   │   │   │   └── page.tsx      # Schedule new session
 │   │   │   └── [id]/
-│   │   │       └── page.tsx        # Edit session
+│   │   │       ├── page.tsx        # Session detail
+│   │   │       ├── edit/
+│   │   │       │   └── page.tsx    # Edit session
+│   │   │       └── evolution/
+│   │   │           └── page.tsx    # Create/view evolution for session
 │   │   └── evolutions/
 │   │       ├── new/
 │   │       │   └── page.tsx      # New evolution
@@ -102,6 +107,10 @@ src/
 │       │   ├── PatientEvolutionsSection.tsx
 │       │   ├── PatientForm.tsx
 │       │   ├── PaginationNav.tsx
+│       │   ├── SessionsContent.tsx   # Sessions list page wrapper
+│       │   ├── SessionsTable.tsx     # Sessions table component
+│       │   ├── SessionForm.tsx       # Session create/edit form
+│       │   ├── EvolutionForm.tsx    # Evolution create/edit form
 │       │   └── index.ts
 │       ├── family/
 │       │   ├── DashboardStats.tsx
@@ -206,6 +215,7 @@ src/
 
 - All component folders have barrel exports (`index.ts`) for cleaner imports
 - Use barrel path instead of individual file paths:
+
   ```tsx
   // ✅ Correct - use barrel export
   import { Button, Container } from '@/components/ui/shared'
@@ -261,8 +271,8 @@ src/
 1. User submits login form → `loginAction` in `src/app/actions/auth.ts`
 2. Server calls `authService.login()` → receives JWT `access` token
 3. Token stored in cookie → subsequent requests include Bearer token automatically
-4. Middleware (`src/app/middleware.ts`) reads cookie, validates via `authResolver.getUser()`
-5. User info passed to pages via `x-user` header
+4. Middleware (`src/app/middleware.ts`) checks cookie existence only, redirects if missing
+5. Pages fetch user info via `authService.me()` when needed
 
 ### Family Portal (Dashboard)
 
@@ -282,7 +292,7 @@ src/
 - **Top Navbar**: Sticky navbar with search bar and user avatar
   - `ClinicSearchBar.tsx` - Search input for patients
   - `ClinicUserAvatar.tsx` - User initials avatar display
-- **User Header**: Uses x-user header from middleware for authentication context
+- **User Header**: Uses `authService.me()` to fetch user data for authentication context
 
 ## Domain Context
 

@@ -45,6 +45,10 @@ src/components/
     │   ├── PatientEvolutionsSection.tsx
     │   ├── PatientForm.tsx
     │   ├── PaginationNav.tsx
+    │   ├── SessionsContent.tsx
+    │   ├── SessionsTable.tsx
+    │   ├── SessionForm.tsx
+    │   ├── EvolutionForm.tsx
     │   └── index.ts           # Barrel export
 ├── family/              # Family-specific UI components
     │   ├── DashboardStats.tsx

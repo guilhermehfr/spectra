@@ -40,7 +40,7 @@ O sistema de autenticação usa cookies para manter a sessão do usuário:
 
 Novos portais de login devem extender `BaseLoginForm` em `src/components/auth/BaseLoginForm.tsx`:
 
-```tsx
+````tsx
 import { BaseLoginForm } from '@/components/auth/BaseLoginForm'
 import { CustomIcon } from 'lucide-react'
 
@@ -66,7 +66,7 @@ A API real retorna respostas paginadas no formato Django REST Framework:
   "previous": null,
   "results": [...]
 }
-```
+````
 
 O cliente HTTP (`src/lib/api/clinic-real.ts`, `src/lib/api/family-real.ts`) automaticamente unwraps o array `results` para retornar apenas os dados.
 
@@ -90,7 +90,7 @@ src/lib/api/
 ├── family-mock.ts # Implementação mock
 └── family-real.ts # Implementação HTTP real
 
-````
+```
 
 ## Pré-requisitos
 
@@ -112,7 +112,7 @@ Primeiro, certifique-se de que o backend do Spectra está rodando. Em seguida, i
 
 ```bash
 pnpm dev
-````
+```
 
 Abra [http://localhost:3000](http://localhost:3000) no seu navegador para ver o resultado.
 
@@ -196,28 +196,28 @@ O portal da clínica inclui:
 - **Header**: Logo da marca Spectra com subtítulo "Gerenciamento de Clínica"
 - **Navegação**: Links para Dashboard, Pacientes e Sessões
 - **Estado Ativo**: Estilização com gradiente azul e indicador visual
-- **Header de Usuário**: Usa o header `x-user` do middleware para contexto de autenticação
+- **Header de Usuário**: Usa `authService.me()` para buscar dados do usuário para contexto de autenticação
 - **Navbar Superior**: Barra de navegação fixa no topo com busca de pacientes e avatar do usuário
 
 ## Usuários Disponíveis
 
 ### Mock (NEXT_PUBLIC_DISABLE_MSW=false)
 
-| Email              | Role      | Senha              |
-| ------------------ | --------- | ------------------ |
-| admin@spectra.com  | admin     | qualquer senha    |
-| ana@spectra.com    | therapist | qualquer senha   |
-| carlos@spectra.com | therapist | qualquer senha  |
-| maria@gmail.com    | family    | qualquer senha   |
+| Email              | Role      | Senha          |
+| ------------------ | --------- | -------------- |
+| admin@spectra.com  | admin     | qualquer senha |
+| ana@spectra.com    | therapist | qualquer senha |
+| carlos@spectra.com | therapist | qualquer senha |
+| maria@gmail.com    | family    | qualquer senha |
 
 ### Real API (NEXT_PUBLIC_DISABLE_MSW=true)
 
-| Email              | Role      | Senha         |
-| ------------------ | --------- | ------------- |
-| admin@spectra.com  | admin     | admin123      |
-| ana@spectra.com    | therapist | therapist123  |
+| Email              | Role      | Senha        |
+| ------------------ | --------- | ------------ |
+| admin@spectra.com  | admin     | admin123     |
+| ana@spectra.com    | therapist | therapist123 |
 | carlos@spectra.com | therapist | therapist123 |
-| maria@spectra.com | family    | family123    |
+| maria@spectra.com  | family    | family123    |
 
 **Nota**: Execute `python manage.py seed` no backend para criar os usuários na API real.
 

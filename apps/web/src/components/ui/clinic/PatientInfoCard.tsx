@@ -2,6 +2,7 @@
 
 import { Mail } from 'lucide-react'
 import type { Patient } from '@/lib/types'
+import { formatDate, formatDateTime } from '@/lib/utils/dateUtils'
 
 function getInitials(name: string): string {
   const parts = name.trim().split(' ')
@@ -20,19 +21,6 @@ function calculateAge(birthDate: string): number {
     age--
   }
   return age
-}
-
-function formatDate(dateString: string): string {
-  const [year, month, day] = dateString.split('-')
-  return `${day}/${month}/${year}`
-}
-
-function formatDateTime(dateString: string): string {
-  const [datePart, timePart] = dateString.split('T')
-  const [year, month, day] = datePart.split('-')
-  const timeOnly = timePart.split('.')[0]
-  const [hour, minute] = timeOnly.split(':')
-  return `${day}/${month}/${year} ${hour}:${minute}`
 }
 
 const avatarColors = [

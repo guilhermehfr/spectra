@@ -1,43 +1,5 @@
 import { NextResponse, type NextRequest } from 'next/server'
-import { authResolver } from '@/lib/authResolver'
-import { mockUsers } from '@/mocks/data/users'
-import type { User } from '@/lib/types'
-
-const MOCK_USER_IDS = {
-  clinic: 2,
-  family: 4,
-}
-
-import { getUseMock } from '@/lib/envUtils'
-
-function getMockUserForRoute(pathname: string): User | null {
-  const isFamily = pathname.startsWith('/family')
-  const mockUserId = isFamily ? MOCK_USER_IDS.family : MOCK_USER_IDS.clinic
-  const user = mockUsers.find((u) => u.id === mockUserId)
-
-  if (!user) return null
-
-  return {
-    id: user.id,
-    username: user.username,
-    email: user.email,
-    first_name: user.first_name,
-    last_name: user.last_name,
-    role: user.role as User['role'],
-    phone: user.phone,
-    is_active: user.is_active,
-  }
-}
-
-async function getUserFromCookie(request: NextRequest, pathname: string) {
-  const cookieValue = request.cookies.get(authResolver.getCookieName())?.value
-
-  if (!cookieValue && getUseMock()) {
-    return getMockUserForRoute(pathname)
-  }
-
-  return authResolver.getUser(cookieValue)
-}
+import { authService } from '@/lib/authService'
 
 function isPublicRoute(pathname: string) {
   return pathname.startsWith('/login/')
@@ -49,37 +11,40 @@ function isRootRoute(pathname: string) {
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
+  const hasCookie = request.cookies.has('access_token')
 
   if (isPublicRoute(pathname)) {
     return NextResponse.next()
   }
 
-  if (isRootRoute(pathname)) {
-    const user = await getUserFromCookie(request, pathname)
-    if (user?.role) {
+  if (isRootRoute(pathname) && hasCookie) {
+    try {
+      const user = await authService.me()
       const destination = user.role === 'family' ? '/family/dashboard' : '/clinic/dashboard'
       return NextResponse.redirect(new URL(destination, request.url))
+    } catch {
+      return NextResponse.redirect(new URL('/login/clinic', request.url))
     }
+  }
+
+  if (isRootRoute(pathname)) {
     return NextResponse.redirect(new URL('/login/clinic', request.url))
   }
 
-  const user = await getUserFromCookie(request, pathname)
-  const userRole = user?.role
+  if (pathname.startsWith('/login/')) {
+    if (hasCookie) {
+      return NextResponse.redirect(new URL('/family/dashboard', request.url))
+    }
+    return NextResponse.next()
+  }
 
-  if (!user || !userRole) {
+  if (!hasCookie) {
     const isFamily = pathname.startsWith('/family')
     const loginPage = isFamily ? '/login/family' : '/login/clinic'
     return NextResponse.redirect(new URL(loginPage, request.url))
   }
 
-  if (pathname.startsWith('/login/')) {
-    const destination = userRole === 'family' ? '/family/dashboard' : '/clinic/dashboard'
-    return NextResponse.redirect(new URL(destination, request.url))
-  }
-
-  const response = NextResponse.next()
-  response.headers.set('x-user', JSON.stringify(user))
-  return response
+  return NextResponse.next()
 }
 
 export const config = {

@@ -27,12 +27,12 @@ export default async function Page() {
 ```
 
 ```tsx
-// ❌ Avoid - manual header parsing
-import { headers } from 'next/headers'
+// ❌ Avoid - manual cookie parsing
+import { cookies } from 'next/headers'
 
 export default async function Page() {
-  const requestHeaders = await headers()
-  const user = JSON.parse(requestHeaders.get('x-user') ?? '{}') as User
+  const cookieStore = await cookies()
+  const token = cookieStore.get('access_token')?.value
   // ...
 }
 ```

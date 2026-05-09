@@ -16,9 +16,7 @@ export function Section({ icon, title, content, variant = 'default' }: SectionPr
         <div
           className={twMerge(
             'flex h-8 w-8 items-center justify-center rounded-full',
-            isHighlight
-              ? 'bg-cyan-100 text-cyan-600'
-              : 'bg-blue-100 text-blue-600'
+            isHighlight ? 'bg-cyan-100 text-cyan-600' : 'bg-blue-100 text-blue-600'
           )}
         >
           {icon}
