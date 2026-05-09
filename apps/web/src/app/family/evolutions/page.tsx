@@ -44,9 +44,7 @@ export default async function FamilyEvolutionsPage() {
     <div className="min-h-screen bg-[#EEF3FB] pb-32 md:pb-0">
       <div className="mx-auto max-w-2xl px-4 py-8 md:px-6 md:pt-24">
         <div className="mb-8">
-          <h1 className="font-manrope text-2xl md:text-3xl font-bold text-slate-900">
-            Evoluções
-          </h1>
+          <h1 className="font-manrope text-2xl md:text-3xl font-bold text-slate-900">Evoluções</h1>
           <p className="mt-1 font-manrope text-sm text-slate-500">
             Atualizações recentes da equipe de terapia do {patient.name}.
           </p>
@@ -59,9 +57,7 @@ export default async function FamilyEvolutionsPage() {
             ))
           ) : (
             <div className="rounded-xl border border-slate-200 bg-white p-8 text-center">
-              <p className="font-manrope text-sm text-slate-500">
-                Nenhuma evolução disponível.
-              </p>
+              <p className="font-manrope text-sm text-slate-500">Nenhuma evolução disponível.</p>
             </div>
           )}
         </div>

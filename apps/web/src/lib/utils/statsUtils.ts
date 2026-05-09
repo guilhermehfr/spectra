@@ -22,13 +22,18 @@ export function calculateClinicStats(
     return sessionDate >= startOfToday && sessionDate <= endOfToday
   }).length
 
+  // Get IDs of completed sessions
   const completedSessionIds = new Set(
     sessions.filter((s) => s.status === 'completed' && !s.is_deleted).map((s) => s.id)
   )
 
-  const pendingEvolutions = evolutions.filter((e) => {
-    return !completedSessionIds.has(e.session) && !e.released_to_family
-  }).length
+  // Get IDs of sessions that already have evolutions
+  const evolutionSessionIds = new Set(evolutions.map((e) => e.session))
+
+  // Count sessions completed but without evolution
+  const pendingEvolutions = [...completedSessionIds].filter(
+    (sessionId) => !evolutionSessionIds.has(sessionId)
+  ).length
 
   return { activePatients, todaySessions, pendingEvolutions }
 }

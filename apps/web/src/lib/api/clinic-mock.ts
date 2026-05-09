@@ -151,6 +151,18 @@ export function updateEvolution(
   }
 }
 
+export function patchEvolution(
+  id: number,
+  data: Partial<UpdateEvolutionInput>
+): Promise<Evolution | undefined> {
+  try {
+    const result = state.updateEvolution(id, data)
+    return Promise.resolve(result)
+  } catch (error) {
+    return Promise.reject(error)
+  }
+}
+
 export function getDashboard(): Promise<Dashboard> {
   return Promise.resolve(state.getDashboardMetrics())
 }

@@ -12,6 +12,7 @@ interface PatientsContentProps {
   initialPatients: Patient[]
   totalCount: number
   isLoading?: boolean
+  searchQuery?: string
 }
 
 const ITEMS_PER_PAGE = 10
@@ -20,11 +21,17 @@ export function PatientsContent({
   initialPatients,
   totalCount,
   isLoading = false,
+  searchQuery,
 }: PatientsContentProps) {
   const router = useRouter()
   const [currentPage, setCurrentPage] = useState(1)
   const [patientToDelete, setPatientToDelete] = useState<Patient | null>(null)
-  const totalPages = Math.ceil(totalCount / ITEMS_PER_PAGE)
+
+  const filteredPatients = searchQuery
+    ? initialPatients.filter((p) => p.name.toLowerCase().includes(searchQuery.toLowerCase()))
+    : initialPatients
+  const filteredCount = searchQuery ? filteredPatients.length : totalCount
+  const totalPages = Math.ceil(filteredCount / ITEMS_PER_PAGE)
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page)
@@ -65,8 +72,8 @@ export function PatientsContent({
 
   // Calculate pagination indices
   const startItem = (currentPage - 1) * ITEMS_PER_PAGE
-  const endItem = Math.min(startItem + ITEMS_PER_PAGE, totalCount)
-  const currentPatients = initialPatients.slice(startItem, endItem)
+  const endItem = Math.min(startItem + ITEMS_PER_PAGE, filteredPatients.length)
+  const currentPatients = filteredPatients.slice(startItem, endItem)
 
   return (
     <div className="flex flex-col gap-6">
@@ -80,11 +87,11 @@ export function PatientsContent({
         onDelete={handleDeletePatient}
       />
 
-      {!isLoading && totalCount > 0 && (
+      {!isLoading && filteredCount > 0 && (
         <PaginationNav
           currentPage={currentPage}
           totalPages={totalPages}
-          totalItems={totalCount}
+          totalItems={filteredCount}
           itemsPerPage={ITEMS_PER_PAGE}
           onPageChange={handlePageChange}
         />
@@ -95,7 +102,8 @@ export function PatientsContent({
           <div className="bg-white rounded-lg p-6 max-w-sm mx-4 shadow-xl">
             <h3 className="text-lg font-semibold text-slate-900 mb-2">Excluir paciente?</h3>
             <p className="text-sm text-slate-600 mb-6">
-              Tem certeza que deseja excluir {patientToDelete.name}? Esta ação não pode ser desfeita.
+              Tem certeza que deseja excluir {patientToDelete.name}? Esta ação não pode ser
+              desfeita.
             </p>
             <div className="flex gap-3 justify-end">
               <button

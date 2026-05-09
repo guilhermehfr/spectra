@@ -10,10 +10,7 @@ import type { PatientFormState } from '@/app/actions/patient'
 
 interface PatientFormProps {
   patient?: Patient
-  formAction: (
-    state: PatientFormState,
-    formData: FormData
-  ) => Promise<PatientFormState>
+  formAction: (state: PatientFormState, formData: FormData) => Promise<PatientFormState>
   cancelHref: string
 }
 
@@ -23,11 +20,7 @@ const initialState: PatientFormState = {
   errors: undefined,
 }
 
-export function PatientForm({
-  patient,
-  formAction,
-  cancelHref,
-}: PatientFormProps) {
+export function PatientForm({ patient, formAction, cancelHref }: PatientFormProps) {
   const router = useRouter()
   const [state, action, isPending] = useActionState(formAction, initialState)
 

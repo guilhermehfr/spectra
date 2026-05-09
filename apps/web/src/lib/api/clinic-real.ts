@@ -102,7 +102,14 @@ export function createEvolution(data: CreateEvolutionInput) {
 
 export function updateEvolution(id: number, data: UpdateEvolutionInput) {
   return http<Evolution>(`/api/evolutions/${id}/`, {
-    method: 'PUT',
+    method: 'PATCH',
+    body: JSON.stringify(data),
+  })
+}
+
+export function patchEvolution(id: number, data: Partial<UpdateEvolutionInput>) {
+  return http<Evolution>(`/api/evolutions/${id}/`, {
+    method: 'PATCH',
     body: JSON.stringify(data),
   })
 }

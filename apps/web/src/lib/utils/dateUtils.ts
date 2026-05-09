@@ -1,19 +1,56 @@
 export function formatDate(dateString: string): string {
   const date = new Date(dateString)
-  return date.toLocaleDateString('pt-BR', {
-    day: '2-digit',
-    month: 'short',
-    year: 'numeric',
-  }).replace('.', '')
+  return date
+    .toLocaleDateString('pt-BR', {
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric',
+    })
+    .replace('.', '')
 }
 
-export function formatDateTime(dateString: string): string {
+export function formatDateShort(dateString: string): string {
   const date = new Date(dateString)
   return date.toLocaleDateString('pt-BR', {
     day: '2-digit',
     month: 'short',
     year: 'numeric',
-  }).replace('.', '') + ' • 10:00'
+  })
+}
+
+export function formatDateLong(dateString: string): string {
+  const date = new Date(dateString)
+  return date.toLocaleDateString('pt-BR', {
+    day: '2-digit',
+    month: 'long',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+  })
+}
+
+export function formatDateTime(dateString: string): string {
+  const date = new Date(dateString)
+  return (
+    date
+      .toLocaleDateString('pt-BR', {
+        day: '2-digit',
+        month: 'short',
+        year: 'numeric',
+      })
+      .replace('.', '') + ' • 10:00'
+  )
+}
+
+export function formatDateTimeISO(dateString: string): string {
+  const [datePart, timePart] = dateString.split('T')
+  if (timePart) {
+    const [year, month, day] = datePart.split('-')
+    const [hour, minute] = timePart.split(':')
+    return `${day}/${month}/${year} às ${hour}:${minute}`
+  }
+  const [year, month, day] = datePart.split('-')
+  return `${day}/${month}/${year}`
 }
 
 export function getRelativeDate(dateString: string | null): string {

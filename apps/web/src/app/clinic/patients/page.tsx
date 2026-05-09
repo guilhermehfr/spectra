@@ -6,8 +6,13 @@ import { resolveUser } from '@/lib/utils/userUtils'
 export const dynamic = 'force-dynamic'
 export const revalidate = 0
 
-export default async function ClinicPatientsPage() {
+interface PageProps {
+  searchParams: Promise<{ search?: string }>
+}
+
+export default async function ClinicPatientsPage({ searchParams }: PageProps) {
   const user = await resolveUser()
+  const { search } = await searchParams
 
   const patients = await getPatients()
   const activePatients = patients.filter((p) => !p.is_deleted)
@@ -19,6 +24,7 @@ export default async function ClinicPatientsPage() {
           initialPatients={activePatients}
           totalCount={activePatients.length}
           isLoading={false}
+          searchQuery={search}
         />
       </div>
     </Layout>

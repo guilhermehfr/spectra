@@ -873,6 +873,40 @@ NODE_ENV=development           # Still useful for other things
 - `src/components/layout/clinic/SidebarFooter.tsx` - Footer content
 - `src/components/layout/clinic/types.ts` - TypeScript types for sidebar
 
+#### Patients
+
+- `src/app/clinic/patients/page.tsx` - Patients list page
+- `src/app/clinic/patients/new/page.tsx` - Add new patient page
+- `src/app/clinic/patients/[id]/page.tsx` - Patient detail page
+- `src/app/clinic/patients/[id]/edit/page.tsx` - Edit patient page
+- `src/components/ui/clinic/PatientsContent.tsx` - Patients list content
+- `src/components/ui/clinic/PatientsTable.tsx` - Patients table
+- `src/components/ui/clinic/PatientsPageHeader.tsx` - Patients page header
+- `src/components/ui/clinic/PatientDetailContent.tsx` - Patient detail content
+- `src/components/ui/clinic/PatientDetailHeader.tsx` - Patient detail header
+- `src/components/ui/clinic/PatientInfoCard.tsx` - Patient info card
+- `src/components/ui/clinic/PatientSessionsSection.tsx` - Patient sessions section
+- `src/components/ui/clinic/PatientEvolutionsSection.tsx` - Patient evolutions section
+- `src/components/ui/clinic/PatientForm.tsx` - Patient create/edit form
+- `src/components/ui/clinic/PaginationNav.tsx` - Pagination navigation
+
+#### Sessions
+
+- `src/app/clinic/sessions/page.tsx` - Sessions list page
+- `src/app/clinic/sessions/new/page.tsx` - Schedule new session
+- `src/app/clinic/sessions/[id]/page.tsx` - Session detail page
+- `src/app/clinic/sessions/[id]/edit/page.tsx` - Edit session page
+- `src/app/clinic/sessions/[id]/evolution/page.tsx` - Create/view evolution for session
+- `src/components/ui/clinic/SessionsContent.tsx` - Sessions list content
+- `src/components/ui/clinic/SessionsTable.tsx` - Sessions table
+- `src/components/ui/clinic/SessionForm.tsx` - Session create/edit form
+
+#### Evolutions
+
+- `src/app/clinic/evolutions/new/page.tsx` - New evolution page
+- `src/app/clinic/evolutions/[id]/edit/page.tsx` - Edit evolution page
+- `src/components/ui/clinic/EvolutionForm.tsx` - Evolution create/edit form
+
 #### Family Dashboard
 
 - `src/app/family/dashboard/page.tsx` - Family dashboard page

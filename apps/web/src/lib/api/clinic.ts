@@ -108,6 +108,11 @@ export async function updateEvolution(id: number, data: UpdateEvolutionInput) {
   return impl.updateEvolution(id, data)
 }
 
+export async function patchEvolution(id: number, data: Partial<UpdateEvolutionInput>) {
+  const impl = await getImpl()
+  return impl.patchEvolution(id, data)
+}
+
 export async function getDashboard() {
   const impl = await getImpl()
   return impl.getDashboard()

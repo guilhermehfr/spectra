@@ -2,9 +2,11 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { toast } from 'react-toastify'
 import type { Patient, Session, Evolution } from '@/lib/types'
 import { deleteSessionAction } from '@/app/actions/session'
 import { deletePatientAction } from '@/app/actions/patient'
+import { releaseEvolutionAction } from '@/app/actions/evolution'
 
 import { PatientDetailHeader } from './PatientDetailHeader'
 import { PatientInfoCard } from './PatientInfoCard'
@@ -22,6 +24,9 @@ export function PatientDetailContent({ patient, sessions, evolutions }: PatientD
   const [showDeleteConfirmPatient, setShowDeleteConfirmPatient] = useState(false)
   const [showDeleteConfirmSession, setShowDeleteConfirmSession] = useState(false)
   const [sessionToDelete, setSessionToDelete] = useState<Session | null>(null)
+  const [isReleasing, setIsReleasing] = useState(false)
+  const [showSessionSelect, setShowSessionSelect] = useState(false)
+  const [availableSessions, setAvailableSessions] = useState<Session[]>([])
 
   const handleEditPatient = () => {
     router.push(`/clinic/patients/${patient.id}/edit`)
@@ -57,7 +62,7 @@ export function PatientDetailContent({ patient, sessions, evolutions }: PatientD
   }
 
   const handleEditSession = (session: Session) => {
-    router.push(`/clinic/sessions/${session.id}`)
+    router.push(`/clinic/sessions/${session.id}/edit`)
   }
 
   const handleDeleteSession = (session: Session) => {
@@ -66,15 +71,48 @@ export function PatientDetailContent({ patient, sessions, evolutions }: PatientD
   }
 
   const handleAddEvolution = () => {
-    router.push('/clinic/evolutions/new')
+    const completedSessions = sessions.filter((s) => s.status === 'completed')
+
+    const evolutionSessionIds = new Set(evolutions.map((e) => e.session))
+    const availableSessions = completedSessions.filter((s) => !evolutionSessionIds.has(s.id))
+
+    if (availableSessions.length === 0) {
+      if (completedSessions.length === 0) {
+        toast.error('É necessário ter uma sessão concluída para criar uma evolução.')
+      } else {
+        toast.error('Todas as sessões concluídas já possuem evolução.')
+      }
+      return
+    }
+
+    if (availableSessions.length === 1) {
+      router.push(`/clinic/sessions/${availableSessions[0].id}/evolution/new`)
+    } else {
+      setAvailableSessions(availableSessions)
+      setShowSessionSelect(true)
+    }
+  }
+
+  const handleSelectSessionForEvolution = (sessionId: number) => {
+    setShowSessionSelect(false)
+    router.push(`/clinic/sessions/${sessionId}/evolution/new`)
   }
 
   const handleEditEvolution = (evolution: Evolution) => {
-    router.push(`/clinic/evolutions/${evolution.id}`)
+    router.push(`/clinic/evolutions/${evolution.id}/edit`)
   }
 
-  const handleReleaseEvolution = (evolution: Evolution) => {
-    console.log('Release evolution to family:', evolution.id)
+  const handleReleaseEvolution = async (evolution: Evolution) => {
+    setIsReleasing(true)
+    const result = await releaseEvolutionAction(evolution.id)
+    setIsReleasing(false)
+
+    if (result.success) {
+      toast.success('Evolução liberada para a família com sucesso!')
+      router.refresh()
+    } else {
+      toast.error(result.error || 'Falha ao liberar evolução')
+    }
   }
 
   return (
@@ -99,6 +137,7 @@ export function PatientDetailContent({ patient, sessions, evolutions }: PatientD
         onEdit={handleEditEvolution}
         onRelease={handleReleaseEvolution}
         onAdd={handleAddEvolution}
+        isReleasing={isReleasing}
       />
 
       {showDeleteConfirmPatient && (
@@ -152,6 +191,43 @@ export function PatientDetailContent({ patient, sessions, evolutions }: PatientD
                 className="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700 transition-colors"
               >
                 Deletar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showSessionSelect && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+          <div className="bg-white rounded-lg p-6 max-w-sm mx-4 shadow-xl">
+            <h3 className="text-lg font-semibold text-slate-900 mb-2">Selecione uma sessão</h3>
+            <p className="text-sm text-slate-600 mb-4">
+              Escolha uma sessão concluída para criar a evolução:
+            </p>
+            <div className="space-y-2 max-h-60 overflow-y-auto mb-4">
+              {availableSessions.map((session) => (
+                <button
+                  key={session.id}
+                  onClick={() => handleSelectSessionForEvolution(session.id)}
+                  className="w-full text-left p-3 rounded-lg border border-slate-200 hover:border-blue-500 hover:bg-blue-50 transition-colors"
+                >
+                  <p className="text-sm font-medium text-slate-900">
+                    {new Date(session.date_time).toLocaleDateString('pt-BR', {
+                      day: '2-digit',
+                      month: 'short',
+                      year: 'numeric',
+                    })}
+                  </p>
+                  <p className="text-xs text-slate-500">Terapeuta: {session.therapist_name}</p>
+                </button>
+              ))}
+            </div>
+            <div className="flex gap-3 justify-end">
+              <button
+                onClick={() => setShowSessionSelect(false)}
+                className="px-4 py-2 text-sm font-medium text-slate-600 bg-slate-100 rounded-lg hover:bg-slate-200 transition-colors"
+              >
+                Cancelar
               </button>
             </div>
           </div>

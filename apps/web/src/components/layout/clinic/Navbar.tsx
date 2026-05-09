@@ -1,5 +1,6 @@
 'use client'
 
+import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { User } from '@/lib/types'
 import { SearchBar } from './SearchBar'
@@ -10,9 +11,10 @@ interface NavbarProps {
 }
 
 export function Navbar({ user }: NavbarProps) {
+  const router = useRouter()
+
   const handleSearch = (query: string) => {
-    // TODO: Implement patient search functionality
-    console.log('Search query:', query)
+    router.push(`/clinic/patients?search=${encodeURIComponent(query)}`)
   }
 
   return (

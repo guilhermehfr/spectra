@@ -13,7 +13,7 @@ interface EvolutionCardProps {
 }
 
 export function EvolutionCard({ evolution }: EvolutionCardProps) {
-  const initials = extractInitials(evolution.therapist_name)
+  const initials = extractInitials(evolution.therapist_name || '')
 
   return (
     <article className="relative w-full overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
@@ -41,18 +41,14 @@ export function EvolutionCard({ evolution }: EvolutionCardProps) {
         </div>
 
         <div className="rounded-lg border border-slate-100 bg-slate-50 px-3 py-3">
-          <p className="line-clamp-3 font-manrope text-sm text-slate-600">
-            {evolution.behavior}
-          </p>
+          <p className="line-clamp-3 font-manrope text-sm text-slate-600">{evolution.behavior}</p>
         </div>
 
         <Link
           href={`/family/evolutions/${evolution.id}`}
           className="flex items-center justify-center gap-2 text-blue-600 hover:text-blue-700"
         >
-          <span className="font-manrope text-sm font-medium">
-            Ver evolução completa
-          </span>
+          <span className="font-manrope text-sm font-medium">Ver evolução completa</span>
           <ArrowRight size={16} strokeWidth={2} />
         </Link>
       </div>
