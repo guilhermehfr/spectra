@@ -6,13 +6,14 @@ import { PatientsTable } from './PatientsTable'
 import { PatientsPageHeader } from './PatientsPageHeader'
 import { PaginationNav } from './PaginationNav'
 import { deletePatientAction } from '@/app/actions/patient'
-import type { Patient } from '@/lib/types'
+import type { Patient, User } from '@/lib/types'
 
 interface PatientsContentProps {
   initialPatients: Patient[]
   totalCount: number
   isLoading?: boolean
   searchQuery?: string
+  currentUser?: User
 }
 
 const ITEMS_PER_PAGE = 10
@@ -22,6 +23,7 @@ export function PatientsContent({
   totalCount,
   isLoading = false,
   searchQuery,
+  currentUser,
 }: PatientsContentProps) {
   const router = useRouter()
   const [currentPage, setCurrentPage] = useState(1)
@@ -85,6 +87,7 @@ export function PatientsContent({
         onView={handleViewPatient}
         onEdit={handleEditPatient}
         onDelete={handleDeletePatient}
+        canDelete={currentUser?.role === 'admin'}
       />
 
       {!isLoading && filteredCount > 0 && (

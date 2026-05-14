@@ -12,6 +12,7 @@ interface PatientsTableProps {
   onView?: (patient: Patient) => void
   onEdit?: (patient: Patient) => void
   onDelete?: (patient: Patient) => void
+  canDelete?: boolean
 }
 
 const AVATAR_COLORS = [
@@ -74,6 +75,7 @@ export function PatientsTable({
   onView,
   onEdit,
   onDelete,
+  canDelete = true,
 }: PatientsTableProps) {
   return (
     <Container className="overflow-x-auto p-0">
@@ -147,8 +149,9 @@ export function PatientsTable({
                     </button>
                     <button
                       onClick={() => onDelete?.(patient)}
-                      className="p-2 rounded-lg cursor-pointer hover:bg-red-50 text-slate-500 hover:text-red-600 transition-colors"
-                      title="Excluir"
+                      disabled={!canDelete}
+                      className="p-2 rounded-lg transition-colors cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed hover:bg-red-50 text-slate-500 hover:text-red-600"
+                      title={canDelete ? 'Excluir' : 'Apenas administradores podem excluir'}
                     >
                       <Trash2 className="w-4 h-4" />
                     </button>

@@ -15,10 +15,12 @@ interface SessionFormProps {
     therapist: number
     date_time: string
     notes: string
-    status: 'scheduled' | 'completed' | 'cancelled'
+    status: 'scheduled' | 'completed' | 'canceled'
   }
   patients: Patient[]
   currentUser: User
+  therapists?: User[]
+  selectedPatientId?: number
   formAction: (state: SessionFormState, formData: FormData) => Promise<SessionFormState>
   cancelHref: string
 }
@@ -33,6 +35,8 @@ export function SessionForm({
   session,
   patients,
   currentUser,
+  therapists,
+  selectedPatientId,
   formAction,
   cancelHref,
 }: SessionFormProps) {
@@ -51,6 +55,8 @@ export function SessionForm({
   }, [state, router])
 
   const isEdit = !!session
+  const isAdmin = currentUser.role === 'admin'
+  const showTherapistSelect = isAdmin && therapists && therapists.length > 0
   const formattedDateTime = session?.date_time ? session.date_time.slice(0, 16) : ''
   const minDateTime = new Date().toISOString().slice(0, 16)
 
@@ -73,7 +79,7 @@ export function SessionForm({
           label="Paciente"
           name="patient"
           required
-          defaultValue={session?.patient?.toString() || ''}
+          defaultValue={session?.patient?.toString() || selectedPatientId?.toString() || ''}
           error={state.errors?.patient}
         >
           <option value="" disabled>
@@ -86,7 +92,28 @@ export function SessionForm({
           ))}
         </SelectField>
 
-        <input type="hidden" name="therapist" value={currentUser.id} />
+        {isEdit ? (
+          <input type="hidden" name="therapist" value={session.therapist} />
+        ) : showTherapistSelect ? (
+          <SelectField
+            label="Terapeuta"
+            name="therapist"
+            required
+            defaultValue=""
+            error={state.errors?.therapist}
+          >
+            <option value="" disabled>
+              Selecione um terapeuta
+            </option>
+            {therapists!.map((therapist) => (
+              <option key={therapist.id} value={therapist.id}>
+                {therapist.first_name} {therapist.last_name}
+              </option>
+            ))}
+          </SelectField>
+        ) : (
+          <input type="hidden" name="therapist" value={currentUser.id} />
+        )}
 
         <InputField
           label="Data e Horário"
@@ -117,7 +144,7 @@ export function SessionForm({
           >
             <option value="scheduled">Agendada</option>
             <option value="completed">Concluída</option>
-            <option value="cancelled">Cancelada</option>
+            <option value="canceled">Cancelada</option>
           </SelectField>
         )}
       </div>

@@ -1,8 +1,9 @@
 'use client'
 
 import { Check, Lock, Pencil, Plus, Share2 } from 'lucide-react'
-import type { Evolution } from '@/lib/types'
+import type { Evolution, Session, User } from '@/lib/types'
 import { formatDate } from '@/lib/utils/dateUtils'
+import { canEditEvolution, canReleaseEvolution } from '@/lib/utils/permissionUtils'
 
 interface EvolutionFieldProps {
   label: string
@@ -21,13 +22,19 @@ function EvolutionField({ label, value }: EvolutionFieldProps) {
 
 interface EvolutionCardProps {
   evolution: Evolution
+  sessions: Session[]
+  currentUser: User
   onEdit: (evolution: Evolution) => void
   onRelease: (evolution: Evolution) => void
   isReleasing?: boolean
 }
 
-function EvolutionCard({ evolution, onEdit, onRelease, isReleasing }: EvolutionCardProps) {
+function EvolutionCard({ evolution, sessions, currentUser, onEdit, onRelease, isReleasing }: EvolutionCardProps) {
   const isReleased = evolution.released_to_family
+  const session = sessions.find((s) => s.id === evolution.session)
+  const sessionTherapistId = session?.therapist ?? 0
+  const canEdit = canEditEvolution(evolution, currentUser, sessionTherapistId)
+  const canRelease = canReleaseEvolution(evolution, currentUser, sessionTherapistId)
 
   return (
     <div className="bg-white rounded-lg border border-slate-200 p-4 md:p-6">
@@ -39,6 +46,9 @@ function EvolutionCard({ evolution, onEdit, onRelease, isReleasing }: EvolutionC
               : formatDate(evolution.created_at)}
           </p>
           <p className="text-sm text-slate-600">Terapeuta: {evolution.therapist_name}</p>
+          {evolution.author_name && (
+            <p className="text-xs text-slate-500">Registrado por: {evolution.author_name}</p>
+          )}
         </div>
         <div className="flex items-center gap-2">
           <span
@@ -74,7 +84,13 @@ function EvolutionCard({ evolution, onEdit, onRelease, isReleasing }: EvolutionC
       <div className="flex flex-wrap items-center gap-2 mt-4 pt-4 border-t border-slate-100">
         <button
           onClick={() => onEdit(evolution)}
-          className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-slate-600 hover:text-slate-700 hover:bg-slate-50 rounded-md transition-colors cursor-pointer"
+          disabled={!canEdit}
+          title={!canEdit ? 'Você não tem permissão para editar esta evolução' : undefined}
+          className={
+            canEdit
+              ? 'flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-slate-600 hover:text-slate-700 hover:bg-slate-50 rounded-md transition-colors cursor-pointer'
+              : 'flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-slate-300 rounded-md transition-colors cursor-not-allowed'
+          }
         >
           <Pencil className="w-3.5 h-3.5" />
           Editar
@@ -82,8 +98,13 @@ function EvolutionCard({ evolution, onEdit, onRelease, isReleasing }: EvolutionC
         {!isReleased && (
           <button
             onClick={() => onRelease(evolution)}
-            disabled={isReleasing}
-            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-green-700 hover:bg-green-50 rounded-md transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+            disabled={isReleasing || !canRelease}
+            title={!canRelease ? 'Você não tem permissão para compartilhar esta evolução' : undefined}
+            className={
+              canRelease && !isReleasing
+                ? 'flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-green-700 hover:bg-green-50 rounded-md transition-colors cursor-pointer'
+                : 'flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-green-300 rounded-md transition-colors cursor-not-allowed'
+            }
           >
             <Share2 className="w-3.5 h-3.5" />
             Compartilhar com Família
@@ -96,6 +117,8 @@ function EvolutionCard({ evolution, onEdit, onRelease, isReleasing }: EvolutionC
 
 interface PatientEvolutionsSectionProps {
   evolutions: Evolution[]
+  sessions: Session[]
+  currentUser: User
   onEdit: (evolution: Evolution) => void
   onRelease: (evolution: Evolution) => void
   onAdd: () => void
@@ -104,6 +127,8 @@ interface PatientEvolutionsSectionProps {
 
 export function PatientEvolutionsSection({
   evolutions,
+  sessions,
+  currentUser,
   onEdit,
   onRelease,
   onAdd,
@@ -136,6 +161,8 @@ export function PatientEvolutionsSection({
             <EvolutionCard
               key={evolution.id}
               evolution={evolution}
+              sessions={sessions}
+              currentUser={currentUser}
               onEdit={onEdit}
               onRelease={onRelease}
               isReleasing={isReleasing}

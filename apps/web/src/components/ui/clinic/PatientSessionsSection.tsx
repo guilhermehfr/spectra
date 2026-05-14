@@ -2,32 +2,20 @@
 
 import { Pencil, Plus, Trash2 } from 'lucide-react'
 import { twMerge } from 'tailwind-merge'
-import type { Session, SessionStatus } from '@/lib/types'
-import { formatDateTimeISO } from '@/lib/utils/dateUtils'
-
-const statusConfig: Record<SessionStatus, { label: string; className: string }> = {
-  scheduled: {
-    label: 'Agendada',
-    className: 'bg-blue-50 text-blue-700 border-blue-200',
-  },
-  completed: {
-    label: 'Concluída',
-    className: 'bg-green-50 text-green-700 border-green-200',
-  },
-  cancelled: {
-    label: 'Cancelada',
-    className: 'bg-red-50 text-red-700 border-red-200',
-  },
-}
+import type { Session, User } from '@/lib/types'
+import { formatDateTimeISO, getSessionStatusDisplay, canEditSession, canDeleteSession } from '@/lib/utils'
 
 interface SessionCardProps {
   session: Session
+  currentUser: User
   onEdit: (session: Session) => void
   onDelete: (session: Session) => void
 }
 
-function SessionCard({ session, onEdit, onDelete }: SessionCardProps) {
-  const status = statusConfig[session.status]
+function SessionCard({ session, currentUser, onEdit, onDelete }: SessionCardProps) {
+  const status = getSessionStatusDisplay(session.status)
+  const canEdit = canEditSession(session, currentUser)
+  const canDelete = canDeleteSession(session, currentUser)
 
   return (
     <div className="bg-white rounded-lg border border-slate-200 p-4 flex flex-col gap-3">
@@ -48,14 +36,28 @@ function SessionCard({ session, onEdit, onDelete }: SessionCardProps) {
       <div className="flex items-center gap-2 pt-2 border-t border-slate-100">
         <button
           onClick={() => onEdit(session)}
-          className="flex items-center gap-1 px-3 py-1.5 text-xs font-medium text-slate-600 hover:text-slate-700 hover:bg-slate-50 rounded-md transition-colors cursor-pointer"
+          disabled={!canEdit}
+          title={!canEdit ? 'Você não tem permissão para editar esta sessão' : undefined}
+          className={twMerge(
+            'flex items-center gap-1 px-3 py-1.5 text-xs font-medium rounded-md transition-colors',
+            canEdit
+              ? 'text-slate-600 hover:text-slate-700 hover:bg-slate-50 cursor-pointer'
+              : 'text-slate-300 cursor-not-allowed'
+          )}
         >
           <Pencil className="w-3.5 h-3.5" />
           Editar
         </button>
         <button
           onClick={() => onDelete(session)}
-          className="flex items-center gap-1 px-3 py-1.5 text-xs font-medium text-red-600 hover:text-red-700 hover:bg-red-50 rounded-md transition-colors cursor-pointer"
+          disabled={!canDelete}
+          title={!canDelete ? 'Você não tem permissão para excluir esta sessão' : undefined}
+          className={twMerge(
+            'flex items-center gap-1 px-3 py-1.5 text-xs font-medium rounded-md transition-colors',
+            canDelete
+              ? 'text-red-600 hover:text-red-700 hover:bg-red-50 cursor-pointer'
+              : 'text-slate-300 cursor-not-allowed'
+          )}
         >
           <Trash2 className="w-3.5 h-3.5" />
           Excluir
@@ -67,12 +69,15 @@ function SessionCard({ session, onEdit, onDelete }: SessionCardProps) {
 
 interface SessionRowProps {
   session: Session
+  currentUser: User
   onEdit: (session: Session) => void
   onDelete: (session: Session) => void
 }
 
-function SessionRow({ session, onEdit, onDelete }: SessionRowProps) {
-  const status = statusConfig[session.status]
+function SessionRow({ session, currentUser, onEdit, onDelete }: SessionRowProps) {
+  const status = getSessionStatusDisplay(session.status)
+  const canEdit = canEditSession(session, currentUser)
+  const canDelete = canDeleteSession(session, currentUser)
 
   return (
     <tr className="border-b border-slate-100 hover:bg-slate-50/50 transition-colors">
@@ -90,15 +95,27 @@ function SessionRow({ session, onEdit, onDelete }: SessionRowProps) {
         <div className="flex items-center gap-1">
           <button
             onClick={() => onEdit(session)}
-            className="p-1.5 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-md transition-colors cursor-pointer"
-            title="Editar"
+            disabled={!canEdit}
+            title={!canEdit ? 'Você não tem permissão para editar esta sessão' : 'Editar'}
+            className={twMerge(
+              'p-1.5 rounded-md transition-colors',
+              canEdit
+                ? 'text-slate-400 hover:text-slate-600 hover:bg-slate-100 cursor-pointer'
+                : 'text-slate-200 cursor-not-allowed'
+            )}
           >
             <Pencil className="w-4 h-4" />
           </button>
           <button
             onClick={() => onDelete(session)}
-            className="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-md transition-colors cursor-pointer"
-            title="Excluir"
+            disabled={!canDelete}
+            title={!canDelete ? 'Você não tem permissão para excluir esta sessão' : 'Excluir'}
+            className={twMerge(
+              'p-1.5 rounded-md transition-colors',
+              canDelete
+                ? 'text-slate-400 hover:text-red-600 hover:bg-red-50 cursor-pointer'
+                : 'text-slate-200 cursor-not-allowed'
+            )}
           >
             <Trash2 className="w-4 h-4" />
           </button>
@@ -110,6 +127,7 @@ function SessionRow({ session, onEdit, onDelete }: SessionRowProps) {
 
 interface PatientSessionsSectionProps {
   sessions: Session[]
+  currentUser: User
   onEdit: (session: Session) => void
   onDelete: (session: Session) => void
   onAdd: () => void
@@ -117,6 +135,7 @@ interface PatientSessionsSectionProps {
 
 export function PatientSessionsSection({
   sessions,
+  currentUser,
   onEdit,
   onDelete,
   onAdd,
@@ -146,7 +165,7 @@ export function PatientSessionsSection({
         <>
           <div className="md:hidden p-4 space-y-3">
             {sortedSessions.map((session) => (
-              <SessionCard key={session.id} session={session} onEdit={onEdit} onDelete={onDelete} />
+              <SessionCard key={session.id} session={session} currentUser={currentUser} onEdit={onEdit} onDelete={onDelete} />
             ))}
           </div>
 
@@ -176,6 +195,7 @@ export function PatientSessionsSection({
                   <SessionRow
                     key={session.id}
                     session={session}
+                    currentUser={currentUser}
                     onEdit={onEdit}
                     onDelete={onDelete}
                   />
