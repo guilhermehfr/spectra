@@ -354,6 +354,7 @@ async function FamilyDashboard() {
 - `src/app/clinic/evolutions/new/page.tsx` - New evolution
 - `src/app/clinic/evolutions/[id]/edit/page.tsx` - Edit evolution
 - `src/components/ui/clinic/EvolutionForm.tsx` - Evolution create/edit form
+- `src/components/ui/clinic/NotFound.tsx` - 404 page component
 
 ### Family
 
@@ -364,6 +365,12 @@ async function FamilyDashboard() {
 - `src/components/ui/family/TherapistCard.tsx`
 - `src/components/ui/family/EvolutionSection.tsx`
 - `src/components/ui/family/EvolutionCard.tsx`
+- `src/components/ui/family/NotFound.tsx` - 404 page component
+
+### Utils
+
+- `src/lib/utils/permissionUtils.ts` - checkPermission(), hasRole()
+- `src/lib/utils/sessionStatusUtils.ts` - getStatusColor(), getStatusLabel()
 
 ---
 
