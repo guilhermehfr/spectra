@@ -19,11 +19,34 @@ Spectra centralizes patient management, therapy scheduling, clinical progress tr
 
 <img width="700" height="400" alt="hero" src="https://github.com/user-attachments/assets/a3a3789b-4e39-427a-8347-6b6524350b97" />
 
-[Live App](https://spectratea.vercel.app) · [Landing Page](https://spectra-tea.vercel.app)
+[Live App](https://spectratea.vercel.app) · [Demo App](https://spectraclinic-demo.vercel.app) · [Landing Page](https://spectra-tea.vercel.app) 
 
 ---
 
 </div>
+
+## 🚀 Demo Access (Recommended)
+
+To explore the platform instantly without setup:
+
+Live Demo: https://spectraclinic-demo.vercel.app
+
+### Quick Login
+
+Use the credentials below directly in the application:
+
+| Role | Email | Password |
+| --- | --- | --- |
+| Admin | admin@spectra.com | admin123 |
+| Therapist | ana@spectra.com | therapist123 |
+| Therapist | carlos@spectra.com | therapist123 |
+| Family | maria@gmail.com | family123 |
+
+➡️ You can also jump directly to the local developement credentials section: [Mock Accounts](#-mock-accounts)
+
+> The demo runs using the a separate dataset and API seeded service, ensuring identical behavior between environments.
+
+---
 
 ## ✨ Overview
 
@@ -119,9 +142,7 @@ The mock infrastructure allows frontend development to proceed independently fro
 | [React 19](https://react.dev/) | UI library |
 | [TypeScript](https://www.typescriptlang.org/) | Static typing |
 | [Tailwind CSS v4](https://tailwindcss.com/) | Styling |
-| [TanStack Query](https://tanstack.com/query) | Async state management |
 | [MSW](https://mswjs.io/) | Mock API infrastructure |
-| [Zod](https://zod.dev/) | Validation and typing |
 
 ### Infrastructure
 
@@ -155,20 +176,6 @@ spectra/
 └── README.md
 ```
 
-## 🎬 Demo
-
-> **Live demo coming soon.**  
-> We are currently setting up a dedicated demo environment with pre-populated clinic data.
-
-In the meantime, you can run the project locally using the mock infrastructure — no backend required:
-
-```bash
-cd apps/web
-pnpm install
-cp .env.local.example .env.local  # NEXT_PUBLIC_DISABLE_MSW=false
-pnpm dev
-```
-
 Mock accounts are available out of the box. See [Mock Accounts](#-mock-accounts) for credentials.
 
 ---
@@ -193,7 +200,7 @@ source .venv/bin/activate
 
 pip install -r requirements.txt
 
-cp .env.example .env
+cp .env.local.example .env.local
 
 python manage.py migrate
 python manage.py seed
@@ -247,7 +254,7 @@ http://localhost:3000
 | --- | --- | --- |
 | `NEXT_PUBLIC_API_URL` | Backend API URL | `http://127.0.0.1:8000` |
 | `NEXT_PUBLIC_DISABLE_MSW` | Toggle mock infrastructure | `false` |
-| `NEXT_PUBLIC_MOCK_USER_ID` | Default mock user | `1` |
+| `NEXT_PUBLIC_MOCK_USER_ID` | Default mock user (admin) | `1` |
 
 ---
 
@@ -262,16 +269,7 @@ http://localhost:3000
 | Therapist | carlos@spectra.com | any |
 | Family | maria@gmail.com | any |
 
-### Real API (`NEXT_PUBLIC_DISABLE_MSW=true`)
-
-| Role | Email | Password |
-| --- | --- | --- |
-| Admin | admin@spectra.com | admin123 |
-| Therapist | ana@spectra.com | therapist123 |
-| Therapist | carlos@spectra.com | therapist123 |
-| Family | maria@spectra.com | family123 |
-
-> Run `python manage.py seed` to populate mock accounts in the real API.
+> Run `python manage.py seed` to populate mock accounts in the selected API DB.
 
 ---
 
@@ -280,7 +278,7 @@ http://localhost:3000
 | Role | Permissions |
 | --- | --- |
 | `admin` | Full clinic access |
-| `therapist` | Sessions, patients, evolutions |
+| `therapist` | Patients, sessions, evolutions |
 | `family` | Read-only access to released evolutions |
 
 ---
@@ -295,20 +293,6 @@ Main API domains:
 - Clinical Evolutions
 - Dashboard Analytics
 - Family Portal Access
-
----
-
-## 🚧 Project Status
-
-Spectra is currently in MVP stage.
-
-Current focus areas include:
-
-- Clinical workflow refinement
-- Accessibility improvements
-- Multi-clinic support
-- Notification infrastructure
-- Production hardening
 
 ---
 

@@ -1,16 +1,14 @@
 <div align="center">
 
-
-# 🧩 Spectra - Plataforma de Gestão para Clínicas TEA
+# 🧩 Spectra - Plataforma de Gestão para Clínicas de TEA
 
 [![Vercel Status](https://therealsujitk-vercel-badge.vercel.app/?app=spectratea)](https://spectratea.vercel.app)
 [![Render](https://img.shields.io/badge/render-live-brightgreen?style=flat&logo=render&logoColor=white)](https://ai-powered-webhook-handler-generator.onrender.com)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
+Uma plataforma full-stack de operações clínicas projetada para clínicas de terapia de Transtorno do Espectro Autista (TEA).
 
-Uma plataforma fullstack de operações clínicas desenvolvida para clínicas de terapia especializadas em Transtorno do Espectro Autista (TEA).
-
-O Spectra centraliza o gerenciamento de pacientes, agendamento de terapias, acompanhamento do progresso clínico e fluxos de comunicação com responsáveis em um único sistema.
+O Spectra centraliza o gerenciamento de pacientes, o agendamento de terapias, o acompanhamento da evolução clínica e os fluxos de comunicação com os responsáveis em um único sistema.
 
 **Backend:** Django 5 · Django REST Framework · PostgreSQL  
 **Frontend:** Next.js 16 · React 19 · TypeScript
@@ -19,55 +17,79 @@ O Spectra centraliza o gerenciamento de pacientes, agendamento de terapias, acom
 
 <img width="700" height="400" alt="hero" src="https://github.com/user-attachments/assets/a3a3789b-4e39-427a-8347-6b6524350b97" />
 
-[Aplicação](https://spectratea.vercel.app) · [Landing Page](https://spectra-tea.vercel.app)
+[Live App](https://spectratea.vercel.app) · [Demo App](https://spectraclinic-demo.vercel.app) · [Landing Page](https://spectra-tea.vercel.app) 
 
 ---
 
 </div>
 
+## 🚀 Acesso à Demonstração (Recomendado)
+
+Para explorar a plataforma instantaneamente sem necessidade de configuração:
+
+Demonstração ao Vivo: https://spectraclinic-demo.vercel.app
+
+### Login Rápido
+
+Utilize as credenciais abaixo diretamente na aplicação:
+
+
+| Perfil | E-mail | Senha |
+| --- | --- | --- |
+| Administrador | admin@spectra.com | admin123 |
+| Terapeuta | ana@spectra.com | therapist123 |
+| Terapeuta | carlos@spectra.com | therapist123 |
+| Família | maria@gmail.com | family123 |
+
+➡️ Você também pode pular diretamente para a seção de credenciais de desenvolvimento local: [Contas de Teste (Mock)](#-contas-de-teste-mock)
+
+> A demonstração roda utilizando um conjunto de dados separado e um serviço de API alimentado por sementes (seeded), garantindo comportamento idêntico entre os ambientes.
+
+---
+
 ## ✨ Visão Geral
 
-O Spectra foi construído em torno de fluxos de trabalho reais de terapia multidisciplinar.
+O Spectra foi construído com base em fluxos reais de trabalho de terapias multidisciplinares.
 
-A plataforma fornece ferramentas operacionais para clínicas e, ao mesmo tempo, entrega uma experiência dedicada para que responsáveis acompanhem o progresso dos pacientes.
+A plataforma fornece ferramentas operacionais para clínicas e, ao mesmo tempo, oferece uma experiência dedicada voltada para que os responsáveis acompanhem o progresso do paciente.
 
-Em vez de focar apenas em operações administrativas de CRUD, o Spectra modela o fluxo real entre terapeutas, sessões, evoluções clínicas e comunicação com famílias.
+Em vez de focar apenas em operações administrativas básicas de CRUD, o Spectra modela o fluxo de trabalho real entre terapeutas, sessões, evoluções clínicas e a comunicação familiar.
 
-Fluxos principais incluem:
+Os fluxos de trabalho principais incluem:
 
 - Gerenciamento de pacientes e responsáveis
-- Agendamento de sessões terapêuticas
-- Registro de notas de progresso clínico
-- Controle de visibilidade pelo terapeuta
-- Portal de acompanhamento para responsáveis
-- Acesso operacional baseado em perfil
+- Agendamento de sessões de terapia
+- Registro de notas de evolução clínica
+- Permissões de visibilidade controladas pelo terapeuta
+- Portal de acompanhamento voltado para os responsáveis
+- Acesso operacional baseado em perfis (roles)
 
 ## 🩺 Fluxo de Trabalho
 
 ```txt
-Terapeuta agenda sessão
+Terapeuta agenda a sessão
             ↓
-Sessão é realizada
+A sessão é concluída
             ↓
-Evolução clínica é registrada
+A evolução clínica é registrada
             ↓
-Responsável recebe acesso pelo Portal da Família
+O responsável recebe acesso através do Portal da Família
 ```
 
 ## ✨ Funcionalidades
 
 ### Backoffice da Clínica
 
-- Cadastro de pacientes com informações do responsável
+- Prontuários de pacientes com informações dos responsáveis
 - Agendamento semanal de terapias
 - Gerenciamento e reagendamento de sessões
-- Registro de evoluções clínicas
-- Estatísticas do dashboard em tempo real
-- Controle de visibilidade para família pelo terapeuta
+- Registro de evolução clínica
+- Estatísticas do painel (dashboard) em tempo real
+- Controle de visibilidade da família gerenciado pelo terapeuta
 
 ### Portal da Família
 
-- Experiência mobile-first para responsáveis
+- Experiência do responsável focada prioritariamente em dispositivos móveis (mobile-first)
 - Histórico de evoluções liberadas
 - Acompanhamento do progresso das sessões
 - Interface simplificada e acessível
@@ -75,43 +97,45 @@ Responsável recebe acesso pelo Portal da Família
 ### Infraestrutura da Plataforma
 
 - Autenticação JWT com cookies httpOnly
-- Controle de acesso baseado em perfil
-- Abstração de API com troca por ambiente
-- Infraestrutura de mock centralizada com MSW
-- Implementações de API com lazy-load
-- Arquitetura monorepo com pnpm workspaces
+- Controle de acesso baseado em perfis (RBAC)
+- Abstração de API ciente do ambiente (environment-aware)
+- Infraestrutura de simulação (mock) centralizada baseada em MSW
+- Implementações de API com carregamento tardio (lazy-loaded)
+- Arquitetura monorepo com workspaces pnpm
 
 ---
 
-## 🏗 Destaques de Arquitetura
+## 🏗 Destaques da Arquitetura
 
-- Arquitetura multi-portal (`clinic` e `family`)
-- Arquitetura server-first com Next.js App Router
-- Troca de API por ambiente (`mock` ↔ `real`)
-- Estado mock centralizado em memória com MSW
-- Middleware de autenticação com reconhecimento de perfil
-- Implementações de API com lazy-load
-- Estrutura de componentes orientada a domínio
+- Arquitetura de múltiplos portais (`clinic` e `family`)
+- Arquitetura Next.js App Router focada prioritariamente no servidor (server-first)
+- Alternância de API baseada no ambiente (`mock` ↔ `real`)
+- Estado de simulação (mock) em memória centralizado com MSW
+- Autenticação em middleware ciente do perfil do usuário
+- Implementações de API com carregamento tardio (lazy-loaded)
+- Estrutura de componentes compartilhados orientada ao domínio (domain-driven)
 - Fluxo de autenticação JWT com cookies seguros
 
-A infraestrutura de mock permite que o desenvolvimento frontend avance de forma independente da disponibilidade do backend, mantendo o comportamento consistente da aplicação.
+A infraestrutura de mock permite que o desenvolvimento do frontend avance de forma independente da disponibilidade do backend, mantendo um comportamento consistente do aplicativo.
 
 ---
 
-## 🛠 Tech Stack
+## 🛠 Tecnologias Utilizadas
 
 ### Backend
 
+
 | Tecnologia | Finalidade |
 | --- | --- |
-| [Django](https://www.djangoproject.com/) | Framework backend |
+| [Django](https://www.djangoproject.com/) | Framework de backend |
 | [Django REST Framework](https://www.django-rest-framework.org/) | API REST |
 | [PostgreSQL](https://www.postgresql.org/) | Banco de dados relacional |
-| [Neon](https://neon.tech/) | PostgreSQL serverless |
+| [Neon](https://neon.tech/) | PostgreSQL Serverless |
 | [SimpleJWT](https://django-rest-framework-simplejwt.readthedocs.io/) | Autenticação JWT |
 | [Gunicorn](https://gunicorn.org/) | Servidor de produção |
 
 ### Frontend
+
 
 | Tecnologia | Finalidade |
 | --- | --- |
@@ -119,17 +143,16 @@ A infraestrutura de mock permite que o desenvolvimento frontend avance de forma 
 | [React 19](https://react.dev/) | Biblioteca de UI |
 | [TypeScript](https://www.typescriptlang.org/) | Tipagem estática |
 | [Tailwind CSS v4](https://tailwindcss.com/) | Estilização |
-| [TanStack Query](https://tanstack.com/query) | Gerenciamento de estado assíncrono |
-| [MSW](https://mswjs.io/) | Infraestrutura de mock de API |
-| [Zod](https://zod.dev/) | Validação e tipagem |
+| [MSW](https://mswjs.io/) | Infraestrutura de API simulada (mock) |
 
 ### Infraestrutura
 
+
 | Tecnologia | Finalidade |
 | --- | --- |
-| [Vercel](https://vercel.com/) | Deploy do frontend |
-| [Render](https://render.com/) | Deploy do backend |
-| [pnpm](https://pnpm.io/) | Gerenciamento de pacotes monorepo |
+| [Vercel](https://vercel.com/) | Implantação (deployment) do frontend |
+| [Render](https://render.com/) | Implantação (deployment) do backend |
+| [pnpm](https://pnpm.io/) | Gerenciamento de pacotes em Monorepo |
 
 ---
 
@@ -155,21 +178,7 @@ spectra/
 └── README.md
 ```
 
-## 🎬 Demo
-
-> **Demo ao vivo em breve.**  
-> Estamos configurando um ambiente de demonstração dedicado com dados clínicos pré-populados.
-
-Enquanto isso, você pode rodar o projeto localmente usando a infraestrutura de mock — sem necessidade de backend:
-
-```bash
-cd apps/web
-pnpm install
-cp .env.local.example .env.local  # NEXT_PUBLIC_DISABLE_MSW=false
-pnpm dev
-```
-
-Contas de teste estão disponíveis por padrão. Veja [Contas de Teste](#-contas-de-teste) para as credenciais.
+As contas de teste (mock) já vêm prontas para uso. Consulte [Contas de Teste (Mock)](#-contas-de-teste-mock) para obter as credenciais.
 
 ---
 
@@ -193,7 +202,7 @@ source .venv/bin/activate
 
 pip install -r requirements.txt
 
-cp .env.example .env
+cp .env.local.example .env.local
 
 python manage.py migrate
 python manage.py seed
@@ -221,7 +230,7 @@ cp .env.local.example .env.local
 pnpm dev
 ```
 
-Aplicação disponível em:
+Aplicativo disponível em:
 
 ```txt
 http://localhost:3000
@@ -233,55 +242,50 @@ http://localhost:3000
 
 ### Backend (`apps/api/.env`)
 
+
 | Variável | Descrição |
 | --- | --- |
 | `SECRET_KEY` | Chave secreta do Django |
-| `DEBUG` | Modo debug |
-| `DATABASE_URL` | String de conexão PostgreSQL |
+| `DEBUG` | Modo de depuração (debug) |
+| `DATABASE_URL` | String de conexão do PostgreSQL |
 | `ALLOWED_HOSTS` | Hosts permitidos |
-| `CORS_ALLOWED_ORIGINS` | Origens do frontend |
+| `CORS_ALLOWED_ORIGINS` | Origens permitidas do frontend |
 
 ### Frontend (`apps/web/.env.local`)
 
+
 | Variável | Descrição | Padrão |
 | --- | --- | --- |
-| `NEXT_PUBLIC_API_URL` | URL da API backend | `http://127.0.0.1:8000` |
-| `NEXT_PUBLIC_DISABLE_MSW` | Alternar infraestrutura de mock | `false` |
-| `NEXT_PUBLIC_MOCK_USER_ID` | Usuário mock padrão | `1` |
+| `NEXT_PUBLIC_API_URL` | URL da API do backend | `http://127.0.0.1:8000` |
+| `NEXT_PUBLIC_DISABLE_MSW` | Ativar/desativar infraestrutura de mock | `false` |
+| `NEXT_PUBLIC_MOCK_USER_ID` | Usuário mock padrão (admin) | `1` |
 
 ---
 
-## 👥 Contas de Teste
+## 👥 Contas de Teste (Mock)
 
-### Modo Mock (`NEXT_PUBLIC_DISABLE_MSW=false`)
+### Modo Simulado / Mock (`NEXT_PUBLIC_DISABLE_MSW=false`)
 
-| Perfil | Email | Senha |
+
+| Perfil | E-mail | Senha |
 | --- | --- | --- |
-| Admin | admin@spectra.com | qualquer |
-| Terapeuta | ana@spectra.com | qualquer |
-| Terapeuta | carlos@spectra.com | qualquer |
-| Família | maria@gmail.com | qualquer |
+| Administrador | admin@spectra.com | qualquer uma |
+| Terapeuta | ana@spectra.com | qualquer uma |
+| Terapeuta | carlos@spectra.com | qualquer uma |
+| Família | maria@gmail.com | qualquer uma |
 
-### API Real (`NEXT_PUBLIC_DISABLE_MSW=true`)
-
-| Perfil | Email | Senha |
-| --- | --- | --- |
-| Admin | admin@spectra.com | admin123 |
-| Terapeuta | ana@spectra.com | therapist123 |
-| Terapeuta | carlos@spectra.com | therapist123 |
-| Família | maria@spectra.com | family123 |
-
-> Execute `python manage.py seed` para popular as contas na API real.
+> Execute `python manage.py seed` para preencher as contas de teste no banco de dados da API selecionado.
 
 ---
 
 ## 🔐 Modelo de Acesso
 
+
 | Perfil | Permissões |
 | --- | --- |
 | `admin` | Acesso total à clínica |
-| `therapist` | Sessões, pacientes e evoluções |
-| `family` | Leitura das evoluções liberadas |
+| `therapist` | Pacientes, sessões, evoluções |
+| `family` | Acesso de apenas leitura às evoluções liberadas |
 
 ---
 
@@ -293,26 +297,13 @@ Principais domínios da API:
 - Pacientes
 - Sessões
 - Evoluções Clínicas
-- Análises do Dashboard
+- Análise de Painel (Dashboard)
 - Acesso ao Portal da Família
 
 ---
 
-## 🚧 Status do Projeto
+## 👋 Equipe
 
-O Spectra está atualmente em estágio de MVP.
-
-Áreas de foco atuais incluem:
-
-- Refinamento do fluxo clínico
-- Melhorias de acessibilidade
-- Suporte a múltiplas clínicas
-- Infraestrutura de notificações
-- Hardening para produção
-
----
-
-## 👋 Time
 
 | Membros | LinkedIn | GitHub |
 |-|----------|--------|
