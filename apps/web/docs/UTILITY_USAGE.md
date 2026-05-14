@@ -143,6 +143,39 @@ const recent = filterRecentSessions(allSessions, 7) // Last 7 days
 
 ---
 
+### Permission Utilities (`src/lib/utils/permissionUtils.ts`)
+
+```tsx
+import { checkPermission, hasRole } from '@/lib/utils/permissionUtils'
+
+// Check if user has permission for action
+const canEdit = checkPermission(user, 'patient', 'edit')
+
+// Check if user has specific role
+const isAdmin = hasRole(user, 'admin')
+const isTherapist = hasRole(user, 'therapist')
+```
+
+**Use in:** Middleware, page authorization, component visibility
+
+---
+
+### Session Status Utilities (`src/lib/utils/sessionStatusUtils.ts`)
+
+```tsx
+import { getStatusColor, getStatusLabel } from '@/lib/utils/sessionStatusUtils'
+
+// Get color for session status
+const color = getStatusColor('completed') // Returns: 'green', 'yellow', 'red', etc.
+
+// Get label for session status
+const label = getStatusLabel('scheduled') // Returns: 'Agendada', 'Concluída', etc.
+```
+
+**Use in:** Session tables, status badges, filtering
+
+---
+
 ## Creating a New Utility
 
 ### Step 1: Choose the Right Location

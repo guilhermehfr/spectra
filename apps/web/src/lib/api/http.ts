@@ -5,6 +5,7 @@ export async function http<T>(
   options?: RequestInit & {
     timeout?: number
     tag?: string
+    tags?: string[]
   }
 ): Promise<T> {
   const isAbsolute = /^https?:\/\//i.test(input)
@@ -18,11 +19,22 @@ export async function http<T>(
   const cookieStore = await cookies()
   const accessToken = cookieStore.get('access_token')?.value
 
+  const cacheTags = options?.tags?.length
+    ? options.tags
+    : options?.tag
+      ? [options.tag]
+      : undefined
+
+  const method = options?.method?.toUpperCase() || 'GET'
+  const isReadOnly = method === 'GET' || method === 'HEAD'
+  const cacheMode = isReadOnly ? 'force-cache' : 'no-store'
+  const revalidateSeconds = isReadOnly ? 3600 : 0
+
   try {
     const res = await fetch(url, {
       ...options,
-      cache: 'no-store',
-      next: options?.tag ? { tags: [options.tag] } : undefined,
+      cache: cacheMode,
+      next: cacheTags ? { tags: cacheTags, revalidate: revalidateSeconds } : { revalidate: revalidateSeconds },
       credentials: 'include',
       headers: {
         ...(options?.body && !(options.body instanceof FormData)
@@ -41,7 +53,9 @@ export async function http<T>(
       const message =
         typeof data === 'object' && data !== null && 'detail' in data
           ? (data as { detail: string }).detail
-          : `HTTP ${res.status}`
+          : typeof data === 'object'
+            ? JSON.stringify(data)
+            : `HTTP ${res.status}`
       throw new Error(message)
     }
 
@@ -51,10 +65,35 @@ export async function http<T>(
   }
 }
 
+// Fine-grained tag revalidation functions
 export function revalidatePatients() {
-  updateTag('patients')
+  updateTag('patients-list')
+}
+
+export function revalidatePatient(id: number) {
+  updateTag(`patient-${id}`)
+}
+
+export function revalidateSessions() {
+  updateTag('sessions-list')
+}
+
+export function revalidateSession(id: number) {
+  updateTag(`session-${id}`)
+}
+
+export function revalidateEvolutions() {
+  updateTag('evolutions-list')
+}
+
+export function revalidateEvolution(id: number) {
+  updateTag(`evolution-${id}`)
 }
 
 export function revalidateFamilyEvolutions() {
   updateTag('family-evolutions')
+}
+
+export function revalidateDashboard() {
+  updateTag('dashboard')
 }

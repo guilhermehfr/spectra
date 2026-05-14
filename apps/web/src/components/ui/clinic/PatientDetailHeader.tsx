@@ -7,9 +7,10 @@ interface PatientDetailHeaderProps {
   patientName: string
   onEdit?: () => void
   onDelete?: () => void
+  canDelete?: boolean
 }
 
-export function PatientDetailHeader({ patientName, onEdit, onDelete }: PatientDetailHeaderProps) {
+export function PatientDetailHeader({ patientName, onEdit, onDelete, canDelete = true }: PatientDetailHeaderProps) {
   return (
     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
       <div className="flex items-center gap-3">
@@ -31,7 +32,24 @@ export function PatientDetailHeader({ patientName, onEdit, onDelete }: PatientDe
         </button>
         <button
           onClick={onDelete}
-          className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-red-600 bg-white border border-red-100 rounded-lg hover:bg-red-50 hover:text-red-700 transition-colors cursor-pointer"
+          disabled={!canDelete}
+          className="flex items-center gap-2 px-4 py-2 text-sm font-medium bg-white border rounded-lg transition-colors cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-white"
+          style={{
+            color: canDelete ? '#dc2626' : '#9ca3af',
+            borderColor: canDelete ? '#fee2e2' : '#e5e7eb',
+          }}
+          onMouseEnter={(e) => {
+            if (canDelete) {
+              e.currentTarget.style.backgroundColor = '#fef2f2'
+              e.currentTarget.style.color = '#b91c1c'
+            }
+          }}
+          onMouseLeave={(e) => {
+            if (canDelete) {
+              e.currentTarget.style.backgroundColor = 'white'
+              e.currentTarget.style.color = '#dc2626'
+            }
+          }}
         >
           <Trash2 className="w-4 h-4" />
           Excluir

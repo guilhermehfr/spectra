@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { toast } from 'react-toastify'
-import type { Patient, Session, Evolution } from '@/lib/types'
+import type { Patient, Session, Evolution, User } from '@/lib/types'
 import { deleteSessionAction } from '@/app/actions/session'
 import { deletePatientAction } from '@/app/actions/patient'
 import { releaseEvolutionAction } from '@/app/actions/evolution'
@@ -17,9 +17,10 @@ interface PatientDetailContentProps {
   patient: Patient
   sessions: Session[]
   evolutions: Evolution[]
+  currentUser: User
 }
 
-export function PatientDetailContent({ patient, sessions, evolutions }: PatientDetailContentProps) {
+export function PatientDetailContent({ patient, sessions, evolutions, currentUser }: PatientDetailContentProps) {
   const router = useRouter()
   const [showDeleteConfirmPatient, setShowDeleteConfirmPatient] = useState(false)
   const [showDeleteConfirmSession, setShowDeleteConfirmSession] = useState(false)
@@ -51,8 +52,6 @@ export function PatientDetailContent({ patient, sessions, evolutions }: PatientD
       router.refresh()
       if (data === 'patient') {
         router.replace('/clinic/patients')
-      } else if (data === 'session') {
-        console.log('Delete session confirmed')
       }
     }
   }
@@ -121,12 +120,14 @@ export function PatientDetailContent({ patient, sessions, evolutions }: PatientD
         patientName={patient.name}
         onEdit={handleEditPatient}
         onDelete={handleDeletePatient}
+        canDelete={currentUser.role === 'admin'}
       />
 
       <PatientInfoCard patient={patient} />
 
       <PatientSessionsSection
         sessions={sessions}
+        currentUser={currentUser}
         onEdit={handleEditSession}
         onDelete={handleDeleteSession}
         onAdd={handleAddSession}
@@ -134,6 +135,8 @@ export function PatientDetailContent({ patient, sessions, evolutions }: PatientD
 
       <PatientEvolutionsSection
         evolutions={evolutions}
+        sessions={sessions}
+        currentUser={currentUser}
         onEdit={handleEditEvolution}
         onRelease={handleReleaseEvolution}
         onAdd={handleAddEvolution}

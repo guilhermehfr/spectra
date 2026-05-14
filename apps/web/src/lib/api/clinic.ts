@@ -9,10 +9,11 @@
  * - NEXT_PUBLIC_DISABLE_MSW=true (prod/real API): Uses HTTP client to make
  *   actual requests to the backend API
  *
- * Note: React cache() was removed to fix caching issues with new patient creation.
- * Each call now fetches fresh data from the API.
+ * React cache() is used for the implementation loader only (not data fetches)
+ * to deduplicate dynamic imports within a single request.
  */
 
+import { cache } from 'react'
 import type {
   CreateEvolutionInput,
   CreatePatientInput,
@@ -24,14 +25,14 @@ import type {
 
 import { getUseMock } from '@/lib/envUtils'
 
-const getImpl = async () => {
+const getImpl = cache(async () => {
   const useMock = getUseMock()
   if (useMock) {
     return import('@/lib/api/clinic-mock')
   } else {
     return import('@/lib/api/clinic-real')
   }
-}
+})
 
 export async function getPatients() {
   const impl = await getImpl()
@@ -116,4 +117,9 @@ export async function patchEvolution(id: number, data: Partial<UpdateEvolutionIn
 export async function getDashboard() {
   const impl = await getImpl()
   return impl.getDashboard()
+}
+
+export async function getTherapists() {
+  const impl = await getImpl()
+  return impl.getTherapists()
 }

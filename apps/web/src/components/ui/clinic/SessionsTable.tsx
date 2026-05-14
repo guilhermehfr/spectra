@@ -2,8 +2,8 @@
 
 import { Pencil, Trash2, Eye } from 'lucide-react'
 import { twMerge } from 'tailwind-merge'
-import type { Session, SessionStatus } from '@/lib/types'
-import { formatDateTimeISO } from '@/lib/utils/dateUtils'
+import type { Session } from '@/lib/types'
+import { formatDateTimeISO, getSessionStatusDisplay } from '@/lib/utils'
 
 interface SessionsTableProps {
   sessions: Session[]
@@ -11,21 +11,6 @@ interface SessionsTableProps {
   onView?: (session: Session) => void
   onEdit?: (session: Session) => void
   onDelete?: (session: Session) => void
-}
-
-const statusConfig: Record<SessionStatus, { label: string; className: string }> = {
-  scheduled: {
-    label: 'Agendada',
-    className: 'bg-blue-50 text-blue-700 border-blue-200',
-  },
-  completed: {
-    label: 'Concluída',
-    className: 'bg-green-50 text-green-700 border-green-200',
-  },
-  cancelled: {
-    label: 'Cancelada',
-    className: 'bg-red-50 text-red-700 border-red-200',
-  },
 }
 
 interface SessionCardProps {
@@ -36,7 +21,7 @@ interface SessionCardProps {
 }
 
 function SessionCard({ session, onView, onEdit, onDelete }: SessionCardProps) {
-  const status = statusConfig[session.status]
+  const status = getSessionStatusDisplay(session.status)
 
   return (
     <div className="bg-white rounded-lg border border-slate-200 p-4 flex flex-col gap-3">
@@ -90,7 +75,7 @@ interface SessionRowProps {
 }
 
 function SessionRow({ session, onView, onEdit, onDelete }: SessionRowProps) {
-  const status = statusConfig[session.status]
+  const status = getSessionStatusDisplay(session.status)
 
   return (
     <tr className="border-b border-slate-100 hover:bg-slate-50/50 transition-colors">
@@ -141,10 +126,6 @@ export function SessionsTable({
   onEdit,
   onDelete,
 }: SessionsTableProps) {
-  const sortedSessions = [...sessions].sort(
-    (a, b) => new Date(b.date_time).getTime() - new Date(a.date_time).getTime()
-  )
-
   if (isLoading) {
     return (
       <div className="bg-white rounded-lg border border-slate-200 p-12 text-center">
@@ -162,7 +143,7 @@ export function SessionsTable({
       ) : (
         <>
           <div className="md:hidden p-4 space-y-3">
-            {sortedSessions.map((session) => (
+            {sessions.map((session) => (
               <SessionCard
                 key={session.id}
                 session={session}
@@ -198,7 +179,7 @@ export function SessionsTable({
                 </tr>
               </thead>
               <tbody>
-                {sortedSessions.map((session) => (
+                {sessions.map((session) => (
                   <SessionRow
                     key={session.id}
                     session={session}

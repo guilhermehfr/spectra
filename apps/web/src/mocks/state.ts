@@ -263,6 +263,10 @@ export function getMockUsers() {
   return mockUsers
 }
 
+export function getTherapists(): User[] {
+  return mockUsers.filter((u) => u.role === 'therapist') as User[]
+}
+
 export function getMockTokens() {
   return mockTokens
 }

@@ -19,6 +19,7 @@ import type {
   UpdateEvolutionInput,
   UpdatePatientInput,
   UpdateSessionInput,
+  User,
 } from '@/lib/types'
 
 export function getPatients(): Promise<Patient[]> {
@@ -60,8 +61,15 @@ export function deletePatient(id: number): Promise<void> {
   }
 }
 
-export function getSessions(): Promise<Session[]> {
-  return Promise.resolve(state.getSessions())
+export function getSessions(options?: { patient?: number; therapist?: number }): Promise<Session[]> {
+  let sessions = state.getSessions()
+  if (options?.patient) {
+    sessions = sessions.filter((s) => s.patient === options.patient)
+  }
+  if (options?.therapist) {
+    sessions = sessions.filter((s) => s.therapist === options.therapist)
+  }
+  return Promise.resolve(sessions)
 }
 
 export function getSession(id: number): Promise<Session | undefined> {
@@ -105,8 +113,15 @@ export function deleteSession(id: number): Promise<void> {
   }
 }
 
-export function getEvolutions(): Promise<Evolution[]> {
-  return Promise.resolve(state.getEvolutions())
+export function getEvolutions(options?: { session?: number; therapist?: number }): Promise<Evolution[]> {
+  let evolutions = state.getEvolutions()
+  if (options?.session) {
+    evolutions = evolutions.filter((e) => e.session === options.session)
+  }
+  if (options?.therapist) {
+    evolutions = evolutions.filter((e) => e.therapist_name)
+  }
+  return Promise.resolve(evolutions)
 }
 
 export function getEvolution(id: number): Promise<Evolution | undefined> {
@@ -115,16 +130,21 @@ export function getEvolution(id: number): Promise<Evolution | undefined> {
 
 export function createEvolution(data: CreateEvolutionInput): Promise<Evolution> {
   try {
-    // Get the session to extract session_date and therapist_name
     const session = state.getSessionById(data.session)
     if (!session || session.status !== 'completed') {
       throw new Error('A sessão precisa estar com status completed.')
     }
 
+    const currentUser = state.getCurrentUser()
+    const authorName = currentUser
+      ? `${currentUser.first_name} ${currentUser.last_name}`.trim() || currentUser.username
+      : null
+
     const evolutionData: Omit<Evolution, 'id' | 'created_at' | 'updated_at'> = {
       session: data.session,
       session_date: session.date_time,
       therapist_name: session.therapist_name,
+      author_name: authorName,
       objective: data.objective,
       activities: data.activities,
       behavior: data.behavior,
@@ -165,4 +185,8 @@ export function patchEvolution(
 
 export function getDashboard(): Promise<Dashboard> {
   return Promise.resolve(state.getDashboardMetrics())
+}
+
+export function getTherapists(): Promise<User[]> {
+  return Promise.resolve(state.getTherapists())
 }

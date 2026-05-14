@@ -45,7 +45,7 @@ export const mockSessions = [
     therapist: 3,
     therapist_name: 'Carlos Souza',
     date_time: '2026-04-29T14:00:00Z',
-    status: 'cancelled',
+    status: 'canceled',
     notes: 'Paciente não compareceu.',
     is_deleted: false,
     created_at: '2026-04-20T10:00:00Z',

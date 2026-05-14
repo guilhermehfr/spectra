@@ -20,15 +20,16 @@ import type {
   UpdateEvolutionInput,
   UpdatePatientInput,
   UpdateSessionInput,
+  User,
 } from '@/lib/types'
 
 export async function getPatients() {
-  const response = await http<{ results: Patient[] }>('/api/patients/', { tag: 'patients' })
+  const response = await http<{ results: Patient[] }>('/api/patients/', { tags: ['patients-list'] })
   return response.results
 }
 
 export function getPatient(id: number) {
-  return http<Patient>(`/api/patients/${id}/`)
+  return http<Patient>(`/api/patients/${id}/`, { tags: [`patient-${id}`] })
 }
 
 export async function getPatientByGuardianEmail(email: string) {
@@ -55,13 +56,18 @@ export function deletePatient(id: number) {
   })
 }
 
-export async function getSessions() {
-  const response = await http<{ results: Session[] }>('/api/sessions/')
+export async function getSessions(options?: { patient?: number; therapist?: number }) {
+  const params = new URLSearchParams()
+  if (options?.patient) params.append('patient', options.patient.toString())
+  if (options?.therapist) params.append('therapist', options.therapist.toString())
+  const query = params.toString()
+  const url = `/api/sessions/${query ? '?' + query : ''}`
+  const response = await http<{ results: Session[] }>(url, { tags: ['sessions-list'] })
   return response.results
 }
 
 export function getSession(id: number) {
-  return http<Session>(`/api/sessions/${id}/`)
+  return http<Session>(`/api/sessions/${id}/`, { tags: [`session-${id}`] })
 }
 
 export function createSession(data: CreateSessionInput) {
@@ -84,13 +90,18 @@ export function deleteSession(id: number) {
   })
 }
 
-export async function getEvolutions() {
-  const response = await http<{ results: Evolution[] }>('/api/evolutions/')
+export async function getEvolutions(options?: { session?: number; therapist?: number }) {
+  const params = new URLSearchParams()
+  if (options?.session) params.append('session', options.session.toString())
+  if (options?.therapist) params.append('therapist', options.therapist.toString())
+  const query = params.toString()
+  const url = `/api/evolutions/${query ? '?' + query : ''}`
+  const response = await http<{ results: Evolution[] }>(url, { tags: ['evolutions-list'] })
   return response.results
 }
 
 export function getEvolution(id: number) {
-  return http<Evolution>(`/api/evolutions/${id}/`)
+  return http<Evolution>(`/api/evolutions/${id}/`, { tags: [`evolution-${id}`] })
 }
 
 export function createEvolution(data: CreateEvolutionInput) {
@@ -115,5 +126,9 @@ export function patchEvolution(id: number, data: Partial<UpdateEvolutionInput>) 
 }
 
 export function getDashboard() {
-  return http<Dashboard>('/api/dashboard/')
+  return http<Dashboard>('/api/dashboard/', { next: { tags: ['dashboard'] } })
+}
+
+export function getTherapists() {
+  return http<User[]>('/api/therapists/')
 }

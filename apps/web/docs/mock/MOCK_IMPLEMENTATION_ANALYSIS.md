@@ -906,6 +906,7 @@ NODE_ENV=development           # Still useful for other things
 - `src/app/clinic/evolutions/new/page.tsx` - New evolution page
 - `src/app/clinic/evolutions/[id]/edit/page.tsx` - Edit evolution page
 - `src/components/ui/clinic/EvolutionForm.tsx` - Evolution create/edit form
+- `src/components/ui/clinic/NotFound.tsx` - 404 page component
 
 #### Family Dashboard
 
@@ -916,6 +917,7 @@ NODE_ENV=development           # Still useful for other things
 - `src/components/ui/family/TherapistCard.tsx` - Therapist info display
 - `src/components/ui/family/EvolutionSection.tsx` - Evolution list section
 - `src/components/ui/family/EvolutionCard.tsx` - Evolution card component
+- `src/components/ui/family/NotFound.tsx` - 404 page component
 - `src/components/layout/family/Navbar.tsx` - Responsive navigation
 - `src/components/layout/family/Header.tsx` - Header component
 - `src/components/layout/family/types.ts` - TypeScript types for family layout
