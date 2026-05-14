@@ -68,6 +68,7 @@ export default async function FamilyDashboard() {
             <LogOut size={18} strokeWidth={1.5} />
             Logout
           </button>
+          </form>
         </div>
         <div className="mb-8 flex items-center gap-4">
           <div
