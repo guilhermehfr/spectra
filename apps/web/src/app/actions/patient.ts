@@ -2,7 +2,7 @@
 
 import { revalidatePath } from 'next/cache'
 import { createPatient, updatePatient, deletePatient } from '@/lib/api/clinic'
-import { revalidatePatients } from '@/lib/api/http'
+import { revalidatePatients, revalidatePatient, revalidateDashboard } from '@/lib/api/http'
 import type { CreatePatientInput, UpdatePatientInput } from '@/lib/types'
 
 export interface PatientFormState {
@@ -54,10 +54,15 @@ export async function createPatientAction(
       notes,
     }
 
-    await createPatient(patientData)
+    const newPatient = await createPatient(patientData)
 
     revalidatePath('/clinic/patients')
+    revalidatePath('/clinic/dashboard')
     revalidatePatients()
+    if (newPatient?.id) {
+      revalidatePatient(newPatient.id)
+    }
+    revalidateDashboard()
     return { success: true }
   } catch (error) {
     const digest = (error as Error & { digest?: string }).digest
@@ -130,6 +135,7 @@ export async function updatePatientAction(
     revalidatePath('/clinic/patients')
     revalidatePath(`/clinic/patients/${patientId}`)
     revalidatePatients()
+    revalidatePatient(patientId)
     return { success: true }
   } catch (error) {
     console.error('Failed to update patient:', error)
@@ -144,6 +150,8 @@ export async function deletePatientAction(patientId: number): Promise<void> {
     await deletePatient(patientId)
     revalidatePath('/clinic/patients')
     revalidatePatients()
+    revalidatePatient(patientId)
+    revalidateDashboard()
     return
   } catch (error) {
     console.error('Failed to delete patient:', error)

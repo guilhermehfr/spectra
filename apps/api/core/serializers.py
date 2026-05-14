@@ -106,14 +106,23 @@ class SessionSerializer(serializers.ModelSerializer):
 class TherapeuticEvolutionSerializer(serializers.ModelSerializer):
     """Serializer para Evoluções."""
     
+    session_date = serializers.DateTimeField(source='session.date_time', read_only=True)
+    therapist_name = serializers.CharField(source='session.therapist.get_full_name', read_only=True)
+    author_name = serializers.SerializerMethodField()
     session_details = SessionSerializer(source='session', read_only=True)
     
     class Meta:
         model = TherapeuticEvolution
-        fields = ['id', 'session', 'session_details', 'objective', 'activities', 
-                  'behavior', 'progress', 'next_steps', 'released_to_family',
-                  'created_at', 'updated_at']
+        fields = ['id', 'session', 'session_date', 'therapist_name', 'author_name', 'session_details', 
+                  'objective', 'activities', 'behavior', 'progress', 'next_steps', 
+                  'released_to_family', 'created_at', 'updated_at']
         read_only_fields = ['id', 'created_at', 'updated_at']
+    
+    def get_author_name(self, obj):
+        """Retorna o nome completo de quem criou/atualizou a evolução."""
+        if obj.created_by:
+            return obj.created_by.get_full_name() or obj.created_by.username
+        return None
         
     def validate_session(self, value):
         """Validar se a sessão já possui evolução e se está marcada como realizada."""

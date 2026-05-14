@@ -3,7 +3,7 @@ from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIV
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from rest_framework.status import HTTP_200_OK, HTTP_201_CREATED, HTTP_404_NOT_FOUND
+from rest_framework.status import HTTP_200_OK, HTTP_201_CREATED, HTTP_404_NOT_FOUND, HTTP_403_FORBIDDEN
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
@@ -115,6 +115,11 @@ class PatientDetailView(RetrieveUpdateDestroyAPIView):
         return obj
     
     def destroy(self, request, *args, **kwargs):
+        if request.user.role != 'admin':
+            return Response(
+                {'detail': 'Apenas administradores podem excluir pacientes'},
+                status=HTTP_403_FORBIDDEN
+            )
         instance = self.get_object()
         instance.delete()  # Uses model's soft delete (sets is_deleted=True)
         return Response(status=204)
@@ -136,10 +141,7 @@ class SessionListCreateView(ListCreateAPIView):
         user = self.request.user
         if not user.is_authenticated:
             return qs.none()
-        # Terapeuta vê as suas sessões
-        if getattr(user, 'is_therapist', lambda: False)():
-            return qs.filter(therapist=user)
-        # Admin vê todas
+        # All therapists and admins can see all sessions
         return qs
 
     def perform_create(self, serializer) -> None:
@@ -159,10 +161,17 @@ class SessionDetailView(RetrieveUpdateDestroyAPIView):
     permission_classes = [IsTherapistOrAdmin]
     
     def get_queryset(self):
-        user = self.request.user
-        if user.is_therapist():
-            return Session.objects.filter(therapist=user)
         return Session.objects.all()
+    
+    def perform_update(self, serializer):
+        session = self.get_object()
+        user = self.request.user
+        if user.role != 'admin' and session.therapist != user:
+            return Response(
+                {'detail': 'Você não tem permissão para editar esta sessão'},
+                status=HTTP_403_FORBIDDEN
+            )
+        serializer.save()
 
 
 class TherapeuticEvolutionListCreateView(ListCreateAPIView):
@@ -173,10 +182,15 @@ class TherapeuticEvolutionListCreateView(ListCreateAPIView):
     permission_classes = [IsTherapistOrAdmin]
     
     def get_queryset(self):
-        user = self.request.user
-        if user.is_therapist():
-            return TherapeuticEvolution.objects.filter(session__therapist=user)
         return TherapeuticEvolution.objects.all()
+    
+    def perform_create(self, serializer):
+        """Define o created_by como o usuário autenticado que está criando a evolução."""
+        session = serializer.validated_data['session']
+        user = self.request.user
+        if user.role != 'admin' and session.therapist != user:
+            raise PermissionError('Você não tem permissão para criar evolução para esta sessão')
+        serializer.save(created_by=self.request.user)
 
 
 class TherapeuticEvolutionDetailView(RetrieveUpdateDestroyAPIView):
@@ -187,10 +201,17 @@ class TherapeuticEvolutionDetailView(RetrieveUpdateDestroyAPIView):
     permission_classes = [IsTherapistOrAdmin]
 
     def get_queryset(self):
-        user = self.request.user
-        if user.is_therapist():
-            return TherapeuticEvolution.objects.filter(session__therapist=user)
         return TherapeuticEvolution.objects.all()
+    
+    def perform_update(self, serializer):
+        evolution = self.get_object()
+        user = self.request.user
+        if user.role != 'admin' and evolution.session.therapist != user:
+            return Response(
+                {'detail': 'Você não tem permissão para editar esta evolução'},
+                status=HTTP_403_FORBIDDEN
+            )
+        serializer.save()
 
 
 class DashboardView(APIView):
@@ -278,6 +299,29 @@ class CurrentUserView(APIView):
         return Response(serializer.data, status=HTTP_200_OK)
 
 
+class TherapistListView(APIView):
+    """
+    GET /api/therapists/
+    
+    Retorna lista de terapeutas ativos.
+    Útil para admins ao criar/editar sessões.
+    
+    Permissão: IsTherapistOrAdmin
+    - Therapeura sees all therapists
+    - Admin sees all therapists
+    """
+    permission_classes = [IsTherapistOrAdmin]
+    
+    def get(self, request):
+        therapists = CustomUser.objects.filter(
+            role='therapist',
+            is_active=True
+        ).order_by('first_name', 'last_name')
+        
+        serializer = CustomUserSerializer(therapists, many=True)
+        return Response(serializer.data, status=HTTP_200_OK)
+
+
 class LogoutView(APIView):
     """
     POST /api/auth/logout/
@@ -315,7 +359,43 @@ class FamilyEvolutionsListView(ListCreateAPIView):
     permission_classes = [IsAuthenticated]
     
     def get_queryset(self):
-        return TherapeuticEvolution.objects.filter(released_to_family=True).order_by('-created_at')
+        user = self.request.user
+        return TherapeuticEvolution.objects.filter(
+            released_to_family=True,
+            session__patient__guardian_email=user.email
+        ).order_by('-created_at')
+
+
+class FamilyEvolutionDetailView(APIView):
+    """
+    GET /api/evolutions/family/{id}/
+    
+    Retorna os detalhes de uma evolução específica para a família.
+    Verifica se a evolução está liberada para família E se o email do
+    responsável corresponde ao email do usuário autenticado.
+    
+    Permissão: family (família) - apenas leitura
+    """
+    permission_classes = [IsAuthenticated]
+    serializer_class = TherapeuticEvolutionSerializer
+    
+    def get(self, request, pk):
+        user = request.user
+        
+        evolution = TherapeuticEvolution.objects.filter(
+            id=pk,
+            released_to_family=True,
+            session__patient__guardian_email=user.email
+        ).first()
+        
+        if not evolution:
+            return Response(
+                {'detail': 'Evolução não encontrada ou não autorizada.'},
+                status=404
+            )
+        
+        serializer = self.serializer_class(evolution)
+        return Response(serializer.data)
 
 
 class FamilyPatientView(APIView):

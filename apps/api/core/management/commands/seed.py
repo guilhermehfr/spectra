@@ -5,26 +5,26 @@ from core.models import CustomUser, Patient, Session, TherapeuticEvolution
 
 
 class Command(BaseCommand):
-    help = 'Seed the database with test data for development'
+    help = 'Popular o banco de dados com dados de teste para desenvolvimento'
 
     def handle(self, *args, **options):
-        self.stdout.write('Clearing existing seed data...')
+        self.stdout.write('Limpando dados existentes...')
         self.clear_data()
-        
-        self.stdout.write('Creating users...')
+
+        self.stdout.write('Criando usuários...')
         users = self.create_users()
-        
-        self.stdout.write('Creating patients...')
+
+        self.stdout.write('Criando pacientes...')
         patients = self.create_patients(users)
-        
-        self.stdout.write('Creating sessions...')
+
+        self.stdout.write('Criando sessões...')
         sessions = self.create_sessions(users, patients)
-        
-        self.stdout.write('Creating evolutions...')
+
+        self.stdout.write('Criando evoluções...')
         self.create_evolutions(sessions, users)
-        
+
         self.verify_data()
-        self.stdout.write(self.style.SUCCESS('Seed completed successfully!'))
+        self.stdout.write(self.style.SUCCESS('Seed concluído com sucesso!'))
 
     def clear_data(self):
         TherapeuticEvolution.objects.all().delete()
@@ -91,28 +91,28 @@ class Command(BaseCommand):
                 'birth_date': '2017-03-10',
                 'guardian_name': 'Maria Silva',
                 'guardian_email': 'maria@spectra.com',
-                'notes': 'Patient with TEA level 2. Highly responsive to ABA therapy.',
+                'notes': 'Paciente com TEA nível 2. Altamente responsivo à terapia ABA.',
             },
             {
                 'name': 'Sofia Rodrigues',
                 'birth_date': '2016-07-22',
                 'guardian_name': 'João Rodrigues',
                 'guardian_email': 'joao.rod@email.com',
-                'notes': 'Patient with TEA level 1. Good verbal communication.',
+                'notes': 'Paciente com TEA nível 1. Boa comunicação verbal.',
             },
             {
                 'name': 'Pedro Alves',
                 'birth_date': '2018-11-05',
                 'guardian_name': 'Fernanda Alves',
                 'guardian_email': 'fernanda@email.com',
-                'notes': 'Patient with TEA level 2. Benefits from visual schedules.',
+                'notes': 'Paciente com TEA nível 2. Se beneficia de agendas visuais.',
             },
             {
                 'name': 'Clara Mendes',
                 'birth_date': '2015-04-18',
                 'guardian_name': 'Roberto Mendes',
                 'guardian_email': 'roberto@email.com',
-                'notes': 'Patient with TEA level 3. Requires more individual support.',
+                'notes': 'Paciente com TEA nível 3. Requer mais suporte individual.',
             },
         ]
         
@@ -133,70 +133,70 @@ class Command(BaseCommand):
         therapist_ana = users.get('ana')
         therapist_carlos = users.get('carlos')
         now = timezone.now()
-        
+
         sessions_data = [
             {
                 'patient': patients['Leonardo'],
                 'therapist': therapist_ana,
                 'date_time': now - timedelta(days=14),
                 'status': 'completed',
-                'notes': 'Session completed successfully.',
+                'notes': 'Sessão concluída com sucesso.',
             },
             {
                 'patient': patients['Leonardo'],
                 'therapist': therapist_ana,
                 'date_time': now - timedelta(days=7),
                 'status': 'completed',
-                'notes': 'Good progress on verbal requests.',
+                'notes': 'Bom progresso em solicitações verbais.',
             },
             {
                 'patient': patients['Leonardo'],
                 'therapist': therapist_ana,
                 'date_time': now + timedelta(days=3),
                 'status': 'scheduled',
-                'notes': 'Scheduled follow-up session.',
+                'notes': 'Sessão de acompanhamento agendada.',
             },
             {
                 'patient': patients['Leonardo'],
                 'therapist': therapist_ana,
                 'date_time': now + timedelta(days=7),
                 'status': 'scheduled',
-                'notes': 'Parent meeting scheduled.',
+                'notes': 'Reunião com responsáveis agendada.',
             },
             {
                 'patient': patients['Sofia'],
                 'therapist': therapist_ana,
                 'date_time': now - timedelta(days=10),
                 'status': 'completed',
-                'notes': 'Focused on social skills.',
+                'notes': 'Focado em habilidades sociais.',
             },
             {
                 'patient': patients['Sofia'],
                 'therapist': therapist_ana,
                 'date_time': now + timedelta(days=5),
                 'status': 'scheduled',
-                'notes': 'Scheduled session.',
+                'notes': 'Sessão agendada.',
             },
             {
                 'patient': patients['Pedro'],
                 'therapist': therapist_carlos,
                 'date_time': now + timedelta(days=2),
                 'status': 'scheduled',
-                'notes': 'Initial assessment session.',
+                'notes': 'Sessão de avaliação inicial.',
             },
             {
                 'patient': patients['Clara'],
                 'therapist': therapist_carlos,
                 'date_time': now - timedelta(days=3),
                 'status': 'canceled',
-                'notes': 'Canceled due to patient illness.',
+                'notes': 'Cancelado devido a doença do paciente.',
             },
             {
                 'patient': patients['Clara'],
                 'therapist': therapist_carlos,
                 'date_time': now - timedelta(days=1),
                 'status': 'completed',
-                'notes': 'Sensory integration activities.',
+                'notes': 'Atividades de integração sensorial.',
             },
         ]
         
@@ -221,47 +221,47 @@ class Command(BaseCommand):
         evolutions_data = [
             {
                 'session_key': ('Leonardo_completed', 0),
-                'objective': 'Improve verbal requests using Picture Exchange Communication System (PECS)',
-                'activities': 'Used PECS Phase 1 pictures for requesting desired items. Practiced "I want" exchanges.',
-                'behavior': 'Leonardo showed consistent interest in using pictures to request. Required minimal prompting.',
-                'progress': 'Good progress - increased spontaneous requests from 2 to 8 per session.',
-                'next_steps': 'Introduce PECS Phase 2 with sentence strips. Practice combining 2 pictures.',
+                'objective': 'Melhorar solicitações verbais usando o Sistema de Comunicação por Troca de Imagens (PECS)',
+                'activities': 'Utilizadas imagens do PECS Fase 1 para solicitar itens desejados. Praticadas trocas "Eu quero".',
+                'behavior': 'Leonardo mostrou interesse consistente em usar imagens para solicitar. Necesitou prompting mínimo.',
+                'progress': 'Bom progresso - aumentou solicitações espontâneas de 2 para 8 por sessão.',
+                'next_steps': 'Introduzir PECS Fase 2 com frases. Praticar combinação de 2 imagens.',
                 'released_to_family': True,
             },
             {
                 'session_key': ('Leonardo_completed', 1),
-                'objective': 'Continue developing verbal imitation and vocalizations',
-                'activities': 'Echo practice with vowels and consonants. Ball pop games for fun.',
-                'behavior': 'Improved vowel sounds. More engaged when activities are play-based.',
-                'progress': 'Increased vocalizations from 3 to 7 per session. Beginning to pair words with actions.',
-                'next_steps': 'Continue play-based sound games. Introduce "more" and "up" words.',
+                'objective': 'Continuar desenvolvendo imitação verbal e vocalizações',
+                'activities': 'Prática de eco com vogais e consoantes. Jogos de estoura bolhas para diversão.',
+                'behavior': 'Melhorou sons de vogais. Mais engajado quando atividades são lúdicas.',
+                'progress': 'Aumentou vocalizações de 3 para 7 por sessão. Começando a associar palavras com ações.',
+                'next_steps': 'Continuar jogos sonoros lúdicos. Introduzir palavras "mais" e "pra cima".',
                 'released_to_family': False,
             },
             {
                 'session_key': 'Sofia_completed',
-                'objective': 'Develop peer interaction skills during structured activities',
-                'activities': 'Turn-taking games with therapist. Parallel play with peer video modeling.',
-                'behavior': 'Sofia appropriately requested turns. Made eye contact when asking for help.',
-                'progress': 'Improved from 2 to 5 peer interactions per session without prompting.',
-                'next_steps': 'Introduce simple cooperative play activities with a peer.',
+                'objective': 'Desenvolver habilidades de interação com pares durante atividades estruturadas',
+                'activities': 'Jogos de alternância com terapeuta. Brincadeira paralela com modelagem em vídeo.',
+                'behavior': 'Sofia solicitou turnos de forma apropriada. Fez contato visual ao pedir ajuda.',
+                'progress': 'Melhorou de 2 para 5 interações com pares por sessão sem prompting.',
+                'next_steps': 'Introduzir atividades cooperativas simples com um par.',
                 'released_to_family': False,
             },
             {
                 'session_key': 'Clara_completed',
-                'objective': 'Sensory regulation using weighted blanket and tactile activities',
-                'activities': 'Weighted blanket time. Playdoh tactile play. Swing activities.',
-                'behavior': 'Clara became regulated after 10 minutes with weighted blanket.',
-                'progress': ' Able to achieve sensory regulation within 15 minutes (down from 25).',
-                'next_steps': 'Continue sensory integration activities. Begin self-regulation checklist.',
+                'objective': 'Regulação sensorial usando cobertor weighted e atividades táteis',
+                'activities': 'Tempo com cobertor weighted. Brincadeira com massinha. Atividades de balanço.',
+                'behavior': 'Clara se regulou após 10 minutos com o cobertor weighted.',
+                'progress': 'Capaz de atingir regulação sensorial em 15 minutos (reduzido de 25).',
+                'next_steps': 'Continuar atividades de integração sensorial. Iniciar lista de autorregulação.',
                 'released_to_family': True,
             },
             {
                 'session_key': 'Leonardo_completed',
-                'objective': 'Generalization of "more" and "all done" requests',
-                'activities': 'Block building with request opportunities. Puzzle activities.',
-                'behavior': 'Used "more" and "all done" spontaneously in 3 contexts.',
-                'progress': 'Successfully generalized requests across 3 different activities.',
-                'next_steps': 'Expand to "I need help" and "open" requests.',
+                'objective': 'Generalização de solicitações "mais" e "terminou"',
+                'activities': 'Construção com blocos com oportunidades de solicitação. Atividades de quebra-cabeça.',
+                'behavior': 'Usou "mais" e "terminou" espontaneamente em 3 contextos.',
+                'progress': 'Generalizou solicitações com sucesso em 3 atividades diferentes.',
+                'next_steps': 'Expandir para "preciso de ajuda" e "abre".',
                 'released_to_family': True,
             },
         ]
@@ -276,6 +276,7 @@ class Command(BaseCommand):
                 session = session_list[i]
                 TherapeuticEvolution.objects.create(
                     session=session,
+                    created_by=session.therapist,  # Author is the therapist who conducted the session
                     objective=evo_data['objective'],
                     activities=evo_data['activities'],
                     behavior=evo_data['behavior'],
@@ -289,11 +290,11 @@ class Command(BaseCommand):
         patient_count = Patient.objects.count()
         session_count = Session.objects.count()
         evolution_count = TherapeuticEvolution.objects.count()
-        
+
         self.stdout.write(self.style.SUCCESS(
-            f'\nData verification:\n'
-            f'  Users: {user_count}\n'
-            f'  Patients: {patient_count}\n'
-            f'  Sessions: {session_count}\n'
-            f'  Evolutions: {evolution_count}\n'
+            f'\nVerificação de dados:\n'
+            f'  Usuários: {user_count}\n'
+            f'  Pacientes: {patient_count}\n'
+            f'  Sessões: {session_count}\n'
+            f'  Evoluções: {evolution_count}\n'
         ))
