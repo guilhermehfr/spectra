@@ -1,44 +1,21 @@
-'use client'
+import { authService } from '@/lib/authService'
+import { redirect } from 'next/navigation'
+import { ClinicNotFound } from '@/components/ui/clinic'
+import { FamilyNotFound } from '@/components/ui/family'
 
-import { usePathname } from 'next/navigation'
-import { Layout } from '@/components/layout/clinic'
-import Link from 'next/link'
+export default async function NotFound() {
+  let userRole: string | null = null
 
-export default function NotFound() {
-  const pathname = usePathname()
-
-  if (pathname.startsWith('/clinic')) {
-    return (
-      <Layout>
-        <div className="flex flex-col items-center justify-center min-h-[60vh]">
-          <h1 className="text-6xl font-bold text-slate-900">404</h1>
-          <p className="text-xl text-slate-600 mt-2 mb-2">Página não encontrada</p>
-          <p className="text-sm text-slate-500 mb-8">
-            A página que você está procurando não existe ou foi movida.
-          </p>
-          <Link
-            href="/clinic/dashboard"
-            className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-[linear-gradient(90deg,#2563EB,#4648D4)] rounded-lg hover:opacity-90 transition-opacity cursor-pointer"
-          >
-            Ir para a dashboard
-          </Link>
-        </div>
-      </Layout>
-    )
+  try {
+    const user = await authService.me()
+    userRole = user.role
+  } catch {
+    redirect('/')
   }
 
-  if (pathname.startsWith('/family')) {
-    return (
-      <div className="flex flex-col items-center justify-center min-h-screen">
-        <h1 className="text-6xl font-bold text-slate-900">404 - Família</h1>
-      </div>
-    )
+  if (userRole === 'family') {
+    return <FamilyNotFound />
   }
 
-  return (
-    <div className="flex flex-col items-center justify-center min-h-screen">
-      <h1 className="text-6xl font-bold text-slate-900">404</h1>
-      <p className="text-xl text-slate-600 mt-2">Página não encontrada</p>
-    </div>
-  )
+  return <ClinicNotFound />
 }
