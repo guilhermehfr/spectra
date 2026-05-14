@@ -99,6 +99,29 @@ class Patient(SoftDeleteModel):
 
     def __str__(self) -> str:
         return self.name
+    
+    def delete(self, *args, **kwargs) -> tuple[int, dict[str, int]]:
+        """Soft delete patient AND all related sessions and evolutions."""
+        from django.utils import timezone
+        
+        # 1. Soft delete all related sessions
+        for session in self.sessions.all():
+            session.is_deleted = True
+            session.deleted_at = timezone.now()
+            session.save()
+            
+            # 2. Soft delete evolution if exists
+            if hasattr(session, 'evolution'):
+                session.evolution.is_deleted = True
+                session.evolution.deleted_at = timezone.now()
+                session.evolution.save()
+        
+        # 3. Soft delete the patient
+        self.is_deleted = True
+        self.deleted_at = timezone.now()
+        self.save()
+        
+        return (1, {self._meta.label: 1})
 
 
 class Session(SoftDeleteModel):
@@ -131,6 +154,7 @@ class TherapeuticEvolution(SoftDeleteModel):
     """Evolução Terapêutica registrada após uma sessão."""
     
     session = models.OneToOneField(Session, on_delete=models.CASCADE, related_name='evolution', verbose_name='Sessão')
+    created_by = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True, blank=True, related_name='created_evolutions', verbose_name='Criado por')
     objective = models.TextField(verbose_name='Objetivo')
     activities = models.TextField(verbose_name='Atividades Realizadas')
     behavior = models.TextField(verbose_name='Comportamento Observado')

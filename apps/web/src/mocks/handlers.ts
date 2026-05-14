@@ -263,4 +263,16 @@ export const handlers = [
   http.get(`${BASE_URL}/api/dashboard/`, () => {
     return HttpResponse.json(state.getDashboardMetrics())
   }),
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // THERAPISTS
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  /**
+   * GET /api/therapists/
+   * Lists all therapists (users with role 'therapist')
+   */
+  http.get(`${BASE_URL}/api/therapists/`, () => {
+    return HttpResponse.json(state.getTherapists())
+  }),
 ]

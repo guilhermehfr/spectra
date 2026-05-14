@@ -36,6 +36,8 @@ src/
 │   │   ├── clinic/page.tsx     # Clinic staff login
 │   │   └── family/page.tsx     # Family login
 │   ├── clinic/                 # Clinic portal routes
+│   │   ├── layout.tsx          # Clinic portal layout
+│   │   ├── loading.tsx          # Clinic loading state
 │   │   ├── dashboard/
 │   │   │   └── page.tsx        # Clinic dashboard
 │   │   ├── patients/
@@ -63,6 +65,8 @@ src/
 │   │           └── edit/
 │   │               └── page.tsx  # Edit evolution
 │   └── family/                 # Family portal routes
+│       ├── layout.tsx          # Family portal layout
+│       ├── loading.tsx          # Family loading state
 │       ├── dashboard/
 │       │   └── page.tsx        # Family dashboard
 │       └── evolutions/
@@ -111,13 +115,15 @@ src/
 │       │   ├── SessionsTable.tsx     # Sessions table component
 │       │   ├── SessionForm.tsx       # Session create/edit form
 │       │   ├── EvolutionForm.tsx    # Evolution create/edit form
+│       │   ├── NotFound.tsx         # 404 page component
 │       │   └── index.ts
 │       ├── family/
 │       │   ├── DashboardStats.tsx
 │       │   ├── LatestEvolutionCard.tsx
 │       │   ├── TherapistCard.tsx    # Therapist info display
 │       │   ├── EvolutionSection.tsx # Evolution list section
-│       │   └── EvolutionCard.tsx     # Evolution card component
+│       │   ├── EvolutionCard.tsx     # Evolution card component
+│       │   └── NotFound.tsx         # 404 page component
 │       └── shared/             # Reusable UI components
 │           ├── index.ts            # Barrel export
 │           ├── Avatar.tsx
@@ -152,7 +158,9 @@ src/
 │       │   ├── dateRangeUtils.ts# getTodayRange(), getDaysAgo(), aggregateByDayOfWeek()
 │       │   ├── statsUtils.ts   # calculateClinicStats(), filterRecentSessions()
 │       │   ├── envUtils.ts     # getUseMock()
-│       │   └── redirectUtils.ts# getDashboardUrl(), getLoginUrl()
+│       │   ├── redirectUtils.ts# getDashboardUrl(), getLoginUrl()
+│       │   ├── permissionUtils.ts # checkPermission(), hasRole()
+│       │   └── sessionStatusUtils.ts # getStatusColor(), getStatusLabel()
 └── mocks/
     ├── browser.ts              # MSW browser worker setup
     ├── state.ts                # Centralized in-memory mock state

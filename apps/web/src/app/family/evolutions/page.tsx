@@ -1,4 +1,4 @@
-import { resolveUserWithRole } from '@/lib/utils/userUtils'
+import { authService } from '@/lib/authService'
 import { getPatientByGuardianEmail } from '@/lib/api/clinic'
 import { getFamilyEvolutions } from '@/lib/api/family'
 import type { FamilyEvolution } from '@/lib/types'
@@ -6,8 +6,10 @@ import type { FamilyEvolution } from '@/lib/types'
 import { EvolutionCard } from '@/components/ui/family/EvolutionCard'
 import { Navbar } from '@/components/layout/family'
 
+export const revalidate = false
+
 export default async function FamilyEvolutionsPage() {
-  const user = await resolveUserWithRole('family')
+  const user = await authService.me()
 
   let patient = null
   try {

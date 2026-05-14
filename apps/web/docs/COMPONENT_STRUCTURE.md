@@ -49,13 +49,15 @@ src/components/
     │   ├── SessionsTable.tsx
     │   ├── SessionForm.tsx
     │   ├── EvolutionForm.tsx
+    │   ├── NotFound.tsx
     │   └── index.ts           # Barrel export
 ├── family/              # Family-specific UI components
     │   ├── DashboardStats.tsx
     │   ├── LatestEvolutionCard.tsx
     │   ├── TherapistCard.tsx
     │   ├── EvolutionSection.tsx
-    │   └── EvolutionCard.tsx
+    │   ├── EvolutionCard.tsx
+    │   └── NotFound.tsx
     └── shared/              # Reusable UI components
         ├── index.ts            # Barrel export
         ├── Avatar.tsx

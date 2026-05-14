@@ -2,8 +2,17 @@
 
 import { redirect } from 'next/navigation'
 import { revalidatePath } from 'next/cache'
-import { createSession, updateSession, deleteSession } from '@/lib/api/clinic'
+import { createSession, updateSession, deleteSession, getSession } from '@/lib/api/clinic'
+import { revalidateSessions, revalidateSession, revalidateEvolutions, revalidateFamilyEvolutions, revalidateDashboard } from '@/lib/api/http'
+import { resolveUser } from '@/lib/utils/userUtils'
+import { canEditSession, canDeleteSession } from '@/lib/utils/permissionUtils'
 import type { CreateSessionInput, UpdateSessionInput } from '@/lib/types'
+
+function convertToISO8601(dateTime: string): string {
+  if (!dateTime) return dateTime
+  if (dateTime.includes('Z')) return dateTime
+  return `${dateTime}:00Z`
+}
 
 export interface SessionFormState {
   success: boolean
@@ -40,14 +49,23 @@ export async function createSessionAction(
     const sessionData: CreateSessionInput = {
       patient: parseInt(patient!, 10),
       therapist: parseInt(therapist!, 10),
-      date_time,
+      date_time: convertToISO8601(date_time),
       status: 'scheduled',
-      notes,
+      notes: notes || undefined,
     }
 
-    await createSession(sessionData)
+    const newSession = await createSession(sessionData)
 
     revalidatePath('/clinic/sessions')
+    revalidatePath('/clinic/dashboard')
+    revalidatePath(`/clinic/patients/${patient}`)
+    revalidateSessions()
+    if (newSession?.id) {
+      revalidateSession(newSession.id)
+    }
+    revalidateEvolutions()
+    revalidateFamilyEvolutions()
+    revalidateDashboard()
 
     return { success: true }
   } catch (error) {
@@ -72,7 +90,7 @@ export async function updateSessionAction(
   const therapist = formData.get('therapist')?.toString()
   const date_time = formData.get('date_time')?.toString() || ''
   const notes = formData.get('notes')?.toString().trim() || ''
-  const status = formData.get('status')?.toString() as 'scheduled' | 'completed' | 'cancelled'
+  const status = formData.get('status')?.toString() as 'scheduled' | 'completed' | 'canceled'
 
   if (!sessionId) {
     return { success: false, error: 'ID da sessão não encontrado' }
@@ -102,19 +120,37 @@ export async function updateSessionAction(
     return { success: false, errors }
   }
 
+  const user = await resolveUser()
+  const existingSession = await getSession(id)
+
+  if (!existingSession) {
+    return { success: false, error: 'Sessão não encontrada' }
+  }
+
+  if (!canEditSession(existingSession, user)) {
+    return { success: false, error: 'Você não tem permissão para editar esta sessão' }
+  }
+
   try {
     const sessionData: UpdateSessionInput = {
       patient: parseInt(patient!, 10),
       therapist: parseInt(therapist!, 10),
-      date_time,
-      notes,
+      date_time: convertToISO8601(date_time),
+      notes: notes || undefined,
       status,
     }
 
     await updateSession(id, sessionData)
 
     revalidatePath('/clinic/sessions')
+    revalidatePath('/clinic/dashboard')
     revalidatePath(`/clinic/sessions/${id}`)
+    revalidatePath(`/clinic/patients/${patient}`)
+    revalidateSessions()
+    revalidateSession(id)
+    revalidateEvolutions()
+    revalidateFamilyEvolutions()
+    revalidateDashboard()
 
     return { success: true }
   } catch (error) {
@@ -132,9 +168,26 @@ export async function updateSessionAction(
 
 export async function deleteSessionAction(sessionId: number, patientId: number): Promise<void> {
   try {
+    const user = await resolveUser()
+    const session = await getSession(sessionId)
+
+    if (!session) {
+      throw new Error('Sessão não encontrada')
+    }
+
+    if (!canDeleteSession(session, user)) {
+      throw new Error('Você não tem permissão para excluir esta sessão')
+    }
+
     await deleteSession(sessionId)
     revalidatePath(`/clinic/patients/${patientId}`)
     revalidatePath('/clinic/sessions')
+    revalidatePath('/clinic/dashboard')
+    revalidateSession(sessionId)
+    revalidateSessions()
+    revalidateEvolutions()
+    revalidateFamilyEvolutions()
+    revalidateDashboard()
     redirect(`/clinic/patients/${patientId}`)
   } catch (error) {
     console.error('Failed to delete session:', error)

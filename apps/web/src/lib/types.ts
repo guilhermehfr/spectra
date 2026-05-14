@@ -39,7 +39,7 @@ export type Patient = {
 export type CreatePatientInput = Omit<Patient, 'id' | 'created_at' | 'updated_at' | 'is_deleted'>
 export type UpdatePatientInput = Partial<CreatePatientInput>
 
-export type SessionStatus = 'scheduled' | 'completed' | 'cancelled'
+export type SessionStatus = 'scheduled' | 'completed' | 'canceled'
 
 export type Session = {
   id: number
@@ -70,6 +70,7 @@ export type Evolution = {
   session: number
   session_date: string
   therapist_name: string
+  author_name: string | null
   objective: string
   activities: string
   behavior: string
@@ -113,6 +114,7 @@ export type FamilyEvolution = Pick<
   | 'session'
   | 'session_date'
   | 'therapist_name'
+  | 'author_name'
   | 'objective'
   | 'activities'
   | 'behavior'

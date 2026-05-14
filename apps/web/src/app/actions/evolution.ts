@@ -1,7 +1,10 @@
 'use server'
 
 import { revalidatePath } from 'next/cache'
-import { createEvolution, getEvolutions } from '@/lib/api/clinic'
+import { createEvolution, getEvolutions, getEvolution } from '@/lib/api/clinic'
+import { revalidateEvolutions, revalidateEvolution, revalidatePatients, revalidateDashboard } from '@/lib/api/http'
+import { resolveUser } from '@/lib/utils/userUtils'
+import { canEditEvolution, canReleaseEvolution } from '@/lib/utils/permissionUtils'
 import type { CreateEvolutionInput } from '@/lib/types'
 
 export interface EvolutionFormState {
@@ -48,8 +51,23 @@ export async function createEvolutionAction(
   }
 
   try {
+    const sessionIdNum = parseInt(sessionId!, 10)
+
+    const { getSession } = await import('@/lib/api/clinic')
+    const session = await getSession(sessionIdNum)
+
+    if (!session) {
+      return { success: false, error: 'Sessão não encontrada' }
+    }
+
+    const user = await resolveUser()
+
+    if (session.therapist !== user.id && user.role !== 'admin') {
+      return { success: false, error: 'Você não tem permissão para criar evolução para esta sessão' }
+    }
+
     const evolutionData: CreateEvolutionInput = {
-      session: parseInt(sessionId!, 10),
+      session: sessionIdNum,
       objective,
       activities,
       behavior,
@@ -58,10 +76,21 @@ export async function createEvolutionAction(
       released_to_family,
     }
 
-    await createEvolution(evolutionData)
+    const newEvolution = await createEvolution(evolutionData)
 
     revalidatePath('/clinic/sessions')
+    revalidatePath('/clinic/dashboard')
     revalidatePath(`/clinic/sessions/${sessionId}`)
+    revalidateEvolutions()
+    if (newEvolution?.id) {
+      revalidateEvolution(newEvolution.id)
+    }
+    revalidateDashboard()
+
+    // Get patient ID to invalidate patient detail
+    if (session) {
+      revalidatePath(`/clinic/patients/${session.patient}`)
+    }
 
     return { success: true }
   } catch (error) {
@@ -124,6 +153,23 @@ export async function updateEvolutionAction(
     return { success: false, errors }
   }
 
+  const user = await resolveUser()
+  const existingEvolution = await getEvolution(id)
+
+  if (!existingEvolution) {
+    return { success: false, error: 'Evolução não encontrada' }
+  }
+
+  const { getSession } = await import('@/lib/api/clinic')
+  const session = await getSession(existingEvolution.session)
+  if (!session) {
+    return { success: false, error: 'Sessão não encontrada' }
+  }
+
+  if (!canEditEvolution(existingEvolution, user, session.therapist)) {
+    return { success: false, error: 'Você não tem permissão para editar esta evolução' }
+  }
+
   try {
     const { updateEvolution } = await import('@/lib/api/clinic')
 
@@ -138,6 +184,23 @@ export async function updateEvolutionAction(
 
     revalidatePath('/clinic/sessions')
     revalidatePath('/clinic/evolutions')
+    revalidatePath('/clinic/dashboard')
+    revalidateEvolutions()
+    if (id) {
+      revalidateEvolution(id)
+    }
+
+    // Get session to invalidate patient detail
+    const { getEvolution } = await import('@/lib/api/clinic')
+    const evolution = await getEvolution(id)
+    if (evolution) {
+      const { getSession } = await import('@/lib/api/clinic')
+      const session = await getSession(evolution.session)
+      if (session) {
+        revalidatePath(`/clinic/patients/${session.patient}`)
+      }
+      revalidatePath(`/clinic/sessions/${evolution.session}`)
+    }
 
     return { success: true }
   } catch (error) {
@@ -160,19 +223,35 @@ export interface ReleaseEvolutionState {
 
 export async function releaseEvolutionAction(evolutionId: number): Promise<ReleaseEvolutionState> {
   try {
-    const { patchEvolution, getEvolution } = await import('@/lib/api/clinic')
+    const { patchEvolution, getEvolution, getSession } = await import('@/lib/api/clinic')
 
     const existing = await getEvolution(evolutionId)
     if (!existing) {
       return { success: false, error: 'Evolução não encontrada.' }
     }
 
+    const session = await getSession(existing.session)
+    if (!session) {
+      return { success: false, error: 'Sessão não encontrada.' }
+    }
+
+    const user = await resolveUser()
+    if (!canReleaseEvolution(existing, user, session.therapist)) {
+      return { success: false, error: 'Você não tem permissão para liberar esta evolução.' }
+    }
+
     await patchEvolution(evolutionId, {
       released_to_family: true,
     })
 
+    revalidatePatients()
+    revalidateEvolution(evolutionId)
     revalidatePath('/clinic/patients')
-    revalidatePath('/clinic/patients/[id]')
+    revalidatePath('/family/dashboard')
+    revalidatePath('/family/evolutions')
+    if (existing) {
+      revalidatePath(`/clinic/patients/${existing.session}`)
+    }
 
     return { success: true }
   } catch (error) {
