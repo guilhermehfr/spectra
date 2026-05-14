@@ -1,6 +1,5 @@
 import { notFound } from 'next/navigation'
 
-import { Layout } from '@/components/layout/clinic'
 import { EvolutionForm } from '@/components/ui/clinic'
 import { getEvolution, getSession } from '@/lib/api/clinic'
 import { resolveUser } from '@/lib/utils/userUtils'
@@ -18,7 +17,7 @@ export default async function EditEvolutionPage({ params }: PageProps) {
     notFound()
   }
 
-  const user = await resolveUser()
+  await resolveUser()
   const evolution = await getEvolution(evolutionId)
 
   if (!evolution) {
@@ -32,14 +31,12 @@ export default async function EditEvolutionPage({ params }: PageProps) {
   }
 
   return (
-    <Layout user={user}>
-      <div className="mx-auto max-w-2xl px-4 py-8">
-        <EvolutionForm
-          evolution={evolution}
-          formAction={updateEvolutionAction}
-          cancelHref={`/clinic/sessions/${session.id}`}
-        />
-      </div>
-    </Layout>
+    <div className="mx-auto max-w-2xl px-4 py-8">
+      <EvolutionForm
+        evolution={evolution}
+        formAction={updateEvolutionAction}
+        cancelHref={`/clinic/sessions/${session.id}`}
+      />
+    </div>
   )
 }

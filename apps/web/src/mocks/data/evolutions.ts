@@ -3,6 +3,7 @@ export const mockEvolutions = [
     id: 1,
     session: 1,
     therapist_name: 'Ana Lima',
+    author_name: 'Ana Lima',
     session_date: '2026-04-29T09:00:00Z',
     objective: 'Aumentar tempo de atenção compartilhada.',
     activities: 'Brincadeira com blocos e encaixe. Leitura compartilhada de livro de dinossauros.',

@@ -1,6 +1,8 @@
-import { resolveUserWithRole } from '@/lib/utils/userUtils'
+import { authService } from '@/lib/authService'
 import { getPatientByGuardianEmail } from '@/lib/api/clinic'
 import { getFamilyEvolutions } from '@/lib/api/family'
+import { logoutAction } from '@/app/actions/auth'
+import { LogOut } from 'lucide-react'
 import type { FamilyEvolution } from '@/lib/types'
 
 import { DashboardStats } from '@/components/ui/family/DashboardStats'
@@ -10,8 +12,10 @@ import { Navbar } from '@/components/layout/family'
 import { getRelativeDate } from '@/lib/utils/dateUtils'
 import { extractInitials } from '@/lib/utils/stringUtils'
 
+export const revalidate = false
+
 export default async function FamilyDashboard() {
-  const user = await resolveUserWithRole('family')
+  const user = await authService.me()
 
   let patient = null
   try {
@@ -54,7 +58,16 @@ export default async function FamilyDashboard() {
 
   return (
     <div className="min-h-screen bg-[#EEF3FB] pb-32 md:pb-0">
-      <div className="mx-auto max-w-6xl px-4 py-8 md:px-6 md:pt-24">
+      <div className="mx-auto max-w-6xl px-4 py-4 md:px-6 md:py-6">
+        <div className="relative h-0 mb-8">
+          <button
+            onClick={logoutAction}
+            className="absolute top-0 right-0 z-[999] -mt-2 flex items-center gap-2 px-3 py-2 rounded-lg font-manrope text-sm text-slate-500 hover:bg-slate-200 hover:text-red-600 transition-colors cursor-pointer"
+          >
+            <LogOut size={18} strokeWidth={1.5} />
+            Logout
+          </button>
+        </div>
         <div className="mb-8 flex items-center gap-4">
           <div
             className="flex h-16 w-16 items-center justify-center rounded-full border-2 border-white"

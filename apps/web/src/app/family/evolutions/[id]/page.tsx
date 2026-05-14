@@ -2,7 +2,7 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { ArrowLeft, Target, Activity, Brain, TrendingUp, Compass } from 'lucide-react'
 
-import { resolveUserWithRole } from '@/lib/utils/userUtils'
+import { authService } from '@/lib/authService'
 import { getPatientByGuardianEmail } from '@/lib/api/clinic'
 import { getFamilyEvolution } from '@/lib/api/family'
 import type { FamilyEvolution } from '@/lib/types'
@@ -22,7 +22,7 @@ export default async function FamilyEvolutionPage({ params }: PageProps) {
     notFound()
   }
 
-  const user = await resolveUserWithRole('family')
+  const user = await authService.me()
 
   let patient = null
   try {

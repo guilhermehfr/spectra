@@ -1,8 +1,9 @@
 import { notFound } from 'next/navigation'
-import { Layout } from '@/components/layout/clinic'
 import { PatientDetailContent } from '@/components/ui/clinic'
 import { getPatient, getSessions, getEvolutions } from '@/lib/api/clinic'
 import { resolveUser } from '@/lib/utils/userUtils'
+
+export const revalidate = false
 
 interface PageProps {
   params: Promise<{ id: string }>
@@ -16,12 +17,12 @@ export default async function ClinicPatientDetailPage({ params }: PageProps) {
     notFound()
   }
 
-  const user = await resolveUser()
-
   const patient = await getPatient(patientId)
   if (!patient) {
     notFound()
   }
+
+  const user = await resolveUser()
 
   const allSessions = await getSessions()
   const patientSessions = allSessions.filter((s) => s.patient === patientId && !s.is_deleted)
@@ -31,14 +32,13 @@ export default async function ClinicPatientDetailPage({ params }: PageProps) {
   const patientEvolutions = allEvolutions.filter((e) => sessionIds.has(e.session))
 
   return (
-    <Layout user={user}>
-      <div className="mx-auto max-w-4xl px-4 py-8 md:px-6 md:pt-24">
-        <PatientDetailContent
-          patient={patient}
-          sessions={patientSessions}
-          evolutions={patientEvolutions}
-        />
-      </div>
-    </Layout>
+    <div className="mx-auto max-w-4xl px-4 py-8 md:px-6 md:pt-24">
+      <PatientDetailContent
+        patient={patient}
+        sessions={patientSessions}
+        evolutions={patientEvolutions}
+        currentUser={user}
+      />
+    </div>
   )
 }
