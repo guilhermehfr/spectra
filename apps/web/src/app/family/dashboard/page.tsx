@@ -60,7 +60,7 @@ export default async function FamilyDashboard() {
     <div className="min-h-screen bg-[#EEF3FB] pb-32 md:pb-0">
       <div className="mx-auto max-w-6xl px-4 py-4 md:px-6 md:py-6">
         <div className="relative h-0 mb-8">
-          <form action={logoutAction} method="post">
+          <form action={logoutAction}>
             <button
               type="submit"
               className="absolute top-0 right-0 z-[999] -mt-2 flex items-center gap-2 px-3 py-2 rounded-lg font-manrope text-sm text-slate-500 hover:bg-slate-200 hover:text-red-600 transition-colors cursor-pointer"
@@ -70,7 +70,7 @@ export default async function FamilyDashboard() {
           </button>
           </form>
         </div>
-        <div className="mb-8 flex items-center gap-4">
+        <div className="mb-8 pt-5 flex items-center gap-4">
           <div
             className="flex h-16 w-16 items-center justify-center rounded-full border-2 border-white"
             style={{
