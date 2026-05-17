@@ -46,9 +46,7 @@ export default async function SessionDetailPage({ params }: PageProps) {
       <div className="bg-white rounded-xl border border-slate-200 p-6">
         <div className="flex items-start justify-between mb-6">
           <div>
-            <h1 className="font-manrope text-2xl font-bold text-slate-900">
-              Sessão #{session.id}
-            </h1>
+            <h1 className="font-manrope text-2xl font-bold text-slate-900">Sessão #{session.id}</h1>
             <p className="text-sm text-slate-500 mt-1">{formatDateLong(session.date_time)}</p>
           </div>
           <span

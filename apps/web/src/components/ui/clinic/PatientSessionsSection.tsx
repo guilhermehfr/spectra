@@ -3,7 +3,12 @@
 import { Pencil, Plus, Trash2 } from 'lucide-react'
 import { twMerge } from 'tailwind-merge'
 import type { Session, User } from '@/lib/types'
-import { formatDateTimeISO, getSessionStatusDisplay, canEditSession, canDeleteSession } from '@/lib/utils'
+import {
+  formatDateTimeISO,
+  getSessionStatusDisplay,
+  canEditSession,
+  canDeleteSession,
+} from '@/lib/utils'
 
 interface SessionCardProps {
   session: Session
@@ -165,7 +170,13 @@ export function PatientSessionsSection({
         <>
           <div className="md:hidden p-4 space-y-3">
             {sortedSessions.map((session) => (
-              <SessionCard key={session.id} session={session} currentUser={currentUser} onEdit={onEdit} onDelete={onDelete} />
+              <SessionCard
+                key={session.id}
+                session={session}
+                currentUser={currentUser}
+                onEdit={onEdit}
+                onDelete={onDelete}
+              />
             ))}
           </div>
 

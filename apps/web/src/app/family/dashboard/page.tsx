@@ -65,9 +65,9 @@ export default async function FamilyDashboard() {
               type="submit"
               className="absolute top-0 right-0 z-[999] -mt-2 flex items-center gap-2 px-3 py-2 rounded-lg font-manrope text-sm text-slate-500 hover:bg-slate-200 hover:text-red-600 transition-colors cursor-pointer"
             >
-            <LogOut size={18} strokeWidth={1.5} />
-            Logout
-          </button>
+              <LogOut size={18} strokeWidth={1.5} />
+              Logout
+            </button>
           </form>
         </div>
         <div className="mb-8 pt-5 flex items-center gap-4">

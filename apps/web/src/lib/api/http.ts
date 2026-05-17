@@ -19,11 +19,7 @@ export async function http<T>(
   const cookieStore = await cookies()
   const accessToken = cookieStore.get('access_token')?.value
 
-  const cacheTags = options?.tags?.length
-    ? options.tags
-    : options?.tag
-      ? [options.tag]
-      : undefined
+  const cacheTags = options?.tags?.length ? options.tags : options?.tag ? [options.tag] : undefined
 
   const method = options?.method?.toUpperCase() || 'GET'
   const isReadOnly = method === 'GET' || method === 'HEAD'
@@ -34,7 +30,9 @@ export async function http<T>(
     const res = await fetch(url, {
       ...options,
       cache: cacheMode,
-      next: cacheTags ? { tags: cacheTags, revalidate: revalidateSeconds } : { revalidate: revalidateSeconds },
+      next: cacheTags
+        ? { tags: cacheTags, revalidate: revalidateSeconds }
+        : { revalidate: revalidateSeconds },
       credentials: 'include',
       headers: {
         ...(options?.body && !(options.body instanceof FormData)

@@ -3,7 +3,13 @@
 import { redirect } from 'next/navigation'
 import { revalidatePath } from 'next/cache'
 import { createSession, updateSession, deleteSession, getSession } from '@/lib/api/clinic'
-import { revalidateSessions, revalidateSession, revalidateEvolutions, revalidateFamilyEvolutions, revalidateDashboard } from '@/lib/api/http'
+import {
+  revalidateSessions,
+  revalidateSession,
+  revalidateEvolutions,
+  revalidateFamilyEvolutions,
+  revalidateDashboard,
+} from '@/lib/api/http'
 import { resolveUser } from '@/lib/utils/userUtils'
 import { canEditSession, canDeleteSession } from '@/lib/utils/permissionUtils'
 import type { CreateSessionInput, UpdateSessionInput } from '@/lib/types'

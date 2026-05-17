@@ -10,17 +10,29 @@ export function canDeleteSession(session: Session, user: User): boolean {
   return session.therapist === user.id
 }
 
-export function canEditEvolution(evolution: Evolution, user: User, sessionTherapistId: number): boolean {
+export function canEditEvolution(
+  evolution: Evolution,
+  user: User,
+  sessionTherapistId: number
+): boolean {
   if (user.role === 'admin') return true
   return sessionTherapistId === user.id
 }
 
-export function canDeleteEvolution(evolution: Evolution, user: User, sessionTherapistId: number): boolean {
+export function canDeleteEvolution(
+  evolution: Evolution,
+  user: User,
+  sessionTherapistId: number
+): boolean {
   if (user.role === 'admin') return true
   return sessionTherapistId === user.id
 }
 
-export function canReleaseEvolution(evolution: Evolution, user: User, sessionTherapistId: number): boolean {
+export function canReleaseEvolution(
+  evolution: Evolution,
+  user: User,
+  sessionTherapistId: number
+): boolean {
   if (user.role === 'admin') return true
   return sessionTherapistId === user.id
 }

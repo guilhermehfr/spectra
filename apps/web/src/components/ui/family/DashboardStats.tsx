@@ -17,7 +17,7 @@ interface StatCardProps {
 
 function StatCard({ label, value, icon: Icon, iconBgColor }: StatCardProps) {
   return (
-    <div className="flex flex-col gap-2 w-[200%] rounded-lg border border-[var(--color-slate-200)] bg-white p-8 shadow-[0px_4px_12px_0px_rgba(0,0,0,0.02),0px_1px_3px_0px_rgba(0,0,0,0.05)]">
+    <div className="flex flex-col gap-2 rounded-lg border border-slate-200 bg-white p-4 sm:p-8 shadow-[0px_4px_12px_0px_rgba(0,0,0,0.02),0px_1px_3px_0px_rgba(0,0,0,0.05)]">
       <div
         className={twMerge('flex h-12 w-12 items-center justify-center rounded-full', iconBgColor)}
       >
@@ -38,7 +38,7 @@ function StatCard({ label, value, icon: Icon, iconBgColor }: StatCardProps) {
 
 export function DashboardStats({ totalSessions, lastSession }: DashboardStatsProps) {
   return (
-    <div className="flex w-full gap-2">
+    <div className="grid grid-cols-2 gap-4 w-full">
       <StatCard
         label="Total de Evoluções"
         value={totalSessions}

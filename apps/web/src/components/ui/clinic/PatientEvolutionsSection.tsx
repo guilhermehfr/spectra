@@ -29,7 +29,14 @@ interface EvolutionCardProps {
   isReleasing?: boolean
 }
 
-function EvolutionCard({ evolution, sessions, currentUser, onEdit, onRelease, isReleasing }: EvolutionCardProps) {
+function EvolutionCard({
+  evolution,
+  sessions,
+  currentUser,
+  onEdit,
+  onRelease,
+  isReleasing,
+}: EvolutionCardProps) {
   const isReleased = evolution.released_to_family
   const session = sessions.find((s) => s.id === evolution.session)
   const sessionTherapistId = session?.therapist ?? 0
@@ -99,7 +106,9 @@ function EvolutionCard({ evolution, sessions, currentUser, onEdit, onRelease, is
           <button
             onClick={() => onRelease(evolution)}
             disabled={isReleasing || !canRelease}
-            title={!canRelease ? 'Você não tem permissão para compartilhar esta evolução' : undefined}
+            title={
+              !canRelease ? 'Você não tem permissão para compartilhar esta evolução' : undefined
+            }
             className={
               canRelease && !isReleasing
                 ? 'flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-green-700 hover:bg-green-50 rounded-md transition-colors cursor-pointer'

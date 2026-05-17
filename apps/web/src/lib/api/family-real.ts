@@ -19,5 +19,7 @@ export async function getFamilyEvolutions() {
 }
 
 export function getFamilyEvolution(id: number) {
-  return http<FamilyEvolution>(`/api/evolutions/family/${id}/`, { tags: [`family-evolution-${id}`] })
+  return http<FamilyEvolution>(`/api/evolutions/family/${id}/`, {
+    tags: [`family-evolution-${id}`],
+  })
 }

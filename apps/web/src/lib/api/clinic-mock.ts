@@ -61,7 +61,10 @@ export function deletePatient(id: number): Promise<void> {
   }
 }
 
-export function getSessions(options?: { patient?: number; therapist?: number }): Promise<Session[]> {
+export function getSessions(options?: {
+  patient?: number
+  therapist?: number
+}): Promise<Session[]> {
   let sessions = state.getSessions()
   if (options?.patient) {
     sessions = sessions.filter((s) => s.patient === options.patient)
@@ -113,7 +116,10 @@ export function deleteSession(id: number): Promise<void> {
   }
 }
 
-export function getEvolutions(options?: { session?: number; therapist?: number }): Promise<Evolution[]> {
+export function getEvolutions(options?: {
+  session?: number
+  therapist?: number
+}): Promise<Evolution[]> {
   let evolutions = state.getEvolutions()
   if (options?.session) {
     evolutions = evolutions.filter((e) => e.session === options.session)

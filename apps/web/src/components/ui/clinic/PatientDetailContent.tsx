@@ -20,7 +20,12 @@ interface PatientDetailContentProps {
   currentUser: User
 }
 
-export function PatientDetailContent({ patient, sessions, evolutions, currentUser }: PatientDetailContentProps) {
+export function PatientDetailContent({
+  patient,
+  sessions,
+  evolutions,
+  currentUser,
+}: PatientDetailContentProps) {
   const router = useRouter()
   const [showDeleteConfirmPatient, setShowDeleteConfirmPatient] = useState(false)
   const [showDeleteConfirmSession, setShowDeleteConfirmSession] = useState(false)

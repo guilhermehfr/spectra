@@ -2,7 +2,12 @@
 
 import { revalidatePath } from 'next/cache'
 import { createEvolution, getEvolutions, getEvolution } from '@/lib/api/clinic'
-import { revalidateEvolutions, revalidateEvolution, revalidatePatients, revalidateDashboard } from '@/lib/api/http'
+import {
+  revalidateEvolutions,
+  revalidateEvolution,
+  revalidatePatients,
+  revalidateDashboard,
+} from '@/lib/api/http'
 import { resolveUser } from '@/lib/utils/userUtils'
 import { canEditEvolution, canReleaseEvolution } from '@/lib/utils/permissionUtils'
 import type { CreateEvolutionInput } from '@/lib/types'
@@ -63,7 +68,10 @@ export async function createEvolutionAction(
     const user = await resolveUser()
 
     if (session.therapist !== user.id && user.role !== 'admin') {
-      return { success: false, error: 'Você não tem permissão para criar evolução para esta sessão' }
+      return {
+        success: false,
+        error: 'Você não tem permissão para criar evolução para esta sessão',
+      }
     }
 
     const evolutionData: CreateEvolutionInput = {
