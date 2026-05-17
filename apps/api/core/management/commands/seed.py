@@ -344,6 +344,82 @@ class Command(BaseCommand):
 
         sessions_data = [
             # ── Leonardo Silva ──────────────────────────────────────────────
+            # Sessões históricas (últimos 3 meses)
+            {
+                'patient': patients['Leonardo'],
+                'therapist': therapist_ana,
+                'date_time': now - timedelta(days=88),
+                'status': 'completed',
+                'notes': (
+                    'Sessão de 50 minutos focada em PECS Fase 2 - persistência comunicativa. '
+                    'Leonardo praticou o protocolo "esperar enquanto o comunicador não responde": '
+                    'mantinha a imagem por até 10 segundos antes de repetir. '
+                    'Foram realizadas 20 tentativas com 60% de sucesso. '
+                    'Reforço: acesso a tablet com desenho animado por 3 minutos após cada acerto.'
+                ),
+            },
+            {
+                'patient': patients['Leonardo'],
+                'therapist': therapist_carlos,
+                'date_time': now - timedelta(days=75),
+                'status': 'completed',
+                'notes': (
+                    'Sessão de 50 minutos com foco em imitação verbal de sons vocálicos (/a/, /o/, /u/). '
+                    'Atividades com jogos sonoros: apito, tamborim e bolha de sabão. '
+                    'Leonardo emitiu sons vocálicos em 8 de 15 oportunidades (53%成功率). '
+                    'Progresso em relação à linha de base (2/15). Reforço: snack de cereal.'
+                ),
+            },
+            {
+                'patient': patients['Leonardo'],
+                'therapist': therapist_ana,
+                'date_time': now - timedelta(days=61),
+                'status': 'completed',
+                'notes': (
+                    'Sessão de 50 minutos dedicada ao treino de contato visual funcional. '
+                    'Protocolo: olhar-pegar (mandatório para receber item desejado). '
+                    'Leonardo atingiu 70% de contato visual espontâneo (7/10 tentativas). '
+                    'Uso de preferir-historinha como recurso motivador.'
+                ),
+            },
+            {
+                'patient': patients['Leonardo'],
+                'therapist': therapist_carlos,
+                'date_time': now - timedelta(days=47),
+                'status': 'completed',
+                'notes': (
+                    'Sessão de 50 minutos com foco em auto-regulação emocional. '
+                    'Ensino da estratégia "parar-respirar-continuar" com suporte visual. '
+                    'Leonardo apresentou 3 episódios de birra durante transições (reduceis). '
+                    'Utilizou o cartão de respiração em 2 de 3 oportunidades. '
+                    'Reforço: tempo extra no tablet (5 min追加).'
+                ),
+            },
+            {
+                'patient': patients['Leonardo'],
+                'therapist': therapist_ana,
+                'date_time': now - timedelta(days=33),
+                'status': 'completed',
+                'notes': (
+                    'Sessão de 50 minutos de habilidades sociais via jogo paralelo -> compartilhado. '
+                    'Atividade: construção conjunta com blocos. Leonardo aceitou dividir espaço '
+                    'com a terapeuta após negociação visual. Manteve interação por 12 minutos contínuos. '
+                    'Uso de reforçador social: elogio específico ("que bom trabalho em equipe!").'
+                ),
+            },
+            {
+                'patient': patients['Leonardo'],
+                'therapist': therapist_carlos,
+                'date_time': now - timedelta(days=19),
+                'status': 'completed',
+                'notes': (
+                    'Sessão de 50 minutos de atenção compartilhada via jogo de causa-e-feito. '
+                    'Atividade: bola que rola e cai no balde, com alternância de turnos. '
+                    'Leonardo solicitou continuidade do jogo em 4 oportunidades (vocalização + gesto). '
+                    'Indicador de atenção joint emergente: seguiu olhar da terapeuta para objeto 3x.'
+                ),
+            },
+            # Sessões mais recentes (manter as existentes)
             {
                 'patient': patients['Leonardo'],
                 'therapist': therapist_ana,
@@ -372,28 +448,27 @@ class Command(BaseCommand):
                     'e foi orientada ao final sobre as estratégias a generalizar em casa durante a semana.'
                 ),
             },
+            # Sessões agendadas
             {
                 'patient': patients['Leonardo'],
                 'therapist': therapist_ana,
-                'date_time': now + timedelta(days=3),
+                'date_time': now + timedelta(days=7),
                 'status': 'scheduled',
                 'notes': (
-                    'Sessão de acompanhamento agendada para dar continuidade ao programa de PECS Fase 2 '
-                    'e introdução de frases com dois ícones. Será avaliada a generalização das solicitações '
-                    'treinadas nas sessões anteriores para novos contextos e com novos interlocutores. '
-                    'Planejar inclusão de terapeuta auxiliar como interlocutor secundário no bloco final.'
+                    'Sessão de acompanhamento do programa PECS Fase 2. '
+                    'Avaliar generalização das habilidades de persistência comunicativa. '
+                    'Testar com novo interlocutor (terapeuta auxiliar).'
                 ),
             },
             {
                 'patient': patients['Leonardo'],
-                'therapist': therapist_ana,
-                'date_time': now + timedelta(days=10),
+                'therapist': therapist_carlos,
+                'date_time': now + timedelta(days=14),
                 'status': 'scheduled',
                 'notes': (
-                    'Sessão de orientação familiar com presença da mãe e, se possível, da professora de '
-                    'apoio escolar. Objetivo: revisar programas em andamento, apresentar dados de progresso '
-                    'das últimas 4 semanas e alinhar estratégias de generalização entre clínica, escola '
-                    'e domicílio. Preparar relatório parcial de evolução para a reunião.'
+                    'Sessão de orientação familiar com presença da mãe. '
+                    'Revisão de progresso das últimas 4 semanas. '
+                    'Alinhamento de estratégias para generalização em casa.'
                 ),
             },
             # ── Sofia Rodrigues ─────────────────────────────────────────────
@@ -731,10 +806,151 @@ class Command(BaseCommand):
 
     def create_evolutions(self, sessions, users):
         evolutions_data = [
-            # ── Leonardo – sessão 1 (14 dias atrás) ─────────────────────────
+            # ── Leonardo – sessão 1 (88 dias atrás / PECS Fase 2) ───────────
             {
                 'session_key': 'Leonardo_completed',
                 'session_index': 0,
+                'objective': (
+                    'Ensinar persistência comunicativa via PECS Fase 2: Leonardo mantém '
+                    'a imagem até obter resposta do comunicador.'
+                ),
+                'activities': (
+                    'Protocolo "esperar resposta": terapeuta segura imagem sem entregar item. '
+                    'Leonardo espera até 10 segundos. 20 tentativas, 12 acertos (60%).'
+                ),
+                'behavior': (
+                    'Leonardo demonstrou frustração leve em 4 tentativas (empurra imagem). '
+                    'Nos acertos, entregou imagem com firmeza. Manteve motivação alta.'
+                ),
+                'progress': (
+                    'Linha de base: 0% de persistência. Resultado: 60% — progresso significativo. '
+                    'Critério: 80% para avançAR de fase.'
+                ),
+                'next_steps': (
+                    'Aumentar tempo de espera para 15 segundos. Introduzir 2 comunicadores.'
+                ),
+                'released_to_family': True,
+            },
+            # ── Leonardo – sessão 2 (75 dias atrás / Imitação verbal) ────────
+            {
+                'session_key': 'Leonardo_completed',
+                'session_index': 1,
+                'objective': (
+                    'Estabelecer imitação verbal de vogais em contexto lúdico.'
+                ),
+                'activities': (
+                    'Jogos sonoros: apito, tamborim, bolha de sabão. '
+                    '15 oportunidades de imitação após modelagem.'
+                ),
+                'behavior': (
+                    'Leonardo emitiu /a/, /o/, /u/ em 8 de 15 tentativas (53%). '
+                    'Associou som à ação de soprar. Sem comportamentos disruptivos.'
+                ),
+                'progress': (
+                    'Linha de base: 2/15 (13%). Sessão atual: 8/15 (53%). '
+                    'Aumento de 40 pontos percentuais.'
+                ),
+                'next_steps': (
+                    'Continuar com sons bilabiais (/p/, /b/, /m/). Usar snack como reforçador.'
+                ),
+                'released_to_family': False,
+            },
+            # ── Leonardo – sessão 3 (61 dias atrás / Contato visual) ──────────
+            {
+                'session_key': 'Leonardo_completed',
+                'session_index': 2,
+                'objective': (
+                    'Aumentar contato visual funcional para 80% das solicitações.'
+                ),
+                'activities': (
+                    'Protocolo "olhar-pegar": item dado apenas após contato visual >1s. '
+                    '10 tentativas com preferir-historinha como motivador.'
+                ),
+                'behavior': (
+                    'Leonardo alcançou 70% de contato visual espontâneo (7/10). '
+                    'Nos outros 3, precisou de prompt visual (sinal de "olha").'
+                ),
+                'progress': (
+                    'Linha de base: 30%. Sessão: 70%. Muito bom progresso.'
+                ),
+                'next_steps': (
+                    'Reduzir prompt visual. Chegar a 80% sem ajuda.'
+                ),
+                'released_to_family': True,
+            },
+            # ── Leonardo – sessão 4 (47 dias atrás / Regulação emocional) ─────
+            {
+                'session_key': 'Leonardo_completed',
+                'session_index': 3,
+                'objective': (
+                    'Ensinar estratégia "parar-respirar-continuar" com suporte visual.'
+                ),
+                'activities': (
+                    'Cartão visual de respiração. 3 episódios de birra durante transições. '
+                    'Prática da estratégia em cada episódio.'
+                ),
+                'behavior': (
+                    '3 birras breves (30-60 seg). Usou cartão de respiração em 2/3 oportunidades. '
+                    'Autoregulação improving.'
+                ),
+                'progress': (
+                    'Antes: 0 uso da estratégia. Agora: 2/3 oportunidades (67%).'
+                ),
+                'next_steps': (
+                    'Praticar estratégia em ambiente natural (casa, escola).'
+                ),
+                'released_to_family': False,
+            },
+            # ── Leonardo – sessão 5 (33 dias atrás / Habilidades sociais) ─────
+            {
+                'session_key': 'Leonardo_completed',
+                'session_index': 4,
+                'objective': (
+                    'Transicionar de jogo paralelo para interação compartilhada.'
+                ),
+                'activities': (
+                    'Construção conjunta com blocos. Negoção visual de espaço. '
+                    'Turnos alternados por 12 minutos.'
+                ),
+                'behavior': (
+                    'Leonardo aceitou dividir espaço. Manteve interação 12 min contínuos. '
+                    'Iniciou contato visual espontâneo para verificar terapeuta 4x.'
+                ),
+                'progress': (
+                    'Primeira sessão de interação compartilhada. Objetivo atingido!'
+                ),
+                'next_steps': (
+                    'Introduzir segundo paciente em atividade estruturada (sessão dupla).'
+                ),
+                'released_to_family': True,
+            },
+            # ── Leonardo – sessão 6 (19 dias atrás / Atenção compartilhada) ───
+            {
+                'session_key': 'Leonardo_completed',
+                'session_index': 5,
+                'objective': (
+                    'Desenvolver atenção compartilhada via jogo de causa-e-feito.'
+                ),
+                'activities': (
+                    'Bola que rola e cai no balde. Alternância de turnos. '
+                    '4 oportunidades de solicitação de continuidade.'
+                ),
+                'behavior': (
+                    'Leonardo solicitou continuidade 4x (vocalização + gesto). '
+                    'Seguiu olhar da terapeuta para objeto 3x — atenção joint emergente!'
+                ),
+                'progress': (
+                    'Primeira evidência clara de atenção compartilhada. Marco importante!'
+                ),
+                'next_steps': (
+                    'Generalizar atenção joint com outros jogos e interlocutores.'
+                ),
+                'released_to_family': False,
+            },
+            # ── Leonardo – sessão 7 (14 dias atrás / PECS Fase 1) ─────────────
+            {
+                'session_key': 'Leonardo_completed',
+                'session_index': 6,
                 'objective': (
                     'Estabelecer troca comunicativa funcional via PECS Fase 1: Leonardo entrega '
                     'espontaneamente a imagem de um item desejado ao comunicador para obtê-lo, '
@@ -777,10 +993,10 @@ class Command(BaseCommand):
                 ),
                 'released_to_family': True,
             },
-            # ── Leonardo – sessão 2 (7 dias atrás) ──────────────────────────
+            # ── Leonardo – sessão 8 (7 dias atrás) ───────────────────────────
             {
                 'session_key': 'Leonardo_completed',
-                'session_index': 1,
+                'session_index': 7,
                 'objective': (
                     'Expandir repertório de solicitações espontâneas via PECS para 5 itens '
                     'distintos e iniciar imitação verbal de sons vocálicos em contexto lúdico.'

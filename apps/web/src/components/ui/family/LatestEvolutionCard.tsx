@@ -56,7 +56,7 @@ export function LatestEvolutionCard({ evolution, onViewFullEvolution }: LatestEv
 
         {/* Right side - Date */}
         <span className="font-manrope text-xs md:text-sm text-slate-500">
-          {formatDateShort(evolution.created_at)}
+          {formatDateShort(evolution.session_date)}
         </span>
       </div>
 

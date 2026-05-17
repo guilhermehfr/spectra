@@ -1,4 +1,106 @@
 export const mockEvolutions = [
+  // Evolução sessão 6 - PECS Fase 2 (88 dias atrás)
+  {
+    id: 2,
+    session: 6,
+    therapist_name: 'Ana Lima',
+    author_name: 'Ana Lima',
+    session_date: '2026-02-17T09:00:00Z',
+    objective:
+      'Ensinar persistência comunicativa via PECS Fase 2: manter imagem até obter resposta.',
+    activities:
+      'Protocolo "esperar resposta": terapeuta segura imagem sem entregar item. 20 tentativas.',
+    behavior:
+      'Frustração leve em 4 tentativas. Nos acertos, entregou imagem com firmeza. Motivação alta.',
+    progress: 'Linha de base: 0% de persistência. Resultado: 60% — progresso significativo.',
+    next_steps: 'Aumentar tempo de espera para 15 segundos. Introduzir 2 comunicadores.',
+    released_to_family: true,
+    created_at: '2026-02-17T10:30:00Z',
+    updated_at: '2026-02-17T10:30:00Z',
+  },
+  // Evolução sessão 7 - Imitação verbal (75 dias atrás)
+  {
+    id: 3,
+    session: 7,
+    therapist_name: 'Carlos Souza',
+    author_name: 'Carlos Souza',
+    session_date: '2026-03-03T09:00:00Z',
+    objective: 'Estabelecer imitação verbal de vogais em contexto lúdico.',
+    activities: 'Jogos sonoros: apito, tamborim, bolha de sabão. 15 oportunidades de imitação.',
+    behavior: 'Emitiu /a/, /o/, /u/ em 8 de 15 tentativas (53%). Associou som à ação de soprar.',
+    progress: 'Linha de base: 13%. Sessão atual: 53%. Aumento de 40 pontos percentuais.',
+    next_steps: 'Continuar com sons bilabiais (/p/, /b/, /m/). Usar snack como reforçador.',
+    released_to_family: false,
+    created_at: '2026-03-03T10:30:00Z',
+    updated_at: '2026-03-03T10:30:00Z',
+  },
+  // Evolução sessão 8 - Contato visual (61 dias atrás)
+  {
+    id: 4,
+    session: 8,
+    therapist_name: 'Ana Lima',
+    author_name: 'Ana Lima',
+    session_date: '2026-03-17T09:00:00Z',
+    objective: 'Aumentar contato visual funcional para 80% das solicitações.',
+    activities: 'Protocolo "olhar-pegar": item dado apenas após contato visual >1s. 10 tentativas.',
+    behavior: '70% de contato visual espontâneo (7/10). Nos outros 3, precisou de prompt visual.',
+    progress: 'Linha de base: 30%. Sessão: 70%. Muito bom progresso.',
+    next_steps: 'Reduzir prompt visual. Chegar a 80% sem ajuda.',
+    released_to_family: true,
+    created_at: '2026-03-17T10:30:00Z',
+    updated_at: '2026-03-17T10:30:00Z',
+  },
+  // Evolução sessão 9 - Regulação emocional (47 dias atrás)
+  {
+    id: 5,
+    session: 9,
+    therapist_name: 'Carlos Souza',
+    author_name: 'Carlos Souza',
+    session_date: '2026-03-31T09:00:00Z',
+    objective: 'Ensinar estratégia "parar-respirar-continuar" com suporte visual.',
+    activities: 'Cartão visual de respiração. 3 episódios de birra durante transições.',
+    behavior: '3 birras breves (30-60 seg). Usou cartão de respiração em 2/3 oportunidades.',
+    progress: 'Antes: 0% uso da estratégia. Agora: 67% das oportunidades.',
+    next_steps: 'Praticar estratégia em ambiente natural (casa, escola).',
+    released_to_family: false,
+    created_at: '2026-03-31T10:30:00Z',
+    updated_at: '2026-03-31T10:30:00Z',
+  },
+  // Evolução sessão 10 - Habilidades sociais (33 dias atrás)
+  {
+    id: 6,
+    session: 10,
+    therapist_name: 'Ana Lima',
+    author_name: 'Ana Lima',
+    session_date: '2026-04-14T09:00:00Z',
+    objective: 'Transicionar de jogo paralelo para interação compartilhada.',
+    activities: 'Construção conjunta com blocos. Negoção visual de espaço. Turnos alternados.',
+    behavior:
+      'Aceitou dividir espaço. Manteve interação 12 min contínuos. Contato visual espontâneo 4x.',
+    progress: 'Primeira sessão de interação compartilhada. Objetivo atingido!',
+    next_steps: 'Introduzir segundo paciente em atividade estruturada (sessão dupla).',
+    released_to_family: true,
+    created_at: '2026-04-14T10:30:00Z',
+    updated_at: '2026-04-14T10:30:00Z',
+  },
+  // Evolução sessão 11 - Atenção compartilhada (19 dias atrás)
+  {
+    id: 7,
+    session: 11,
+    therapist_name: 'Carlos Souza',
+    author_name: 'Carlos Souza',
+    session_date: '2026-04-28T09:00:00Z',
+    objective: 'Desenvolver atenção compartilhada via jogo de causa-e-feito.',
+    activities:
+      'Bola que rola e cai no balde. Alternância de turnos. 4 oportunidades de solicitação.',
+    behavior: 'Solicitou continuidade 4x (vocalização + gesto). Seguiu olhar da terapeuta 3x.',
+    progress: 'Primeira evidência clara de atenção compartilhada. Marco importante!',
+    next_steps: 'Generalizar atenção joint com outros jogos e interlocutores.',
+    released_to_family: false,
+    created_at: '2026-04-28T10:30:00Z',
+    updated_at: '2026-04-28T10:30:00Z',
+  },
+  // Evolução sessão 1 (existente - mantida)
   {
     id: 1,
     session: 1,
