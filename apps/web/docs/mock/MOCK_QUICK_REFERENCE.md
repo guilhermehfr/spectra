@@ -22,15 +22,13 @@ NEXT_PUBLIC_API_URL=https://api.production.com
 ```
 LOGIN FORM
   ↓
-authService.login(email, password)
+authService.login(credentials)
   ├─ MOCK: Finds in mockUsers[] → stores in mockState → returns tokens
   └─ REAL: HTTP POST /api/auth/login/
   ↓
 Server Action: cookies.set('access_token', userId)
   ↓
 Redirect to /clinic/dashboard or /family/dashboard
-  ↓
-Middleware checks route + authResolver.getUser(cookie)
   ↓
 Page fetches data with authenticated context
 ```
@@ -67,9 +65,9 @@ User: Maria Silva (id=4, email=maria@gmail.com)
 | Entity     | Total | Notes                                 |
 | ---------- | ----- | ------------------------------------- |
 | Users      | 4     | 1 admin, 2 therapists, 1 family       |
-| Patients   | 4     | All active                            |
-| Sessions   | 5     | 1 completed, 3 scheduled, 1 cancelled |
-| Evolutions | 1     | Released to family                    |
+| Patients   | 14    | All active                            |
+| Sessions   | 13    | 7 completed, 4 scheduled, 1 canceled  |
+| Evolutions | 7     | 4 released to family, 3 not released  |
 
 ---
 
@@ -258,26 +256,27 @@ async function FamilyDashboard() {
 
 ## API Endpoints & Handlers
 
-| Endpoint                | Method | Handler Location | State Function        |
-| ----------------------- | ------ | ---------------- | --------------------- |
-| /api/auth/login/        | POST   | handlers.ts:21   | -                     |
-| /api/auth/refresh/      | POST   | handlers.ts:40   | -                     |
-| /api/patients/          | GET    | handlers.ts:52   | getPatients()         |
-| /api/patients/          | POST   | handlers.ts:60   | createPatient()       |
-| /api/patients/:id/      | GET    | handlers.ts:75   | getPatientById()      |
-| /api/patients/:id/      | PUT    | handlers.ts:87   | updatePatient()       |
-| /api/patients/:id/      | DELETE | handlers.ts:102  | deletePatient()       |
-| /api/sessions/          | GET    | handlers.ts:118  | getSessions()         |
-| /api/sessions/          | POST   | handlers.ts:126  | createSession()       |
-| /api/sessions/:id/      | GET    | handlers.ts:141  | getSessionById()      |
-| /api/sessions/:id/      | PUT    | handlers.ts:153  | updateSession()       |
-| /api/sessions/:id/      | DELETE | handlers.ts:168  | deleteSession()       |
-| /api/evolutions/        | POST   | handlers.ts:187  | createEvolution()     |
-| /api/evolutions/:id/    | GET    | handlers.ts:202  | getEvolutionById()    |
-| /api/evolutions/:id/    | PUT    | handlers.ts:214  | updateEvolution()     |
-| /api/evolutions/        | GET    | handlers.ts:229  | getEvolutions()       |
-| /api/evolutions/family/ | GET    | handlers.ts:237  | getFamilyEvolutions() |
-| /api/dashboard/         | GET    | handlers.ts:252  | getDashboardMetrics() |
+| Endpoint                | Method | State Function        |
+| ----------------------- | ------ | --------------------- |
+| /api/auth/login/        | POST   | -                     |
+| /api/auth/refresh/      | POST   | -                     |
+| /api/patients/          | GET    | getPatients()         |
+| /api/patients/          | POST   | createPatient()       |
+| /api/patients/:id/      | GET    | getPatientById()      |
+| /api/patients/:id/      | PUT    | updatePatient()       |
+| /api/patients/:id/      | DELETE | deletePatient()       |
+| /api/sessions/          | GET    | getSessions()         |
+| /api/sessions/          | POST   | createSession()       |
+| /api/sessions/:id/      | GET    | getSessionById()      |
+| /api/sessions/:id/      | PUT    | updateSession()       |
+| /api/sessions/:id/      | DELETE | deleteSession()       |
+| /api/evolutions/        | POST   | createEvolution()     |
+| /api/evolutions/:id/    | GET    | getEvolutionById()    |
+| /api/evolutions/:id/    | PUT    | updateEvolution()     |
+| /api/evolutions/        | GET    | getEvolutions()       |
+| /api/evolutions/family/ | GET    | getFamilyEvolutions() |
+| /api/dashboard/         | GET    | getDashboardMetrics() |
+| /api/therapists/        | GET    | getTherapists()       |
 
 ---
 
@@ -307,6 +306,7 @@ async function FamilyDashboard() {
 
 - `src/lib/utils/dateUtils.ts` - getRelativeDate() for Portuguese relative dates
 - `src/lib/utils/stringUtils.ts` - extractInitials() for name-to-initials conversion
+- `src/lib/envUtils.ts` - getUseMock() for environment mode checks
 
 ### API Layer
 
@@ -344,7 +344,7 @@ async function FamilyDashboard() {
 - `src/app/clinic/sessions/new/page.tsx` - Schedule new session
 - `src/app/clinic/sessions/[id]/page.tsx` - Session detail
 - `src/app/clinic/sessions/[id]/edit/page.tsx` - Edit session
-- `src/app/clinic/sessions/[id]/evolution/page.tsx` - Create/view evolution for session
+- `src/app/clinic/sessions/[id]/evolution/new/page.tsx` - Create evolution for session
 - `src/components/ui/clinic/SessionsContent.tsx` - Sessions list page wrapper
 - `src/components/ui/clinic/SessionsTable.tsx` - Sessions table
 - `src/components/ui/clinic/SessionForm.tsx` - Session create/edit form
@@ -369,8 +369,8 @@ async function FamilyDashboard() {
 
 ### Utils
 
-- `src/lib/utils/permissionUtils.ts` - checkPermission(), hasRole()
-- `src/lib/utils/sessionStatusUtils.ts` - getStatusColor(), getStatusLabel()
+- `src/lib/utils/permissionUtils.ts` - canEditSession(), canDeleteSession(), canEditEvolution(), canDeleteEvolution(), canReleaseEvolution()
+- `src/lib/utils/sessionStatusUtils.ts` - normalizeSessionStatus(), getSessionStatusDisplay(), getStatusLabel(), getStatusClassName()
 
 ---
 

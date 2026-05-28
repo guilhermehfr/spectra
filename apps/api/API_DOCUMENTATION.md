@@ -133,6 +133,41 @@ Authorization: Bearer {access_token}
 
 ---
 
+## 👥 Terapeutas
+
+### Listar Terapeutas
+Retorna lista de terapeutas ativos. Útil para admins ao criar/editar sessões.
+
+**Endpoint:**
+```
+GET /api/therapists/
+```
+
+**Headers:**
+```
+Authorization: Bearer {access_token}
+```
+
+**Response (200):**
+```json
+[
+  {
+    "id": 10,
+    "username": "ana",
+    "email": "ana@spectra.com",
+    "first_name": "Ana",
+    "last_name": "Costa",
+    "role": "therapist",
+    "phone": "",
+    "is_active": true
+  }
+]
+```
+
+**Permissões:** Apenas Terapeutas e Admins
+
+---
+
 ## 👥 Pacientes
 
 ### Listar Pacientes
@@ -148,21 +183,32 @@ GET /api/patients/
 Authorization: Bearer {access_token}
 ```
 
-**Response (200):**
+**Response (200) - Paginada:**
 ```json
-[
-  {
-    "id": 1,
-    "name": "João Silva",
-    "birth_date": "2015-03-10",
-    "guardian_name": "Maria Silva",
-    "guardian_email": "maria@example.com",
-    "notes": "Notas sobre o paciente",
-    "created_at": "2026-04-29T10:30:00Z",
-    "updated_at": "2026-04-29T10:30:00Z"
-  }
-]
+{
+  "count": 4,
+  "next": null,
+  "previous": null,
+  "results": [
+    {
+      "id": 1,
+      "name": "João Silva",
+      "birth_date": "2015-03-10",
+      "guardian_name": "Maria Silva",
+      "guardian_email": "maria@example.com",
+      "notes": "Notas sobre o paciente",
+      "created_at": "2026-04-29T10:30:00Z",
+      "updated_at": "2026-04-29T10:30:00Z"
+    }
+  ]
+}
 ```
+
+**Paginação:**
+- `count`: Total de registros
+- `results`: Array com os dados da página atual
+- `next`/`previous`: Links para próxima/página anterior (null se não houver)
+- `PAGE_SIZE`: 20 registros por página (padrão)
 
 **Permissões:** Apenas Terapeutas e Admins
 
@@ -346,7 +392,7 @@ Authorization: Bearer {access_token}
 
 ---
 
-## � Sessões (Agenda)
+## 📅 Sessões (Agenda)
 
 ### Listar Sessões
 Listar sessões (Terapeutas vêm as próprias; Admin vê todas).
@@ -431,6 +477,40 @@ Listar todas as evoluções criadas pela clínica.
 GET /api/evolutions/
 ```
 
+**Headers:**
+```
+Authorization: Bearer {access_token}
+```
+
+**Response (200) - Paginada:**
+```json
+{
+  "count": 4,
+  "next": null,
+  "previous": null,
+  "results": [
+    {
+      "id": 1,
+      "session": 1,
+      "session_details": {...},
+      "session_date": "2026-04-21T22:24:49Z",
+      "therapist_name": "Ana Costa",
+      "author_name": "Ana Costa",
+      "objective": "Aumentar vocabulário.",
+      "activities": "Brincadeiras conjuntas.",
+      "behavior": "Tranquilo e focado.",
+      "progress": "Muito bom.",
+      "next_steps": "Continuar com fichas.",
+      "released_to_family": false,
+      "created_at": "2026-05-01T15:00:00Z",
+      "updated_at": "2026-05-01T15:00:00Z"
+    }
+  ]
+}
+```
+
+**Permissões:** Apenas Terapeutas e Admins
+
 ---
 
 ### Listar Evoluções Liberadas para Família
@@ -441,7 +521,12 @@ Obter lista de evoluções liberadas para visualização pela família.
 GET /api/evolutions/family/
 ```
 
-**Response (200):**
+**Headers:**
+```
+Authorization: Bearer {access_token}
+```
+
+**Response (200) - Paginada:**
 ```json
 {
   "count": 2,
@@ -452,8 +537,9 @@ GET /api/evolutions/family/
       "id": 1,
       "session": 1,
       "session_details": {...},
-      "session_date": "2026-05-01",
+      "session_date": "2026-04-21",
       "therapist_name": "Ana Costa",
+      "author_name": "Ana Costa",
       "objective": "Aumentar vocabulário.",
       "activities": "Brincadeiras conjuntas.",
       "behavior": "Tranquilo e focado.",
@@ -468,14 +554,61 @@ GET /api/evolutions/family/
 ```
 
 **Paginação:**
-- A API usa paginação padrão do Django REST Framework
 - `count`: Total de registros
-- `results`: Array com os dados
-- `next`/`previous`: Links para próxima/página anterior
+- `results`: Array com os dados da página atual
+- `next`/`previous`: Links para próxima/página anterior (null se não houver)
 
 **Filtros:**
 - Apenas retorna evoluções onde `released_to_family: true`
 - Ordenado por `created_at` (mais recente primeiro)
+
+**Permissões:** Apenas membros da Família
+
+---
+
+### Detalhes da Evolução (Família)
+Obter detalhes de uma evolução específica liberada para o responsável.
+
+**Endpoint:**
+```
+GET /api/evolutions/family/{id}/
+```
+
+**Headers:**
+```
+Authorization: Bearer {access_token}
+```
+
+**Response (200):**
+```json
+{
+  "id": 1,
+  "session": 1,
+  "session_details": {...},
+  "session_date": "2026-04-21",
+  "therapist_name": "Ana Costa",
+  "author_name": "Ana Costa",
+  "objective": "Aumentar vocabulário.",
+  "activities": "Brincadeiras conjuntas.",
+  "behavior": "Tranquilo e focado.",
+  "progress": "Muito bom.",
+  "next_steps": "Continuar com fichas.",
+  "released_to_family": true,
+  "created_at": "2026-05-01T15:00:00Z",
+  "updated_at": "2026-05-01T15:00:00Z"
+}
+```
+
+**Response (404):**
+```json
+{
+  "detail": "Evolução não encontrada ou não autorizada."
+}
+```
+
+**Validações:**
+- A evolução precisa estar com `released_to_family: true`
+- O email do responsável (guardian_email) do paciente deve corresponder ao email do usuário logado
 
 **Permissões:** Apenas membros da Família
 
@@ -491,50 +624,6 @@ GET /api/evolutions/family/
   "released_to_family": true
 }
 ```
-
----
-
-## 📊 Dashboard
-
-### Estatísticas do Dashboard
-Obter dados agregados para o dashboard da clínica.
-
-**Endpoint:**
-```
-GET /api/dashboard/
-```
-
-**Headers:**
-```
-Authorization: Bearer {access_token}
-```
-
-**Response (200):**
-```json
-{
-  "today_sessions": [
-    {
-      "id": 1,
-      "patient": 1,
-      "patient_name": "Leonardo Silva",
-      "therapist": 1,
-      "therapist_name": "Ana Costa",
-      "date_time": "2026-05-05T14:00:00Z",
-      "status": "scheduled",
-      "notes": "Sessão semanal"
-    }
-  ],
-  "active_patients": 4,
-  "pending_evolutions": 2
-}
-```
-
-**Campos:**
-- `today_sessions`: Sessões de hoje (status: scheduled ou completed)
-- `active_patients`: Total de pacientes ativos (não deletados)
-- `pending_evolutions`: Sessões completadas sem evolução
-
-**Permissões:** Apenas Terapeutas e Admins
 
 ---
 
@@ -556,6 +645,7 @@ Authorization: Bearer {access_token}
 | POST `/auth/refresh/` | ✅ | ✅ | ✅ |
 | GET `/auth/me/` | ✅ | ✅ | ✅ |
 | POST `/auth/logout/` | ✅ | ✅ | ✅ |
+| GET `/therapists/` | ✅ | ✅ | ❌ |
 | GET `/dashboard/` | ✅ | ✅ (Dados dele) | ❌ |
 | GET `/patients/` | ✅ | ✅ | ❌ |
 | GET `/patients/family/` | ❌ | ❌ | ✅ |
@@ -564,8 +654,9 @@ Authorization: Bearer {access_token}
 | PUT `/patients/{id}/` | ✅ | ✅ | ❌ |
 | DELETE `/patients/{id}/` | ✅ | ✅ | ❌ |
 | ALL `/sessions/` | ✅ | ✅ (Apenas as dele) | ❌ |
-| ALL `/evolutions/` | ✅ | ✅ (Apenas as dele) | ✅ (Apenas liberadas) |
+| ALL `/evolutions/` | ✅ | ✅ (Apenas as dele) | ❌ |
 | GET `/evolutions/family/` | ✅ | ✅ | ✅ |
+| GET `/evolutions/family/{id}/` | ❌ | ❌ | ✅ |
 
 ---
 

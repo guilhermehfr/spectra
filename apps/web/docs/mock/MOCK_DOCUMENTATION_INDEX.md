@@ -224,7 +224,7 @@ Evolution (session=1, released_to_family=true)
 
 - ⚠️ Dashboard metrics (basic counts, no detailed breakdown)
 - ⚠️ Clinic dashboard (not implemented)
-- ⚠️ Mock data scale (1 evolution for testing)
+- ⚠️ Mock data scale (7 evolutions for testing)
 
 ### Not Yet Implemented
 
@@ -306,7 +306,7 @@ Evolution (session=1, released_to_family=true)
 
 - `src/lib/types.ts` - Shared TypeScript types
 - `src/app/family/dashboard/page.tsx` - Family dashboard (188 lines)
-- `src/app/middleware.ts` - Route protection (44 lines)
+- `src/app/actions/auth.ts` - Server actions for login/logout
 
 ---
 

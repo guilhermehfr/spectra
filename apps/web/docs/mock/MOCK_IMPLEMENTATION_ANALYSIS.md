@@ -71,17 +71,16 @@ export const authResolver = {
 
 **Flow**:
 
-1. Middleware reads `access_token` cookie
-2. Cookie value is passed to `authResolver.getUser()`
-3. In mock mode: cookie = userId (e.g., "1") → resolved to mockUsers[1]
-4. In real mode: cookie = actual token → call backend `/api/auth/me/`
+1. Server Action reads `access_token` cookie and passes value to `authResolver.getUser()`
+2. In mock mode: cookie = userId (e.g., "1") → resolved to mockUsers[1]
+3. In real mode: cookie = actual token → call backend `/api/auth/me/`
 
 ### 1.5 Authentication Flow Diagram
 
 ```
 LOGIN PAGE
     ↓
-authService.login(email, password)
+authService.login(credentials)
     ↓
     ├─ MOCK: loginMock() → finds in mockUsers → stores in mockState → returns tokens
     └─ REAL: HTTP POST /api/auth/login/
@@ -90,11 +89,9 @@ SERVER ACTION stores userId in `access_token` cookie
     ↓
 REDIRECT to /clinic/dashboard or /family/dashboard
     ↓
-MIDDLEWARE checks access_token cookie
-    ↓
-authResolver.getUser(cookieValue) retrieves user info
-    ↓
 PAGE COMPONENT renders authenticated content
+    ↓
+authService.me() fetches user info when needed
 ```
 
 ### 1.6 MSW Integration
@@ -207,7 +204,7 @@ mockPatients = [
     notes: 'Diagnóstico de TEA grau 1...',
     is_deleted: false,
   },
-  // 4 patients total
+  // 14 patients total
 ]
 ```
 
@@ -222,11 +219,11 @@ mockSessions = [
     therapist: 2, // ID reference
     therapist_name: 'Ana Lima', // Denormalized
     date_time: '2026-04-29T09:00:00Z',
-    status: 'completed' | 'scheduled' | 'cancelled',
+    status: 'completed' | 'scheduled' | 'canceled',
     notes: '...',
     is_deleted: false,
   },
-  // 5 sessions total
+  // 13 sessions total
 ]
 ```
 
@@ -246,7 +243,7 @@ mockEvolutions = [
     next_steps: 'Introduzir atividade...',
     released_to_family: true, // Controls visibility to family
   },
-  // 1 evolution (connected to session 1)
+  // 7 evolutions total
 ]
 ```
 
@@ -499,34 +496,28 @@ export async function http<T>(
 ```typescript
 // Page: async Server Component (dynamic = 'force-dynamic')
 export default async function FamilyDashboard() {
-  // 1. Get auth cookie
-  const cookieStore = await cookies()
-  const cookieValue = cookieStore.get('access_token')?.value
+  // 1. Resolve user via authService
+  const user = await authService.me()
 
-  // 2. Resolve user from cookie
-  const user = await authResolver.getUser(cookieValue)
-
-  // 3. Get patient by matching family email to guardian_email
+  // 2. Get patient by matching family email to guardian_email
   let patient = await getPatientByGuardianEmail(user.email)
 
-  // 4. Fetch all evolutions (filtered to released_to_family by API)
+  // 3. Fetch all evolutions (filtered to released_to_family by API)
   let evolutions = await getFamilyEvolutions()
 
-  // 5. Compute display data
+  // 4. Compute display data
   const latestEvolution = evolutions.sort(
     (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
   )[0]
 
-  // 6. Render UI with stats, avatar, evolution card
+  // 5. Render UI with stats, avatar, evolution card
 }
 ```
 
 ### 5.2 Data Resolution Steps
 
 ```
-access_token cookie (value: "4")
-    ↓
-authResolver.getUser("4")
+authService.me()
     ↓
     ├─ MOCK: mockUsers.find(u => u.id === 4) → Maria Silva (family)
     └─ REAL: HTTP GET /api/auth/me/
@@ -618,7 +609,7 @@ Display:
 
 - CRUD operations
 - Auto-population of denormalized fields (patient_name, therapist_name)
-- Status tracking (scheduled, completed, cancelled)
+- Status tracking (scheduled, completed, canceled)
 
 ✅ **Evolutions**
 
@@ -636,12 +627,12 @@ Display:
 
 ### 6.2 Current Mock Data Scale
 
-| Entity     | Count | Current State                                     |
-| ---------- | ----- | ------------------------------------------------- |
-| Users      | 4     | 1 admin, 2 therapists, 1 family                   |
-| Patients   | 4     | All active (is_deleted: false)                    |
-| Sessions   | 5     | Mix of statuses (completed, scheduled, cancelled) |
-| Evolutions | 1     | Related to session 1, released_to_family: true    |
+| Entity     | Count | Current State                                           |
+| ---------- | ----- | ------------------------------------------------------- |
+| Users      | 4     | 1 admin, 2 therapists, 1 family                         |
+| Patients   | 14    | All active (is_deleted: false)                          |
+| Sessions   | 13    | 7 completed, 4 scheduled, 1 canceled                    |
+| Evolutions | 7     | 4 released_to_family: true, 3 released_to_family: false |
 
 ### 6.3 Test User Credentials
 
@@ -779,35 +770,23 @@ NODE_ENV=development           # Still useful for other things
 
 ### 9.2 Additional Evolutions for Family Dashboard
 
-**Status**: Only 1 evolution in mock data
+**Status**: Already expanded to 7 evolutions (4 released to family)
 
-**What's needed for better testing**:
+**What's available for testing**:
 
 - Multiple evolutions released to family
-- Historical evolution data
-- Older evolution dates to test relative date calculation
-
-**Where to add**:
-
-1. `src/mocks/data/evolutions.ts` - add more evolution objects
-2. Update `src/mocks/data/sessions.ts` - mark more as completed
-3. `state.ts` will auto-increment IDs
+- Historical evolution data across different dates
+- Mix of released and unreleased evolutions
 
 ### 9.3 Additional Patients & Sessions
 
-**Status**: 4 patients, 5 sessions, only 1 complete with evolution
+**Status**: Already expanded to 14 patients, 13 sessions, 7 evolutions
 
-**What's needed**:
+**What's available**:
 
-- More patients with different guardian emails
+- Multiple patients with different guardian emails
 - Sessions across multiple dates
-- Mix of released/unreleased evolutions
-
-**Where to add**:
-
-1. `src/mocks/data/patients.ts` - add more patients
-2. `src/mocks/data/sessions.ts` - add more sessions
-3. `src/mocks/data/evolutions.ts` - add evolutions linked to completed sessions
+- Mix of released and unreleased evolutions
 
 ### 9.4 Family Portal Edge Cases
 
@@ -926,9 +905,8 @@ NODE_ENV=development           # Still useful for other things
 
 - `src/lib/types.ts` - Shared TypeScript types
 
-### Middleware & Auth Actions
+### Auth Actions
 
-- `src/app/middleware.ts` - Route protection & redirects
 - `src/app/actions/auth.ts` - Server actions for login/logout
 
 ---

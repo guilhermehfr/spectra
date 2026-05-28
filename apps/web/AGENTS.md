@@ -25,9 +25,8 @@ src/
 ├── app/
 │   ├── layout.tsx              # Root layout with metadata
 │   ├── page.tsx                # Home page
-│   ├── globals.css             # Tailwind imports + CSS variables
-│   ├── middleware.ts           # Auth middleware
-│   ├── actions/                # Server Actions
+  │   ├── globals.css             # Tailwind imports + CSS variables
+  │   ├── actions/                # Server Actions
 │   │   ├── auth.ts             # Authentication actions
 │   │   ├── patient.ts          # Patient CRUD actions
 │   │   ├── session.ts          # Session CRUD actions
@@ -56,8 +55,9 @@ src/
 │   │   │       ├── page.tsx        # Session detail
 │   │   │       ├── edit/
 │   │   │       │   └── page.tsx    # Edit session
-│   │   │       └── evolution/
-│   │   │           └── page.tsx    # Create/view evolution for session
+  │   │   │       └── evolution/
+  │   │   │           └── new/
+  │   │   │               └── page.tsx    # Create/view evolution for session
 │   │   └── evolutions/
 │   │       ├── new/
 │   │       │   └── page.tsx      # New evolution
@@ -148,19 +148,19 @@ src/
 │   ├── auth.ts                 # Real auth implementation (HTTP)
 │   ├── auth-mock.ts            # Mock auth implementation
 │   ├── authService.ts          # Unified auth service (switches by env)
-│   ├── authResolver.ts         # Resolves user identity from request
-│   └── utils/                  # Utility functions
+  │   ├── authResolver.ts         # Resolves user identity from request
+  │   ├── envUtils.ts             # getUseMock()
+  │   └── utils/                  # Utility functions
 │       │   ├── index.ts        # Barrel export for all utilities
 │       │   ├── dateUtils.ts    # getRelativeDate() - relative date formatting in Portuguese
 │       │   ├── stringUtils.ts  # extractInitials() - name to initials conversion
 │       │   ├── userUtils.ts    # resolveUser(), resolveUserWithRole()
 │       │   ├── greetingUtils.ts# getGreeting()
 │       │   ├── dateRangeUtils.ts# getTodayRange(), getDaysAgo(), aggregateByDayOfWeek()
-│       │   ├── statsUtils.ts   # calculateClinicStats(), filterRecentSessions()
-│       │   ├── envUtils.ts     # getUseMock()
-│       │   ├── redirectUtils.ts# getDashboardUrl(), getLoginUrl()
-│       │   ├── permissionUtils.ts # checkPermission(), hasRole()
-│       │   └── sessionStatusUtils.ts # getStatusColor(), getStatusLabel()
+  │   │   ├── statsUtils.ts   # calculateClinicStats(), filterRecentSessions()
+  │   │   ├── redirectUtils.ts# getDashboardUrl(), getLoginUrl()
+  │   │   ├── permissionUtils.ts # canEditSession(), canDeleteSession(), canEditEvolution(), canDeleteEvolution(), canReleaseEvolution()
+  │   │   └── sessionStatusUtils.ts # normalizeSessionStatus(), getSessionStatusDisplay(), getStatusLabel(), getStatusClassName()
 └── mocks/
     ├── browser.ts              # MSW browser worker setup
     ├── state.ts                # Centralized in-memory mock state
@@ -190,7 +190,6 @@ src/
 - **Cookie**: `access_token` stores JWT token after login (not user ID)
 - **HTTP Authorization**: All API calls automatically include `Authorization: Bearer {token}` header via `src/lib/api/http.ts`
 - **Logout**: Use `logoutAction` from `src/app/actions/auth.ts` to logout
-- **Middleware**: `src/app/middleware.ts` handles auth checks on every route
 - **Public routes**: `/`, `/login/*` bypass auth check
 - **Protected routes**: All other routes require authentication
 - **Redirects**:
@@ -207,7 +206,7 @@ src/
 
 **Environment Checks**:
 
-- Use `getUseMock()` from `@/lib/utils/envUtils` instead of inline `process.env.NEXT_PUBLIC_DISABLE_MSW`
+- Use `getUseMock()` from `@/lib/envUtils` instead of inline `process.env.NEXT_PUBLIC_DISABLE_MSW`
 
 **Role-Based Redirects**:
 
@@ -227,7 +226,7 @@ src/
   ```tsx
   // ✅ Correct - use barrel export
   import { Button, Container } from '@/components/ui/shared'
-  import { ClinicLoginForm } from '@/components/auth'
+  import { LoginForm } from '@/components/auth'
 
   // ❌ Avoid - direct file import
   import { Button } from '@/components/ui/shared/Button'
@@ -279,8 +278,7 @@ src/
 1. User submits login form → `loginAction` in `src/app/actions/auth.ts`
 2. Server calls `authService.login()` → receives JWT `access` token
 3. Token stored in cookie → subsequent requests include Bearer token automatically
-4. Middleware (`src/app/middleware.ts`) checks cookie existence only, redirects if missing
-5. Pages fetch user info via `authService.me()` when needed
+4. Pages fetch user info via `authService.me()` when needed
 
 ### Family Portal (Dashboard)
 
@@ -298,8 +296,8 @@ src/
 - **Sidebar**: Fixed left sidebar with navigation links (Dashboard, Pacientes, Sessões)
 - **Navigation**: Active state styling with gradient blue indicator
 - **Top Navbar**: Sticky navbar with search bar and user avatar
-  - `ClinicSearchBar.tsx` - Search input for patients
-  - `ClinicUserAvatar.tsx` - User initials avatar display
+  - `SearchBar.tsx` - Search input for patients
+  - `UserAvatar.tsx` - User initials avatar display
 - **User Header**: Uses `authService.me()` to fetch user data for authentication context
 
 ## Domain Context

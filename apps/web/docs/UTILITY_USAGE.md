@@ -34,10 +34,10 @@ const user = await resolveUserWithRole('therapist') // or 'admin'
 
 ---
 
-### Environment Checks (`src/lib/utils/envUtils.ts`)
+### Environment Checks (`src/lib/envUtils.ts`)
 
 ```tsx
-import { getUseMock } from '@/lib/utils/envUtils'
+import { getUseMock } from '@/lib/envUtils'
 
 const isMockMode = getUseMock()
 // Returns true when NEXT_PUBLIC_DISABLE_MSW !== 'true'
@@ -50,7 +50,7 @@ const isMockMode = getUseMock()
 ### Redirect Utilities (`src/lib/utils/redirectUtils.ts`)
 
 ```tsx
-import { getDashboardUrl, getLoginUrl } from '@/lib/utils/redirectUtils'
+import { getDashboardUrl, getLoginUrl, getLoginRedirectForPath } from '@/lib/utils/redirectUtils'
 
 // Get dashboard based on role
 const dashboard = getDashboardUrl('family') // '/family/dashboard'
@@ -60,18 +60,26 @@ const dashboard = getDashboardUrl('admin') // '/clinic/dashboard'
 // Get login page based on role
 const login = getLoginUrl('family') // '/login/family'
 const login = getLoginUrl('clinic') // '/login/clinic'
+
+// Get login redirect URL based on current path
+const redirect = getLoginRedirectForPath('/clinic/patients') // '/login/clinic'
 ```
 
-**Use in:** Server Actions, middleware, anywhere doing role-based redirects
+**Use in:** Server Actions, anywhere doing role-based redirects
 
 ---
 
 ### Date Utilities (`src/lib/utils/dateUtils.ts`)
 
 ```tsx
-import { getRelativeDate } from '@/lib/utils/dateUtils'
+import { formatDate, formatDateShort, formatDateLong, formatDateTime, formatDateTimeISO, getRelativeDate } from '@/lib/utils/dateUtils'
 
 const label = getRelativeDate('2026-05-04') // Returns: "Hoje", "Ontem", "Há 3 dias", etc.
+const formatted = formatDate('2026-05-28') // Returns: "28/05/2026"
+const short = formatDateShort('2026-05-28') // Returns: "28/05"
+const long = formatDateLong('2026-05-28') // Returns: "28 de maio de 2026"
+const time = formatDateTime('2026-05-28T10:00:00Z') // Returns: "28/05/2026 10:00"
+const iso = formatDateTimeISO('2026-05-28T10:00:00Z') // Returns: "2026-05-28T10:00:00"
 ```
 
 **Use in:** Dashboard stats, session lists, anywhere displaying dates to users
@@ -146,30 +154,38 @@ const recent = filterRecentSessions(allSessions, 7) // Last 7 days
 ### Permission Utilities (`src/lib/utils/permissionUtils.ts`)
 
 ```tsx
-import { checkPermission, hasRole } from '@/lib/utils/permissionUtils'
+import { canEditSession, canDeleteSession, canEditEvolution, canDeleteEvolution, canReleaseEvolution } from '@/lib/utils/permissionUtils'
 
-// Check if user has permission for action
-const canEdit = checkPermission(user, 'patient', 'edit')
+// Check if user can edit/delete a session
+const canEdit = canEditSession(session, user)
+const canDelete = canDeleteSession(session, user)
 
-// Check if user has specific role
-const isAdmin = hasRole(user, 'admin')
-const isTherapist = hasRole(user, 'therapist')
+// Check if user can edit/delete/release an evolution
+const canEdit = canEditEvolution(evolution, user)
+const canDelete = canDeleteEvolution(evolution, user)
+const canRelease = canReleaseEvolution(evolution, user)
 ```
 
-**Use in:** Middleware, page authorization, component visibility
+**Use in:** Page authorization, component visibility
 
 ---
 
 ### Session Status Utilities (`src/lib/utils/sessionStatusUtils.ts`)
 
 ```tsx
-import { getStatusColor, getStatusLabel } from '@/lib/utils/sessionStatusUtils'
+import { normalizeSessionStatus, getSessionStatusDisplay, getStatusLabel, getStatusClassName } from '@/lib/utils/sessionStatusUtils'
 
-// Get color for session status
-const color = getStatusColor('completed') // Returns: 'green', 'yellow', 'red', etc.
+// Normalize session status string
+const normalized = normalizeSessionStatus('completed') // Returns: 'completed'
+
+// Get display info for a status
+const display = getSessionStatusDisplay('scheduled') // Returns: { label: 'Agendada', className: '...' }
 
 // Get label for session status
-const label = getStatusLabel('scheduled') // Returns: 'Agendada', 'Concluída', etc.
+const label = getStatusLabel('completed') // Returns: 'Concluída'
+
+// Get CSS class name for status styling
+const className = getStatusClassName('scheduled') // Returns: 'bg-yellow-100 text-yellow-800'
 ```
 
 **Use in:** Session tables, status badges, filtering

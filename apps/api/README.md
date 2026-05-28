@@ -66,6 +66,10 @@ Acessar painel:
 - `GET /api/auth/me/` → Dados do usuário atual
 - `POST /api/auth/logout/` → Logout
 
+### Terapeutas
+
+- `GET /api/therapists/` → Lista terapeutas ativos
+
 ### Pacientes
 
 - `GET /api/patients/` → Lista todos os pacientes
@@ -97,6 +101,7 @@ Acessar painel:
 
 - `GET /api/patients/family/` → Paciente vinculado ao email
 - `GET /api/evolutions/family/` → Evoluções liberadas para família
+- `GET /api/evolutions/family/{id}/` → Detalhe de evolução liberada
 
 ### Sistema
 
