@@ -21,6 +21,7 @@ if os.path.exists(env_file):
 
 SECRET_KEY = env('SECRET_KEY')
 DEBUG = env('DEBUG')
+SEED_SECRET = env('SEED_SECRET', default=None)
 
 # ALLOWED_HOSTS - only allow '*' in DEBUG mode
 if DEBUG:

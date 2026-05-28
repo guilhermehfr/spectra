@@ -20,6 +20,8 @@ from .serializers import (
     DashboardSerializer
 )
 from .permissions import IsTherapistOrAdmin, IsAdminOrReadOnly, IsFamilyOrReadOnly, IsFamily
+from django.conf import settings
+from django.core.management import call_command
 
 
 class LoginView(TokenObtainPairView):
@@ -424,3 +426,19 @@ class FamilyPatientView(APIView):
         
         serializer = PatientSerializer(patient)
         return Response(serializer.data, status=HTTP_200_OK)
+
+
+class SeedView(APIView):
+    permission_classes = []
+
+    def post(self, request):
+        secret = request.data.get('secret')
+
+        if secret != settings.SEED_SECRET:
+            return Response({'detail': 'Unauthorized'}, status=401)
+
+        try:
+            call_command('seed')
+            return Response({'detail': 'Seed executed successfully'})
+        except Exception as e:
+            return Response({'detail': str(e)}, status=500)

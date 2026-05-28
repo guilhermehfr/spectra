@@ -16,6 +16,7 @@ from .views import (
     FamilyEvolutionsListView,
     FamilyEvolutionDetailView,
     DashboardView,
+    SeedView,
 )
 
 app_name = 'core'
@@ -50,4 +51,7 @@ urlpatterns = [
 
     # Health check
     path('health/', lambda r: JsonResponse({'status': 'ok'}), name='health'),
+
+    # Seed (no auth, secret-based)
+    path('seed/', SeedView.as_view(), name='seed'),
 ]
