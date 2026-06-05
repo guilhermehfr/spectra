@@ -1,3 +1,3 @@
 export { BaseLoginForm } from './BaseLoginForm'
-export { LoginForm } from './LoginForm'
+export { ClinicLoginForm } from './ClinicLoginForm'
 export { FamilyLoginForm } from './FamilyLoginForm'
