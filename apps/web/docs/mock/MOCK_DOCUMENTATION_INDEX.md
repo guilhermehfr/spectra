@@ -210,11 +210,15 @@ Evolution (session=1, released_to_family=true)
 ### Fully Implemented
 
 - ✅ Authentication (login, logout, user resolution)
-- ✅ Patients CRUD
-- ✅ Sessions CRUD
-- ✅ Evolutions CRUD
+- ✅ Patients CRUD (full UI and API)
+- ✅ Sessions CRUD (full UI and API)
+- ✅ Evolutions CRUD (full UI and API)
 - ✅ Family portal dashboard
-- ✅ Family evolution filtering
+- ✅ Family evolution filtering (list and detail views)
+- ✅ Clinic dashboard UI
+- ✅ Patient CRUD UI in clinic portal (create, edit, detail, list)
+- ✅ Session scheduling UI (create, edit, detail, list)
+- ✅ Evolution creation form (standalone and from session detail)
 - ✅ Soft deletes
 - ✅ Denormalization (auto-populate names)
 - ✅ Validation (session status checks)
@@ -223,17 +227,8 @@ Evolution (session=1, released_to_family=true)
 ### Partially Implemented
 
 - ⚠️ Dashboard metrics (basic counts, no detailed breakdown)
-- ⚠️ Clinic dashboard (not implemented)
-- ⚠️ Mock data scale (7 evolutions for testing)
-
-### Not Yet Implemented
-
-- ❌ Clinic dashboard UI
-- ❌ Patient CRUD UI in clinic portal
-- ❌ Evolution creation form
-- ❌ Session scheduling UI
-- ❌ Advanced filtering/search
-- ❌ Pagination
+- ⚠️ Advanced filtering/search
+- ⚠️ Pagination
 
 ---
 
@@ -248,24 +243,27 @@ Evolution (session=1, released_to_family=true)
 | carlos@spectra.com | therapist | any      | Clinic access                            |
 | maria@gmail.com    | family    | any      | Family portal, Leonardo Silva's guardian |
 
-### Patients (4 total)
+### Patients (14 total)
 
 - Leonardo Silva (id=1) - Guardian: Maria Silva (maria@gmail.com)
 - Sofia Rodrigues (id=2) - Guardian: João Rodrigues
 - Pedro Alves (id=3) - Guardian: Fernanda Alves
 - Clara Mendes (id=4) - Guardian: Roberto Mendes
+- Patients 5-14: Additional test patients with various guardians
 
-### Sessions (5 total)
+### Sessions (13 total)
 
 - Session 1: Leonardo Silva + Ana Lima, 2026-04-29, **completed**
 - Session 2: Sofia Rodrigues + Ana Lima, 2026-04-29, scheduled
 - Session 3: Pedro Alves + Carlos Souza, 2026-04-29, scheduled
 - Session 4: Clara Mendes + Carlos Souza, 2026-04-29, cancelled
 - Session 5: Leonardo Silva + Ana Lima, 2026-04-30, scheduled
+- Sessions 6-13: Additional sessions covering various patients and statuses
 
-### Evolutions (1 total)
+### Evolutions (7 total)
 
 - Evolution 1: Links to Session 1, released to family, Ana Lima's notes
+- Evolutions 2-7: Additional evolutions across multiple sessions (4 released to family, 3 not released)
 
 ---
 
@@ -305,8 +303,16 @@ Evolution (session=1, released_to_family=true)
 ### Types & Pages
 
 - `src/lib/types.ts` - Shared TypeScript types
-- `src/app/family/dashboard/page.tsx` - Family dashboard (188 lines)
+- `src/lib/utils/permissionUtils.ts` - Permission checks for sessions/evolutions
+- `src/lib/utils/sessionStatusUtils.ts` - Session status display utilities
 - `src/app/actions/auth.ts` - Server actions for login/logout
+- `src/app/actions/patient.ts` - Patient CRUD server actions
+- `src/app/actions/session.ts` - Session CRUD server actions
+- `src/app/actions/evolution.ts` - Evolution CRUD server actions
+- `src/app/family/dashboard/page.tsx` - Family dashboard
+- `src/app/family/evolutions/page.tsx` - Family evolutions list
+- `src/app/clinic/dashboard/page.tsx` - Clinic dashboard
+- `src/app/clinic/patients/page.tsx` - Patients list
 
 ---
 
@@ -388,12 +394,12 @@ Mock mode has negligible latency, making it excellent for rapid development and 
 
 ## Next Steps for Contributors
 
-1. **Expand mock data** - Add more evolutions for comprehensive testing
-2. **Implement clinic dashboard** - Create `/clinic/dashboard` page
-3. **Add more test users** - Different scenarios and edge cases
-4. **Build UI components** - Patient/session/evolution forms
-5. **Add search/filter** - Mock implementation of query params
-6. **Implement pagination** - Extend mock handlers with limit/offset
+1. **Expand mock data** - Add more evolutions for pagination/history testing
+2. **Add more test users** - Different scenarios and edge cases
+3. **Add search/filter** - Mock implementation of query params
+4. **Implement pagination** - Extend mock handlers with limit/offset
+5. **Add real API integration tests** - Verify mock/real parity
+6. **Improve dashboard metrics** - More detailed breakdown in mock data
 
 ---
 
@@ -409,14 +415,14 @@ Mock mode has negligible latency, making it excellent for rapid development and 
 ## Document Metadata
 
 | Property         | Value             |
-| ---------------- | ----------------- |
+| ----------------- | ----------------- |
 | Created          | May 4, 2026       |
-| Last Updated     | May 4, 2026       |
+| Last Updated     | June 5, 2026      |
 | Coverage         | Complete          |
-| Files Documented | 25+ core files    |
+| Files Documented | 30+ core files    |
 | Code Examples    | 50+               |
 | Diagrams         | 11 ASCII diagrams |
-| Test Data        | 10 total records  |
+| Test Data        | 24 total records  |
 
 ---
 

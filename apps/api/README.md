@@ -36,7 +36,12 @@ pip install -r requirements.txt
 ```bash
 python manage.py migrate
 ```
-5. Rodar servidor
+5. Semear dados de demonstração (opcional)
+```bash
+python manage.py seed
+```
+
+6. Rodar servidor
 ```bash
 python manage.py runserver
 ```
@@ -105,6 +110,7 @@ Acessar painel:
 
 ### Sistema
 
+- `GET /api/seed/` → Semear dados de demonstração (admin apenas)
 - `GET /api/health/` → Health check (para load balancers)
 
 ## Estrutura do modelo (Patient)

@@ -761,6 +761,34 @@ Authorization: Bearer {access_token}
 
 ---
 
+---
+
+## 🌱 Seed (Semear Dados de Demonstração)
+
+Endpoint para popular o banco de dados com dados de demonstração (usuários, pacientes, sessões, evoluções). Útil para ambientes de desenvolvimento e preview.
+
+**Endpoint:**
+```
+GET /api/seed/
+```
+
+**Headers:**
+```
+Authorization: Bearer {access_token}
+```
+
+**Response (200):**
+```json
+{
+  "success": true,
+  "message": "Dados de seed inseridos com sucesso."
+}
+```
+
+**Permissões:** Apenas Admins
+
+---
+
 **Status:** 🟢 Fases 1, 2, 3 e 4 Completas (Backend MVP Entregue)  
 **Última atualização:** 06/05/2026
 

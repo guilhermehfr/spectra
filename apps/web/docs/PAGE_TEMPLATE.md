@@ -255,19 +255,14 @@ export default function PageWithErrorBoundary() {
 
 ## Loading States
 
-Currently pages don't implement loading states. Future pattern:
+Pages use `loading.tsx` files for each portal (clinic and family) with a shared `LoadingSpinner` component. Pattern:
 
 ```tsx
-// Planned pattern
-import { Suspense } from 'react'
-import { LoadingSkeleton } from '@/components/ui/shared'
+// src/app/clinic/loading.tsx
+import { LoadingSpinner } from '@/components/ui/shared'
 
-export default function Page() {
-  return (
-    <Suspense fallback={<LoadingSkeleton />}>
-      <PageContent />
-    </Suspense>
-  )
+export default function ClinicLoading() {
+  return <LoadingSpinner />
 }
 ```
 

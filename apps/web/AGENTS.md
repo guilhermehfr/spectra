@@ -77,7 +77,7 @@ src/
 │   ├── auth/                   # Login form components
 │   │   ├── index.ts             # Barrel export
 │   │   ├── BaseLoginForm.tsx   # Shared login form (use for new portals)
-│   │   ├── LoginForm.tsx       # Main login form component
+│   │   ├── ClinicLoginForm.tsx # Clinic login form component
 │   │   └── FamilyLoginForm.tsx
 │   ├── layout/
 │   │   ├── clinic/
@@ -118,6 +118,7 @@ src/
 │       │   ├── NotFound.tsx         # 404 page component
 │       │   └── index.ts
 │       ├── family/
+│       │   ├── index.ts            # Barrel export
 │       │   ├── DashboardStats.tsx
 │       │   ├── LatestEvolutionCard.tsx
 │       │   ├── TherapistCard.tsx    # Therapist info display
@@ -134,7 +135,8 @@ src/
 │           ├── TextareaField.tsx  # Form textarea
 │           ├── BaseForm.tsx       # Base form wrapper
 │           ├── Container.tsx
-│           └── IconButton.tsx
+│           ├── IconButton.tsx
+│           └── LoadingSpinner.tsx # Shared loading indicator
 ├── lib/
 │   ├── api/
 │   │   ├── http.ts             # HTTP client setup
@@ -226,7 +228,7 @@ src/
   ```tsx
   // ✅ Correct - use barrel export
   import { Button, Container } from '@/components/ui/shared'
-  import { LoginForm } from '@/components/auth'
+  import { ClinicLoginForm } from '@/components/auth'
 
   // ❌ Avoid - direct file import
   import { Button } from '@/components/ui/shared/Button'

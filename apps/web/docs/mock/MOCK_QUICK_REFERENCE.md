@@ -428,8 +428,8 @@ console.log(state.getFamilyEvolutions())
 ## Next Steps for Expansion
 
 1. Add more evolutions to test pagination/history
-2. Add clinic dashboard implementation
-3. Add more test users for different scenarios
-4. Implement patient CRUD UI in clinic portal
-5. Add session scheduling UI
-6. Implement evolution creation form
+2. Add more test users for different scenarios
+3. Implement advanced filtering/search
+4. Add pagination support in mock handlers
+5. Add real API integration tests
+6. Improve dashboard metrics detail

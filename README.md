@@ -293,6 +293,7 @@ Main API domains:
 - Clinical Evolutions
 - Dashboard Analytics
 - Family Portal Access
+- Seed (Demo Data Population)
 
 ---
 

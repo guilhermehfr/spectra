@@ -11,7 +11,7 @@ src/components/
 ├── auth/                     # Authentication
 │   ├── index.ts               # Barrel export
 │   ├── BaseLoginForm.tsx     # Shared login form base
-│   ├── LoginForm.tsx         # Main login form component
+│   ├── ClinicLoginForm.tsx   # Clinic login form component
 │   └── FamilyLoginForm.tsx   # Family login portal
 ├── layout/
 │   ├── clinic/
@@ -52,6 +52,7 @@ src/components/
     │   ├── NotFound.tsx
     │   └── index.ts           # Barrel export
 ├── family/              # Family-specific UI components
+    │   ├── index.ts            # Barrel export
     │   ├── DashboardStats.tsx
     │   ├── LatestEvolutionCard.tsx
     │   ├── TherapistCard.tsx
@@ -68,6 +69,7 @@ src/components/
         ├── TextareaField.tsx  # Form textarea
         ├── BaseForm.tsx       # Base form wrapper
         ├── Container.tsx
+        ├── LoadingSpinner.tsx # Shared loading indicator
         └── IconButton.tsx
 ```
 
