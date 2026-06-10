@@ -1,12 +1,13 @@
 import { getLocale, getTranslations } from 'next-intl/server'
 import { DashboardContent } from '@/components/ui/clinic'
-import { getPatients, getSessions, getEvolutions } from '@/lib/api/clinic'
+import { getDashboard, getSessions } from '@/lib/api/clinic'
 import { resolveUser } from '@/lib/utils/userUtils'
 import { getGreeting } from '@/lib/utils/greetingUtils'
-import { calculateClinicStats, filterRecentSessions } from '@/lib/utils/statsUtils'
+import { filterRecentSessions } from '@/lib/utils/statsUtils'
 import { aggregateByDayOfWeek } from '@/lib/utils/dateRangeUtils'
+import type { Session } from '@/lib/types'
 
-export const revalidate = false
+export const dynamic = 'force-dynamic'
 
 export default async function ClinicDashboard() {
   const user = await resolveUser()
@@ -14,13 +15,15 @@ export default async function ClinicDashboard() {
   const tg = await getTranslations('Greeting')
   const locale = await getLocale()
 
-  const [allPatients, allSessions, allEvolutions] = await Promise.all([
-    getPatients(),
-    getSessions(),
-    getEvolutions(),
+  const [dashboard, allSessions] = await Promise.all([
+    getDashboard().catch(() => undefined),
+    getSessions().catch(() => [] as Session[]),
   ])
 
-  const stats = calculateClinicStats(allPatients, allSessions, allEvolutions)
+  const activePatients = dashboard?.active_patients ?? 0
+  const todaySessions = dashboard?.today_sessions?.length ?? 0
+  const pendingEvolutions = dashboard?.pending_evolutions ?? 0
+
   const recentSessions = filterRecentSessions(allSessions, 7)
   const weeklyData = aggregateByDayOfWeek(recentSessions, locale)
 
@@ -29,9 +32,9 @@ export default async function ClinicDashboard() {
       <DashboardContent
         greeting={getGreeting(user.first_name, tg)}
         subtitle={td('subtitle')}
-        activePatients={stats.activePatients}
-        todaySessions={stats.todaySessions}
-        pendingEvolutions={stats.pendingEvolutions}
+        activePatients={activePatients}
+        todaySessions={todaySessions}
+        pendingEvolutions={pendingEvolutions}
         weeklyData={weeklyData}
       />
     </div>

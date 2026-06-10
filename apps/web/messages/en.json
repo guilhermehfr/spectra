@@ -316,7 +316,9 @@
     "dayLabels": ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
   },
   "SessionStatus": {
-    "completed": "Completed"
+    "scheduled": "Scheduled",
+    "completed": "Completed",
+    "canceled": "Canceled"
   },
   "Sidebar": {
     "subtitle": "Clinic Management"

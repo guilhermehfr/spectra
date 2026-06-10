@@ -11,7 +11,7 @@ interface SidebarHeaderProps {
 export function SidebarHeader({
   logoSrc,
   brandName = 'Spectra',
-  subtitle = 'Gerenciamento de Clínica',
+  subtitle = 'Clinic Management',
   logoBackgroundColor = 'bg-blue-100',
 }: SidebarHeaderProps) {
   return (

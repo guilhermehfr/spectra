@@ -316,7 +316,9 @@
     "dayLabels": ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"]
   },
   "SessionStatus": {
-    "completed": "Concluída"
+    "scheduled": "Agendada",
+    "completed": "Concluída",
+    "canceled": "Cancelada"
   },
   "Sidebar": {
     "subtitle": "Gerenciamento de Clínica"

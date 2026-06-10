@@ -43,7 +43,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <MSWProvider>
           <NextIntlClientProvider messages={messages}>
             <div className="fixed top-4 right-4 z-[60]">
-              <LanguageToggle />
+              <LanguageToggle initialLocale={locale} />
             </div>
             {children}
           </NextIntlClientProvider>

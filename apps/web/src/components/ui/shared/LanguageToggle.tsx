@@ -2,14 +2,8 @@
 
 import { useCallback, useState } from 'react'
 
-function getInitialLocale(): string {
-  if (typeof document === 'undefined') return 'en'
-  const match = document.cookie.match(/(?:^|;\s*)locale=([^;]*)/)
-  return match?.[1] || 'en'
-}
-
-export function LanguageToggle() {
-  const [locale, setLocale] = useState(getInitialLocale)
+export function LanguageToggle({ initialLocale = 'en' }: { initialLocale?: string }) {
+  const [locale, setLocale] = useState(initialLocale)
 
   const isPtBr = locale === 'pt-BR'
 
