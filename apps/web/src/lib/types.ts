@@ -108,6 +108,11 @@ export type Dashboard = {
   pending_evolutions: number
 }
 
+export type Messages = Record<
+  string,
+  string | string[] | Record<string, string | string[] | Record<string, string>>
+>
+
 export type FamilyEvolution = Pick<
   Evolution,
   | 'id'

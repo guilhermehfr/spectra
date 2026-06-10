@@ -1,7 +1,10 @@
 import type { Metadata } from 'next'
 import { Manrope, DM_Sans } from 'next/font/google'
 import { Bounce, ToastContainer } from 'react-toastify'
+import { NextIntlClientProvider } from 'next-intl'
+import { getLocale, getMessages } from 'next-intl/server'
 
+import { LanguageToggle } from '@/components/ui/shared'
 import { MSWProvider } from '@/components/MSWProvider'
 
 import 'react-toastify/dist/ReactToastify.css'
@@ -19,19 +22,30 @@ const dmSans = DM_Sans({
   variable: '--font-dm-sans',
 })
 
-export const metadata: Metadata = {
-  title: 'Spectra',
-  description: 'Sistema de gestão para clínicas TEA',
+export async function generateMetadata(): Promise<Metadata> {
+  const messages = await getMessages()
+  return {
+    title: 'Spectra',
+    description: ((messages as Record<string, Record<string, string>>).Metadata?.description) || 'Spectra',
+  }
 }
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const locale = await getLocale()
+  const messages = await getMessages()
+
   return (
-    <html lang="pt-BR">
+    <html lang={locale}>
       <body
         className={`${manrope.variable} ${dmSans.variable} font-manrope antialiased bg-surface-soft`}
       >
         <MSWProvider>
-          {children}
+          <NextIntlClientProvider messages={messages}>
+            <div className="fixed top-4 right-4 z-[60]">
+              <LanguageToggle />
+            </div>
+            {children}
+          </NextIntlClientProvider>
           <ToastContainer
             position="top-center"
             autoClose={10000}

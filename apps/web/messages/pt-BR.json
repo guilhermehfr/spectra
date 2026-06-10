@@ -1,0 +1,327 @@
+{
+  "Common": {
+    "logout": "Logout",
+    "save": "Salvar",
+    "cancel": "Cancelar",
+    "loading": "Carregando...",
+    "search": "Buscar",
+    "help": "Ajuda",
+    "back": "Voltar",
+    "edit": "Editar",
+    "delete": "Excluir",
+    "deleteConfirm": "Deletar",
+    "paginationShowing": "Mostrando {startItem} a {endItem} de {totalItems} resultados"
+  },
+  "Family": {
+    "patientNotFound": "Paciente Não Encontrado",
+    "patientNotFoundDesc": "Não foi possível encontrar informações do paciente associadas à sua conta.",
+    "greeting": "Olá, {name}",
+    "historyTitle": "Histórico de <highlight>{name}</highlight>",
+    "lastEvolution": "Última Evolução",
+    "therapistNotes": "NOTAS DOS TERAPEUTAS",
+    "noEvolutions": "Nenhum registro de evolução ainda. Volte em breve!",
+    "noSessions": "Sem sessões"
+  },
+  "Clinic": {
+    "dashboard": "Dashboard",
+    "patients": "Pacientes",
+    "sessions": "Sessões",
+    "evolutions": "Evoluções"
+  },
+  "Dashboard": {
+    "greeting": "Olá, {name}",
+    "subtitle": "Aqui está sua visão geral da clínica para hoje",
+    "activePatients": "Pacientes Ativos",
+    "todaySessions": "Sessões de hoje",
+    "pendingEvolutions": "Evoluções pendentes"
+  },
+  "DashboardContent": {
+    "weeklyView": "Visão semanal",
+    "quickActions": "Ações rápidas",
+    "addPatient": "Adicionar Paciente",
+    "scheduleSession": "Agendar sessão"
+  },
+  "WeeklyChart": {
+    "tooltipLabel": "{value} sessões",
+    "tooltipName": "Total"
+  },
+  "FamilyDashboardStats": {
+    "totalEvolutions": "Total de Evoluções",
+    "lastEvolution": "Última Evolução"
+  },
+  "LatestEvolutionCard": {
+    "therapistPrefix": "Terapeuta. ",
+    "viewFullEvolution": "Ver evolução completa"
+  },
+  "Patients": {
+    "title": "Pacientes",
+    "newPatient": "Novo Paciente",
+    "searchPlaceholder": "Buscar paciente...",
+    "listTitle": "Lista de Pacientes",
+    "listDescription": "Organize e veja todos os pacientes registrados",
+    "newDescription": "Cadastre um novo paciente no sistema.",
+    "editTitle": "Editar Paciente",
+    "editDescription": "Atualize as informações do paciente.",
+    "register": "Cadastrar",
+    "tableHeaderPatient": "PACIENTE",
+    "tableHeaderGuardian": "RESPONSAVEL",
+    "tableHeaderBirthDate": "DATA DE NASCIMENTO",
+    "tableHeaderActions": "AÇÕES",
+    "noPatientsFound": "Nenhum paciente encontrado",
+    "deleteRestricted": "Apenas administradores podem excluir",
+    "deleteConfirmTitle": "Excluir paciente?",
+    "deleteConfirmMessage": "Tem certeza que deseja excluir {name}? Esta ação não pode ser desfeita.",
+    "formName": "Nome",
+    "formNamePlaceholder": "Nome completo do paciente",
+    "formBirthDate": "Data de Nascimento",
+    "formGuardian": "Responsável",
+    "formGuardianPlaceholder": "Nome do responsável",
+    "formGuardianEmail": "Email do Responsável",
+    "formGuardianEmailPlaceholder": "email@email.com",
+    "formNotes": "Observações",
+    "formNotesPlaceholder": "Informações adicionais sobre o paciente..."
+  },
+  "Sessions": {
+    "title": "Sessões",
+    "newSession": "Nova Sessão",
+    "found": "{count} {count, plural, one {sessão encontrada} other {sessões encontradas}}",
+    "deleteTitle": "Deletar sessão?",
+    "deleteDescription": "Esta ação não pode ser desfeita. A sessão será removida.",
+    "deleteConfirm": "Deletar",
+    "backToList": "Voltar para sessões",
+    "detailTitle": "Sessão #{id}"
+  },
+  "SessionsTable": {
+    "loading": "Carregando sessões...",
+    "empty": "Nenhuma sessão encontrada.",
+    "dateTime": "Data / Horário",
+    "patient": "Paciente",
+    "therapist": "Terapeuta",
+    "status": "Status",
+    "notes": "Observações",
+    "actions": "Ações",
+    "view": "Ver",
+    "edit": "Editar",
+    "delete": "Excluir"
+  },
+  "SessionForm": {
+    "editTitle": "Editar Sessão",
+    "newTitle": "Nova Sessão",
+    "editDescription": "Atualize as informações da sessão.",
+    "newDescription": "Agende uma nova sessão terapêutica.",
+    "submitCreate": "Agendar",
+    "patientLabel": "Paciente",
+    "patientPlaceholder": "Selecione um paciente",
+    "therapistLabel": "Terapeuta",
+    "therapistPlaceholder": "Selecione um terapeuta",
+    "dateTimeLabel": "Data e Horário",
+    "notesLabel": "Observações",
+    "notesPlaceholder": "Informações adicionais sobre a sessão...",
+    "statusLabel": "Status",
+    "statusScheduled": "Agendada",
+    "statusCompleted": "Concluída",
+    "statusCanceled": "Cancelada"
+  },
+  "SessionDetail": {
+    "title": "Detalhes da Sessão",
+    "edit": "Editar Sessão",
+    "status": "Status",
+    "date": "Data",
+    "notes": "Anotações",
+    "patient": "PACIENTE",
+    "therapist": "TERAPEUTA",
+    "observations": "OBSERVAÇÕES",
+    "viewEvolution": "Ver Evolução",
+    "createEvolution": "Criar Evolução"
+  },
+  "Evolutions": {
+    "title": "Evoluções",
+    "newEvolution": "Nova Evolução",
+    "development": "Nova Evolução - Em desenvolvimento"
+  },
+  "EvolutionForm": {
+    "editTitle": "Editar Evolução",
+    "newTitle": "Nova Evolução",
+    "editDescription": "Atualize as observações da sessão terapêutica.",
+    "newDescription": "Registre as observações da sessão terapêutica.",
+    "submitCreate": "Cadastrar",
+    "objectiveLabel": "Objetivo",
+    "objectivePlaceholder": "Descreva o objetivo da sessão...",
+    "activitiesLabel": "Atividades",
+    "activitiesPlaceholder": "Liste as atividades realizadas...",
+    "behaviorLabel": "Comportamento",
+    "behaviorPlaceholder": "Descreva o comportamento observado...",
+    "progressLabel": "Progresso",
+    "progressPlaceholder": "Descreva o progresso do paciente...",
+    "nextStepsLabel": "Próximos Passos",
+    "nextStepsPlaceholder": "Planeje os próximos passos...",
+    "releaseToFamilyLabel": "Liberar evolução para a família"
+  },
+  "FamilyEvolutions": {
+    "title": "Evoluções",
+    "subtitle": "Atualizações recentes da equipe de terapia do {patientName}.",
+    "empty": "Nenhuma evolução disponível.",
+    "noMore": "Não há mais evoluções para carregar",
+    "viewFullEvolution": "Ver evolução completa",
+    "objective": "Objetivo",
+    "activities": "Atividades",
+    "behavior": "Comportamento",
+    "progress": "Progresso",
+    "nextSteps": "Próximos Passos"
+  },
+  "NotFound": {
+    "title": "Página não encontrada",
+    "message": "A página que você procura não existe.",
+    "backToDashboard": "Voltar ao dashboard",
+    "backToHome": "Voltar ao início"
+  },
+  "Auth": {
+    "sessionExpired": "Sessão expirada. Faça login novamente.",
+    "unauthorized": "Acesso não autorizado",
+    "loginRequired": "Você precisa estar logado para acessar esta página."
+  },
+  "PatientDetail": {
+    "title": "Detalhes do Paciente",
+    "personalInfo": "Informações Pessoais",
+    "sessions": "Sessões",
+    "evolutions": "Evoluções",
+    "edit": "Editar Paciente",
+    "birthDate": "Data de Nascimento",
+    "age": "Idade",
+    "guardian": "Responsável",
+    "notes": "Observações",
+    "createdAt": "Cadastrado em {date}",
+    "updatedAt": "Última atualização em {date}",
+    "ageFormat": "{age, plural, one {# ano} other {# anos}}",
+    "sectionSessions": "Sessões",
+    "sectionEvolutions": "Evoluções",
+    "noSessions": "Nenhuma sessão registrada.",
+    "noEvolutions": "Nenhuma evolução registrada.",
+    "deletePatientTitle": "Deletar paciente?",
+    "deletePatientMessage": "Esta ação não pode ser desfeita. Todas as sessões e evoluções associadas serão removidas.",
+    "deleteSessionTitle": "Deletar sessão?",
+    "deleteSessionMessage": "Esta ação não pode ser desfeita. A sessão será removida.",
+    "selectSessionTitle": "Selecione uma sessão",
+    "selectSessionDescription": "Escolha uma sessão concluída para criar a evolução:",
+    "therapistLabel": "Terapeuta: {name}",
+    "noCompletedSessions": "É necessário ter uma sessão concluída para criar uma evolução.",
+    "allSessionsHaveEvolution": "Todas as sessões concluídas já possuem evolução.",
+    "releaseSuccess": "Evolução liberada para a família com sucesso!",
+    "releaseError": "Falha ao liberar evolução",
+    "editSession": "Editar",
+    "deleteSession": "Excluir",
+    "addSession": "Adicionar Sessão",
+    "addEvolution": "Adicionar Evolução",
+    "editEvolution": "Editar",
+    "releaseEvolution": "Liberar para família",
+    "sessionDate": "Data",
+    "sessionStatus": "Status",
+    "sessionTherapist": "Terapeuta",
+    "noPermissionEditSession": "Você não tem permissão para editar esta sessão",
+    "noPermissionDeleteSession": "Você não tem permissão para excluir esta sessão",
+    "noPermissionEditEvolution": "Você não tem permissão para editar esta evolução",
+    "noPermissionReleaseEvolution": "Você não tem permissão para liberar esta evolução"
+  },
+  "Home": {
+    "subtitle": "Sistema de gestão para clínicas de terapia",
+    "clinicPortal": {
+      "title": "Portal da Clínica",
+      "description": "Para admins e terapeutas gerenciarem pacientes, sessões e evoluções.",
+      "cta": "Acessar portal"
+    },
+    "familyPortal": {
+      "title": "Portal da Família",
+      "description": "Para responsáveis acompanharem as evoluções terapêuticas.",
+      "cta": "Acessar portal"
+    },
+    "footer": "Spectra - Gestão para clínicas de TEA"
+  },
+  "Layout": {
+    "searchPlaceholder": "Pesquisar pacientes...",
+    "navHome": "Home",
+    "navEvolutions": "Evoluções"
+  },
+  "Login": {
+    "title": "Entrar",
+    "email": "Email",
+    "password": "Senha",
+    "submit": "Entrar",
+    "invalidCredentials": "Email ou senha inválidos",
+    "forgotPassword": "Esqueci minha senha",
+    "noAccount": "Ainda não possui uma conta?",
+    "contactAdmin": "Contate um administrador",
+    "clinicSubtitle": "Portal de gerenciamento clínico",
+    "familySubtitle": "Portal familiar",
+    "showPassword": "Mostrar senha",
+    "hidePassword": "Esconder senha"
+  },
+  "Actions": {
+    "emailAndPasswordRequired": "Digite seu email e senha para continuar",
+    "invalidEmailFormat": "Formato de email inválido",
+    "unknownRole": "Função de usuário desconhecida",
+    "nameRequired": "Nome é obrigatório",
+    "birthDateRequired": "Data de nascimento é obrigatória",
+    "guardianNameRequired": "Responsável é obrigatório",
+    "guardianEmailRequired": "Email do responsável é obrigatório",
+    "invalidEmail": "Email inválido",
+    "patientIdNotFound": "ID do paciente não encontrado",
+    "patientIdInvalid": "ID do paciente inválido",
+    "createPatientFailed": "Falha ao cadastrar paciente. Tente novamente.",
+    "updatePatientFailed": "Falha ao atualizar paciente. Tente novamente.",
+    "patientRequired": "Paciente é obrigatório",
+    "therapistRequired": "Terapeuta é obrigatório",
+    "dateTimeRequired": "Data e horário são obrigatórios",
+    "statusRequired": "Status é obrigatório",
+    "sessionIdNotFound": "ID da sessão não encontrado",
+    "sessionIdInvalid": "ID da sessão inválido",
+    "sessionNotFound": "Sessão não encontrada",
+    "noPermissionEditSession": "Você não tem permissão para editar esta sessão",
+    "noPermissionDeleteSession": "Você não tem permissão para excluir esta sessão",
+    "createSessionFailed": "Falha ao criar sessão. Tente novamente.",
+    "updateSessionFailed": "Falha ao atualizar sessão. Tente novamente.",
+    "objectiveRequired": "Objetivo é obrigatório",
+    "activitiesRequired": "Atividades é obrigatória",
+    "behaviorRequired": "Comportamento é obrigatório",
+    "progressRequired": "Progresso é obrigatório",
+    "nextStepsRequired": "Próximos passos são obrigatórios",
+    "evolutionIdNotFound": "ID da evolução não encontrado",
+    "evolutionIdInvalid": "ID da evolução inválido",
+    "evolutionNotFound": "Evolução não encontrada",
+    "noPermissionCreateEvolution": "Você não tem permissão para criar evolução para esta sessão",
+    "noPermissionEditEvolution": "Você não tem permissão para editar esta evolução",
+    "noPermissionReleaseEvolution": "Você não tem permissão para liberar esta evolução.",
+    "createEvolutionFailed": "Falha ao criar evolução. Tente novamente.",
+    "updateEvolutionFailed": "Falha ao atualizar evolução. Tente novamente.",
+    "releaseEvolutionFailed": "Falha ao liberar evolução para a família. Tente novamente."
+  },
+  "Greeting": {
+    "hello": "Olá, {name}"
+  },
+  "DateUtils": {
+    "semSessoes": "Sem sessões",
+    "ha2": "Há 2 dias",
+    "ha3": "Há 3 dias",
+    "ha4": "Há 4 dias",
+    "ha5": "Há 5 dias",
+    "ha6": "Há 6 dias",
+    "haUmaSemana": "Há uma semana",
+    "haDuasSemanas": "Há duas semanas",
+    "haNSemanas": "Há {count} semanas",
+    "haNMeses": "Há {count} meses",
+    "hoje": "Hoje",
+    "ontem": "Ontem",
+    "formatDateTime": "{day}/{month}/{year} às {hour}:{minute}"
+  },
+  "DateRangeUtils": {
+    "dayLabels": ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"]
+  },
+  "SessionStatus": {
+    "completed": "Concluída"
+  },
+  "Sidebar": {
+    "subtitle": "Gerenciamento de Clínica"
+  },
+  "Metadata": {
+    "description": "Sistema de gestão para clínicas TEA"
+  }
+}

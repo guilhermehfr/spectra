@@ -1,0 +1,327 @@
+{
+  "Common": {
+    "logout": "Logout",
+    "save": "Save",
+    "cancel": "Cancel",
+    "loading": "Loading...",
+    "search": "Search",
+    "help": "Help",
+    "back": "Back",
+    "edit": "Edit",
+    "delete": "Delete",
+    "deleteConfirm": "Delete",
+    "paginationShowing": "Showing {startItem} to {endItem} of {totalItems} results"
+  },
+  "Family": {
+    "patientNotFound": "Patient Not Found",
+    "patientNotFoundDesc": "Could not find patient information associated with your account.",
+    "greeting": "Hello, {name}",
+    "historyTitle": "History of <highlight>{name}</highlight>",
+    "lastEvolution": "Latest Evolution",
+    "therapistNotes": "THERAPIST NOTES",
+    "noEvolutions": "No evolution records yet. Check back soon!",
+    "noSessions": "No sessions"
+  },
+  "Clinic": {
+    "dashboard": "Dashboard",
+    "patients": "Patients",
+    "sessions": "Sessions",
+    "evolutions": "Evolutions"
+  },
+  "Dashboard": {
+    "greeting": "Hello, {name}",
+    "subtitle": "Here is your clinic overview for today",
+    "activePatients": "Active Patients",
+    "todaySessions": "Today's sessions",
+    "pendingEvolutions": "Pending evolutions"
+  },
+  "DashboardContent": {
+    "weeklyView": "Weekly view",
+    "quickActions": "Quick actions",
+    "addPatient": "Add Patient",
+    "scheduleSession": "Schedule session"
+  },
+  "WeeklyChart": {
+    "tooltipLabel": "{value} sessions",
+    "tooltipName": "Total"
+  },
+  "FamilyDashboardStats": {
+    "totalEvolutions": "Total Evolutions",
+    "lastEvolution": "Last Evolution"
+  },
+  "LatestEvolutionCard": {
+    "therapistPrefix": "Therapist. ",
+    "viewFullEvolution": "View full evolution"
+  },
+  "Patients": {
+    "title": "Patients",
+    "newPatient": "New Patient",
+    "searchPlaceholder": "Search patient...",
+    "listTitle": "Patient List",
+    "listDescription": "Organize and view all registered patients",
+    "newDescription": "Register a new patient in the system.",
+    "editTitle": "Edit Patient",
+    "editDescription": "Update patient information.",
+    "register": "Register",
+    "tableHeaderPatient": "PATIENT",
+    "tableHeaderGuardian": "GUARDIAN",
+    "tableHeaderBirthDate": "BIRTH DATE",
+    "tableHeaderActions": "ACTIONS",
+    "noPatientsFound": "No patients found",
+    "deleteRestricted": "Only administrators can delete",
+    "deleteConfirmTitle": "Delete patient?",
+    "deleteConfirmMessage": "Are you sure you want to delete {name}? This action cannot be undone.",
+    "formName": "Name",
+    "formNamePlaceholder": "Patient full name",
+    "formBirthDate": "Birth Date",
+    "formGuardian": "Guardian",
+    "formGuardianPlaceholder": "Guardian name",
+    "formGuardianEmail": "Guardian Email",
+    "formGuardianEmailPlaceholder": "email@email.com",
+    "formNotes": "Notes",
+    "formNotesPlaceholder": "Additional patient information..."
+  },
+  "Sessions": {
+    "title": "Sessions",
+    "newSession": "New Session",
+    "found": "{count} {count, plural, one {session found} other {sessions found}}",
+    "deleteTitle": "Delete session?",
+    "deleteDescription": "This action cannot be undone. The session will be removed.",
+    "deleteConfirm": "Delete",
+    "backToList": "Back to sessions",
+    "detailTitle": "Session #{id}"
+  },
+  "SessionsTable": {
+    "loading": "Loading sessions...",
+    "empty": "No sessions found.",
+    "dateTime": "Date / Time",
+    "patient": "Patient",
+    "therapist": "Therapist",
+    "status": "Status",
+    "notes": "Notes",
+    "actions": "Actions",
+    "view": "View",
+    "edit": "Edit",
+    "delete": "Delete"
+  },
+  "SessionForm": {
+    "editTitle": "Edit Session",
+    "newTitle": "New Session",
+    "editDescription": "Update the session information.",
+    "newDescription": "Schedule a new therapy session.",
+    "submitCreate": "Schedule",
+    "patientLabel": "Patient",
+    "patientPlaceholder": "Select a patient",
+    "therapistLabel": "Therapist",
+    "therapistPlaceholder": "Select a therapist",
+    "dateTimeLabel": "Date and Time",
+    "notesLabel": "Notes",
+    "notesPlaceholder": "Additional information about the session...",
+    "statusLabel": "Status",
+    "statusScheduled": "Scheduled",
+    "statusCompleted": "Completed",
+    "statusCanceled": "Canceled"
+  },
+  "SessionDetail": {
+    "title": "Session Details",
+    "edit": "Edit Session",
+    "status": "Status",
+    "date": "Date",
+    "notes": "Notes",
+    "patient": "PATIENT",
+    "therapist": "THERAPIST",
+    "observations": "OBSERVATIONS",
+    "viewEvolution": "View Evolution",
+    "createEvolution": "Create Evolution"
+  },
+  "Evolutions": {
+    "title": "Evolutions",
+    "newEvolution": "New Evolution",
+    "development": "New Evolution - Under development"
+  },
+  "EvolutionForm": {
+    "editTitle": "Edit Evolution",
+    "newTitle": "New Evolution",
+    "editDescription": "Update the therapy session observations.",
+    "newDescription": "Record the therapy session observations.",
+    "submitCreate": "Register",
+    "objectiveLabel": "Objective",
+    "objectivePlaceholder": "Describe the session objective...",
+    "activitiesLabel": "Activities",
+    "activitiesPlaceholder": "List the activities performed...",
+    "behaviorLabel": "Behavior",
+    "behaviorPlaceholder": "Describe the observed behavior...",
+    "progressLabel": "Progress",
+    "progressPlaceholder": "Describe the patient's progress...",
+    "nextStepsLabel": "Next Steps",
+    "nextStepsPlaceholder": "Plan the next steps...",
+    "releaseToFamilyLabel": "Release evolution to family"
+  },
+  "FamilyEvolutions": {
+    "title": "Evolutions",
+    "subtitle": "Recent updates from {patientName}'s therapy team.",
+    "empty": "No evolutions available.",
+    "noMore": "No more evolutions to load",
+    "viewFullEvolution": "View full evolution",
+    "objective": "Objective",
+    "activities": "Activities",
+    "behavior": "Behavior",
+    "progress": "Progress",
+    "nextSteps": "Next Steps"
+  },
+  "NotFound": {
+    "title": "Page not found",
+    "message": "The page you are looking for does not exist.",
+    "backToDashboard": "Back to dashboard",
+    "backToHome": "Back to home"
+  },
+  "Auth": {
+    "sessionExpired": "Session expired. Please log in again.",
+    "unauthorized": "Unauthorized access",
+    "loginRequired": "You need to be logged in to access this page."
+  },
+  "PatientDetail": {
+    "title": "Patient Details",
+    "personalInfo": "Personal Information",
+    "sessions": "Sessions",
+    "evolutions": "Evolutions",
+    "edit": "Edit Patient",
+    "birthDate": "Birth Date",
+    "age": "Age",
+    "guardian": "Guardian",
+    "notes": "Notes",
+    "createdAt": "Registered on {date}",
+    "updatedAt": "Last updated on {date}",
+    "ageFormat": "{age, plural, one {# year} other {# years}}",
+    "sectionSessions": "Sessions",
+    "sectionEvolutions": "Evolutions",
+    "noSessions": "No sessions recorded.",
+    "noEvolutions": "No evolutions recorded.",
+    "deletePatientTitle": "Delete patient?",
+    "deletePatientMessage": "This action cannot be undone. All associated sessions and evolutions will be removed.",
+    "deleteSessionTitle": "Delete session?",
+    "deleteSessionMessage": "This action cannot be undone. The session will be removed.",
+    "selectSessionTitle": "Select a session",
+    "selectSessionDescription": "Choose a completed session to create the evolution:",
+    "therapistLabel": "Therapist: {name}",
+    "noCompletedSessions": "You need a completed session to create an evolution.",
+    "allSessionsHaveEvolution": "All completed sessions already have an evolution.",
+    "releaseSuccess": "Evolution released to family successfully!",
+    "releaseError": "Failed to release evolution",
+    "editSession": "Edit",
+    "deleteSession": "Delete",
+    "addSession": "Add Session",
+    "addEvolution": "Add Evolution",
+    "editEvolution": "Edit",
+    "releaseEvolution": "Release to family",
+    "sessionDate": "Date",
+    "sessionStatus": "Status",
+    "sessionTherapist": "Therapist",
+    "noPermissionEditSession": "You do not have permission to edit this session",
+    "noPermissionDeleteSession": "You do not have permission to delete this session",
+    "noPermissionEditEvolution": "You do not have permission to edit this evolution",
+    "noPermissionReleaseEvolution": "You do not have permission to release this evolution"
+  },
+  "Home": {
+    "subtitle": "Management system for therapy clinics",
+    "clinicPortal": {
+      "title": "Clinic Portal",
+      "description": "For admins and therapists to manage patients, sessions, and evolutions.",
+      "cta": "Access portal"
+    },
+    "familyPortal": {
+      "title": "Family Portal",
+      "description": "For guardians to follow therapeutic evolutions.",
+      "cta": "Access portal"
+    },
+    "footer": "Spectra - Management for TEA clinics"
+  },
+  "Layout": {
+    "searchPlaceholder": "Search patients...",
+    "navHome": "Home",
+    "navEvolutions": "Evolutions"
+  },
+  "Login": {
+    "title": "Login",
+    "email": "Email",
+    "password": "Password",
+    "submit": "Login",
+    "invalidCredentials": "Invalid email or password",
+    "forgotPassword": "Forgot my password",
+    "noAccount": "Don't have an account yet?",
+    "contactAdmin": "Contact an administrator",
+    "clinicSubtitle": "Clinic Management Portal",
+    "familySubtitle": "Family Portal",
+    "showPassword": "Show password",
+    "hidePassword": "Hide password"
+  },
+  "Actions": {
+    "emailAndPasswordRequired": "Enter your email and password to continue",
+    "invalidEmailFormat": "Invalid email format",
+    "unknownRole": "Unknown user role",
+    "nameRequired": "Name is required",
+    "birthDateRequired": "Birth date is required",
+    "guardianNameRequired": "Guardian name is required",
+    "guardianEmailRequired": "Guardian email is required",
+    "invalidEmail": "Invalid email",
+    "patientIdNotFound": "Patient ID not found",
+    "patientIdInvalid": "Invalid patient ID",
+    "createPatientFailed": "Failed to create patient. Please try again.",
+    "updatePatientFailed": "Failed to update patient. Please try again.",
+    "patientRequired": "Patient is required",
+    "therapistRequired": "Therapist is required",
+    "dateTimeRequired": "Date and time are required",
+    "statusRequired": "Status is required",
+    "sessionIdNotFound": "Session ID not found",
+    "sessionIdInvalid": "Invalid session ID",
+    "sessionNotFound": "Session not found",
+    "noPermissionEditSession": "You do not have permission to edit this session",
+    "noPermissionDeleteSession": "You do not have permission to delete this session",
+    "createSessionFailed": "Failed to create session. Please try again.",
+    "updateSessionFailed": "Failed to update session. Please try again.",
+    "objectiveRequired": "Objective is required",
+    "activitiesRequired": "Activities is required",
+    "behaviorRequired": "Behavior is required",
+    "progressRequired": "Progress is required",
+    "nextStepsRequired": "Next steps are required",
+    "evolutionIdNotFound": "Evolution ID not found",
+    "evolutionIdInvalid": "Invalid evolution ID",
+    "evolutionNotFound": "Evolution not found",
+    "noPermissionCreateEvolution": "You do not have permission to create evolution for this session",
+    "noPermissionEditEvolution": "You do not have permission to edit this evolution",
+    "noPermissionReleaseEvolution": "You do not have permission to release this evolution.",
+    "createEvolutionFailed": "Failed to create evolution. Please try again.",
+    "updateEvolutionFailed": "Failed to update evolution. Please try again.",
+    "releaseEvolutionFailed": "Failed to release evolution to family. Please try again."
+  },
+  "Greeting": {
+    "hello": "Hello, {name}"
+  },
+  "DateUtils": {
+    "semSessoes": "No sessions",
+    "ha2": "2 days ago",
+    "ha3": "3 days ago",
+    "ha4": "4 days ago",
+    "ha5": "5 days ago",
+    "ha6": "6 days ago",
+    "haUmaSemana": "One week ago",
+    "haDuasSemanas": "Two weeks ago",
+    "haNSemanas": "{count} weeks ago",
+    "haNMeses": "{count} months ago",
+    "hoje": "Today",
+    "ontem": "Yesterday",
+    "formatDateTime": "{month}/{day}/{year} at {hour}:{minute}"
+  },
+  "DateRangeUtils": {
+    "dayLabels": ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
+  },
+  "SessionStatus": {
+    "completed": "Completed"
+  },
+  "Sidebar": {
+    "subtitle": "Clinic Management"
+  },
+  "Metadata": {
+    "description": "Management system for TEA clinics"
+  }
+}
