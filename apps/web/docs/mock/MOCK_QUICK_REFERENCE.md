@@ -304,9 +304,10 @@ async function FamilyDashboard() {
 
 ### Utils
 
-- `src/lib/utils/dateUtils.ts` - getRelativeDate() for Portuguese relative dates
+- `src/lib/utils/dateUtils.ts` - getRelativeDate() for relative dates (locale-aware)
 - `src/lib/utils/stringUtils.ts` - extractInitials() for name-to-initials conversion
-- `src/lib/envUtils.ts` - getUseMock() for environment mode checks
+- `src/lib/utils/envUtils.ts` - getUseMock() for environment mode checks
+- `src/lib/utils/translationUtils.ts` - getServerT() for server action translations
 
 ### API Layer
 

@@ -34,10 +34,10 @@ const user = await resolveUserWithRole('therapist') // or 'admin'
 
 ---
 
-### Environment Checks (`src/lib/envUtils.ts`)
+### Environment Checks (`src/lib/utils/envUtils.ts`)
 
 ```tsx
-import { getUseMock } from '@/lib/envUtils'
+import { getUseMock } from '@/lib/utils/envUtils'
 
 const isMockMode = getUseMock()
 // Returns true when NEXT_PUBLIC_DISABLE_MSW !== 'true'
@@ -81,10 +81,18 @@ import {
   getRelativeDate,
 } from '@/lib/utils/dateUtils'
 
-const label = getRelativeDate('2026-05-04') // Returns: "Hoje", "Ontem", "Há 3 dias", etc.
+// Accept optional locale param (default: 'pt-BR')
+const label = getRelativeDate('2026-05-04', {
+  today: 'Today',
+  yesterday: 'Yesterday',
+  daysAgo: '{days} days ago',
+})
+// Returns: "Hoje" (pt-BR) or "Today" (en)
 const formatted = formatDate('2026-05-28') // Returns: "28/05/2026"
+const formatted = formatDate('2026-05-28', 'en') // Returns: "05/28/2026"
 const short = formatDateShort('2026-05-28') // Returns: "28/05"
 const long = formatDateLong('2026-05-28') // Returns: "28 de maio de 2026"
+const long = formatDateLong('2026-05-28', 'en') // Returns: "May 28, 2026"
 const time = formatDateTime('2026-05-28T10:00:00Z') // Returns: "28/05/2026 10:00"
 const iso = formatDateTimeISO('2026-05-28T10:00:00Z') // Returns: "2026-05-28T10:00:00"
 ```
@@ -112,7 +120,9 @@ const initials = extractInitials('Ana Carolina') // 'AC'
 ```tsx
 import { getGreeting } from '@/lib/utils/greetingUtils'
 
+// Accept optional t (translator function) — falls back to Portuguese
 const greeting = getGreeting('Ana') // 'Olá, Ana'
+const greeting = getGreeting('Ana', t) // localized via t('greeting', { name: 'Ana' })
 const greeting = getGreeting('') // ''
 ```
 
@@ -132,8 +142,9 @@ const { start, end } = getTodayRange()
 // Get date N days ago
 const weekAgo = getDaysAgo(7) // Date object
 
-// Aggregate sessions by day of week for charts
-const chartData = aggregateByDayOfWeek(sessions)
+// Aggregate sessions by day of week for charts (accepts optional locale)
+const chartData = aggregateByDayOfWeek(sessions) // Portuguese day labels
+const chartData = aggregateByDayOfWeek(sessions, 'en') // English day labels
 // Returns: [{ day: 'Dom', sessions: 0 }, { day: 'Seg', sessions: 2 }, ...]
 ```
 
@@ -193,20 +204,43 @@ import {
   getStatusClassName,
 } from '@/lib/utils/sessionStatusUtils'
 
-// Normalize session status string
+// Accept optional t (translator function) — falls back to Portuguese labels
 const normalized = normalizeSessionStatus('completed') // Returns: 'completed'
 
 // Get display info for a status
-const display = getSessionStatusDisplay('scheduled') // Returns: { label: 'Agendada', className: '...' }
+const display = getSessionStatusDisplay('scheduled', t)
+// Returns: { label: 'Scheduled' (en) or 'Agendada' (pt), className: '...' }
 
 // Get label for session status
-const label = getStatusLabel('completed') // Returns: 'Concluída'
+const label = getStatusLabel('completed', t) // Returns: 'Completed' or 'Concluída'
 
-// Get CSS class name for status styling
+// Get CSS class name for status styling (no translation needed)
 const className = getStatusClassName('scheduled') // Returns: 'bg-yellow-100 text-yellow-800'
 ```
 
 **Use in:** Session tables, status badges, filtering
+
+---
+
+### Translation Utilities (`src/lib/utils/translationUtils.ts`)
+
+```tsx
+import { getServerT } from '@/lib/utils/translationUtils'
+
+// In server actions — resolves locale from request context
+const t = await getServerT()
+return { error: t('Common.loginFailed') }
+return { success: t('Common.saved') }
+```
+
+**Purpose:** Provides translation in server actions where `next-intl` request context may not be available.
+
+**How it works:**
+
+1. Tries `getMessages()` from `next-intl/server` (request-scoped cache)
+2. Falls back to reading `locale` cookie + dynamic import of message file
+
+**Use in:** All server action files (`src/app/actions/`)
 
 ---
 

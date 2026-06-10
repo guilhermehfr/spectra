@@ -21,12 +21,15 @@ This version has breaking changes — APIs, conventions, and file structure may 
 ### File Structure
 
 ```
+messages/
+├── en.json                   # English translations
+└── pt-BR.json                # Portuguese (Brazil) translations
 src/
 ├── app/
-│   ├── layout.tsx              # Root layout with metadata
+│   ├── layout.tsx              # Root layout with metadata + NextIntlClientProvider + LanguageToggle
 │   ├── page.tsx                # Home page
   │   ├── globals.css             # Tailwind imports + CSS variables
-  │   ├── actions/                # Server Actions
+  │   ├── actions/                # Server Actions (all use getServerT())
 │   │   ├── auth.ts             # Authentication actions
 │   │   ├── patient.ts          # Patient CRUD actions
 │   │   ├── session.ts          # Session CRUD actions
@@ -137,6 +140,8 @@ src/
 │           ├── Container.tsx
 │           ├── IconButton.tsx
 │           └── LoadingSpinner.tsx # Shared loading indicator
+├── i18n/
+│   └── request.ts            # next-intl locale resolution (cookie → locale)
 ├── lib/
 │   ├── api/
 │   │   ├── http.ts             # HTTP client setup
@@ -146,23 +151,24 @@ src/
 │   │   ├── family.ts           # Family API dispatcher (lazy-load)
 │   │   ├── family-mock.ts     # Family mock implementation
 │   │   └── family-real.ts     # Family real implementation
-│   ├── types.ts                # Shared TypeScript types
+│   ├── types.ts                # Shared TypeScript types (includes Messages)
 │   ├── auth.ts                 # Real auth implementation (HTTP)
 │   ├── auth-mock.ts            # Mock auth implementation
 │   ├── authService.ts          # Unified auth service (switches by env)
   │   ├── authResolver.ts         # Resolves user identity from request
-  │   ├── envUtils.ts             # getUseMock()
-  │   └── utils/                  # Utility functions
+  │   ├── utils/                  # Utility functions
 │       │   ├── index.ts        # Barrel export for all utilities
-│       │   ├── dateUtils.ts    # getRelativeDate() - relative date formatting in Portuguese
+│       │   ├── dateUtils.ts    # getRelativeDate() - relative date formatting
 │       │   ├── stringUtils.ts  # extractInitials() - name to initials conversion
 │       │   ├── userUtils.ts    # resolveUser(), resolveUserWithRole()
 │       │   ├── greetingUtils.ts# getGreeting()
+│       │   ├── envUtils.ts     # getUseMock() - environment check
 │       │   ├── dateRangeUtils.ts# getTodayRange(), getDaysAgo(), aggregateByDayOfWeek()
   │   │   ├── statsUtils.ts   # calculateClinicStats(), filterRecentSessions()
   │   │   ├── redirectUtils.ts# getDashboardUrl(), getLoginUrl()
   │   │   ├── permissionUtils.ts # canEditSession(), canDeleteSession(), canEditEvolution(), canDeleteEvolution(), canReleaseEvolution()
-  │   │   └── sessionStatusUtils.ts # normalizeSessionStatus(), getSessionStatusDisplay(), getStatusLabel(), getStatusClassName()
+  │   │   ├── sessionStatusUtils.ts # normalizeSessionStatus(), getSessionStatusDisplay(), getStatusLabel(), getStatusClassName()
+  │   │   └── translationUtils.ts # getServerT() - server-side translation helper
 └── mocks/
     ├── browser.ts              # MSW browser worker setup
     ├── state.ts                # Centralized in-memory mock state
@@ -199,6 +205,16 @@ src/
   - Authenticated on login → `/clinic/dashboard` or `/family/dashboard` based on role
 - **User roles**: `admin`/`therapist` → clinic portal, `family` → family portal
 
+### Internationalization (i18n)
+
+- **next-intl** with single-language routing (no `[locale]` in path)
+- **Locale cookie**: `locale` stores `'en'` or `'pt-BR'`, default `'en'`
+- **LanguageToggle** (`src/components/ui/shared/LanguageToggle.tsx`) — single instance in root layout, fixed `top-4 right-4 z-[60]`
+- **Client Components**: `useTranslations('Namespace')` for translatable strings
+- **Server Components**: `getTranslations('Namespace')` from `next-intl/server`
+- **Server Actions**: `getServerT()` from `@/lib/utils/translationUtils` — tries `getMessages()` first, falls back to cookie + dynamic import
+- **Locale in utilities**: `dateUtils`, `dateRangeUtils`, `greetingUtils`, `sessionStatusUtils` accept optional `locale`/`t` params for localized output
+
 ### Preferred Patterns
 
 **User Resolution in Pages**:
@@ -208,7 +224,7 @@ src/
 
 **Environment Checks**:
 
-- Use `getUseMock()` from `@/lib/envUtils` instead of inline `process.env.NEXT_PUBLIC_DISABLE_MSW`
+- Use `getUseMock()` from `@/lib/utils/envUtils` instead of inline `process.env.NEXT_PUBLIC_DISABLE_MSW`
 
 **Role-Based Redirects**:
 
@@ -323,6 +339,7 @@ src/
 - Brazilian Portuguese in UI/mock data
 - ISO 8601 date strings
 - In-memory mock state with incremental IDs
+- All user-facing strings in translations files (`messages/`), not hardcoded
 
 ## Development
 

@@ -26,7 +26,8 @@ export async function generateMetadata(): Promise<Metadata> {
   const messages = await getMessages()
   return {
     title: 'Spectra',
-    description: ((messages as Record<string, Record<string, string>>).Metadata?.description) || 'Spectra',
+    description:
+      (messages as Record<string, Record<string, string>>).Metadata?.description || 'Spectra',
   }
 }
 

@@ -8,7 +8,7 @@ This document outlines the project's established patterns and best practices. Th
 2. **Explicit Over Implicit** - Use named imports and explicit types rather than relying on inference
 3. **Utilities Over Duplication** - Extract repeated logic into utilities after it appears in 2+ locations
 4. **Consistent Styling** - Follow Tailwind CSS 4 patterns established in the codebase
-5. **Brazilian Portuguese** - UI text and user-facing content in pt-BR
+5. **Internationalization** - All user-facing strings via next-intl translations in `messages/` (en + pt-BR)
 
 ---
 
@@ -50,6 +50,46 @@ redirect(getDashboardUrl(user.role))
 // On logout
 redirect(getLoginUrl(user.role))
 ```
+
+---
+
+## Internationalization
+
+### ✅ DO: Use next-intl for all user-facing strings
+
+```tsx
+// ✅ Client Components
+'use client'
+import { useTranslations } from 'next-intl'
+const t = useTranslations('MyComponent')
+return <p>{t('title')}</p>
+
+// ✅ Server Components
+import { getTranslations } from 'next-intl/server'
+const t = await getTranslations('MyComponent')
+return <p>{t('title')}</p>
+
+// ✅ Server Actions
+import { getServerT } from '@/lib/utils/translationUtils'
+const t = await getServerT()
+return { error: t('MyComponent.error') }
+```
+
+### LanguageToggle
+
+- Single instance in root layout (`src/app/layout.tsx`)
+- Fixed position: `fixed top-4 right-4 z-[60]`
+- Reads/sets `locale` cookie, triggers page reload on toggle
+
+### Translation Files
+
+```
+messages/
+├── en.json       # English translations
+└── pt-BR.json    # Portuguese (Brazil) translations
+```
+
+Both files must have the same keys with parallel structure. Use dot-notation for nested keys (e.g., `Common.save`).
 
 ---
 
@@ -122,7 +162,10 @@ src/lib/utils/
 ├── dateRangeUtils.ts # Date range calculations
 ├── statsUtils.ts     # Dashboard statistics
 ├── envUtils.ts       # Environment checks (getUseMock)
-└── redirectUtils.ts  # URL redirects (getDashboardUrl)
+├── redirectUtils.ts  # URL redirects (getDashboardUrl)
+├── permissionUtils.ts# Permission checks
+├── sessionStatusUtils.ts # Session status display
+└── translationUtils.ts   # getServerT() for server actions
 ```
 
 ### Adding a New Utility
@@ -293,18 +336,19 @@ Evolution (session=1, released_to_family=true)
 
 ## Common Patterns Quick Reference
 
-| Pattern                     | Use                       | Location                     |
-| --------------------------- | ------------------------- | ---------------------------- |
-| `resolveUser()`             | Get current user in pages | `@/lib/utils/userUtils`      |
-| `resolveUserWithRole(role)` | Get user + validate role  | `@/lib/utils/userUtils`      |
-| `getUseMock()`              | Check mock/real mode      | `@/lib/utils/envUtils`       |
-| `getDashboardUrl(role)`     | Get dashboard by role     | `@/lib/utils/redirectUtils`  |
-| `getLoginUrl(role)`         | Get login page by role    | `@/lib/utils/redirectUtils`  |
-| `getRelativeDate(date)`     | Portuguese relative dates | `@/lib/utils/dateUtils`      |
-| `extractInitials(name)`     | Get name initials         | `@/lib/utils/stringUtils`    |
-| `getGreeting(firstName)`    | Generate greeting         | `@/lib/utils/greetingUtils`  |
-| `calculateClinicStats()`    | Dashboard metrics         | `@/lib/utils/statsUtils`     |
-| `aggregateByDayOfWeek()`    | Chart data                | `@/lib/utils/dateRangeUtils` |
+| Pattern                     | Use                       | Location                       |
+| --------------------------- | ------------------------- | ------------------------------ |
+| `resolveUser()`             | Get current user in pages | `@/lib/utils/userUtils`        |
+| `resolveUserWithRole(role)` | Get user + validate role  | `@/lib/utils/userUtils`        |
+| `getUseMock()`              | Check mock/real mode      | `@/lib/utils/envUtils`         |
+| `getDashboardUrl(role)`     | Get dashboard by role     | `@/lib/utils/redirectUtils`    |
+| `getLoginUrl(role)`         | Get login page by role    | `@/lib/utils/redirectUtils`    |
+| `getRelativeDate(date, t)`  | Localized relative dates  | `@/lib/utils/dateUtils`        |
+| `extractInitials(name)`     | Get name initials         | `@/lib/utils/stringUtils`      |
+| `getGreeting(firstName, t)` | Generate greeting         | `@/lib/utils/greetingUtils`    |
+| `calculateClinicStats()`    | Dashboard metrics         | `@/lib/utils/statsUtils`       |
+| `aggregateByDayOfWeek()`    | Chart data                | `@/lib/utils/dateRangeUtils`   |
+| `getServerT()`              | Translations in actions   | `@/lib/utils/translationUtils` |
 
 ---
 

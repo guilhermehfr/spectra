@@ -12,6 +12,7 @@ This guide provides standard patterns for creating new pages in the application.
 // src/app/[portal]/dashboard/page.tsx
 import { resolveUser } from '@/lib/utils/userUtils'
 import { getGreeting } from '@/lib/utils/greetingUtils'
+import { getTranslations } from 'next-intl/server'
 import { Layout } from '@/components/layout/portal'
 import { DashboardContent } from '@/components/ui/portal'
 
@@ -19,16 +20,19 @@ export default async function DashboardPage() {
   // 1. Resolve user
   const user = await resolveUser()
 
-  // 2. Fetch data
+  // 2. Fetch translations
+  const t = await getTranslations('Namespace')
+
+  // 3. Fetch data
   const data = await fetchData()
 
-  // 3. Compute derived data
+  // 4. Compute derived data
   const stats = computeStats(data)
 
-  // 4. Render
+  // 5. Render
   return (
     <Layout user={user}>
-      <DashboardContent greeting={getGreeting(user.first_name)} stats={stats} data={data} />
+      <DashboardContent greeting={getGreeting(user.first_name, t)} stats={stats} data={data} />
     </Layout>
   )
 }
@@ -192,6 +196,7 @@ When creating a new page, ensure:
 - [ ] Import `resolveUser()` from `@/lib/utils/userUtils`
 - [ ] Use appropriate Layout component
 - [ ] Pass `user` prop to Layout
+- [ ] Use `getTranslations('Namespace')` for translatable strings
 - [ ] Use async/await for data fetching
 - [ ] Use `Promise.all()` for parallel fetches
 - [ ] Filter `is_deleted` items for entities
@@ -270,12 +275,18 @@ export default function ClinicLoading() {
 
 ## SEO and Metadata
 
-Add metadata to pages as needed:
+Add metadata to pages as needed. For localized metadata, use `generateMetadata`:
 
 ```tsx
-export const metadata = {
-  title: 'Spectra - Dashboard',
-  description: 'Painel de controle da clínica',
+import { getLocale, getMessages } from 'next-intl/server'
+
+export async function generateMetadata() {
+  const messages = await getMessages()
+  return {
+    title: 'Spectra',
+    description:
+      (messages as Record<string, Record<string, string>>).Metadata?.description || 'Spectra',
+  }
 }
 ```
 

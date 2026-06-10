@@ -302,9 +302,11 @@ Evolution (session=1, released_to_family=true)
 
 ### Types & Pages
 
-- `src/lib/types.ts` - Shared TypeScript types
+- `src/lib/types.ts` - Shared TypeScript types (includes `Messages` type)
 - `src/lib/utils/permissionUtils.ts` - Permission checks for sessions/evolutions
 - `src/lib/utils/sessionStatusUtils.ts` - Session status display utilities
+- `src/lib/utils/translationUtils.ts` - getServerT() for server action translations
+- `src/lib/utils/envUtils.ts` - getUseMock() for environment mode checks
 - `src/app/actions/auth.ts` - Server actions for login/logout
 - `src/app/actions/patient.ts` - Patient CRUD server actions
 - `src/app/actions/session.ts` - Session CRUD server actions
@@ -417,7 +419,7 @@ Mock mode has negligible latency, making it excellent for rapid development and 
 | Property         | Value             |
 | ---------------- | ----------------- |
 | Created          | May 4, 2026       |
-| Last Updated     | June 5, 2026      |
+| Last Updated     | June 10, 2026     |
 | Coverage         | Complete          |
 | Files Documented | 30+ core files    |
 | Code Examples    | 50+               |

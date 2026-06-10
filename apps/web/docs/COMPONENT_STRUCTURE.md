@@ -69,6 +69,7 @@ src/components/
         ├── TextareaField.tsx  # Form textarea
         ├── BaseForm.tsx       # Base form wrapper
         ├── Container.tsx
+        ├── LanguageToggle.tsx  # PT|EN toggle (single instance in root layout)
         ├── LoadingSpinner.tsx # Shared loading indicator
         └── IconButton.tsx
 ```
