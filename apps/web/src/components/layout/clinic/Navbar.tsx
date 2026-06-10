@@ -19,7 +19,7 @@ export function Navbar({ user }: NavbarProps) {
 
   return (
     <nav className="sticky top-0 z-40 bg-white border-b border-slate-200 shadow-[0px_4px_12px_0px_rgba(0,0,0,0.05)]">
-      <div className="flex items-center h-16 px-4 md:px-6">
+      <div className="flex items-center h-16 pl-4 pr-48 md:pl-6">
         {/* Logo */}
         <div className="flex-shrink-0">
           <Link
@@ -31,7 +31,7 @@ export function Navbar({ user }: NavbarProps) {
         </div>
 
         {/* Search Bar */}
-        <SearchBar placeholder="Pesquisar pacientes..." onSearch={handleSearch} />
+        <SearchBar onSearch={handleSearch} />
 
         {/* User Avatar */}
         <div className="flex-shrink-0">
