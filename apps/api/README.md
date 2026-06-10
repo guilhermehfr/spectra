@@ -1,119 +1,119 @@
 # API - Patient Management
 
-Backend da aplicação de gerenciamento de pacientes.
-Construído com Django e Django REST Framework.
+Backend for the patient management application.
+Built with Django and Django REST Framework.
 
-## Objetivo
+## Objective
 
-Fornecer uma API para gerenciamento de pacientes, permitindo criação, leitura e manutenção de registros básicos.
+Provide an API for patient management, allowing creation, reading, and maintenance of basic records.
 
-Este backend faz parte de um sistema fullstack com frontend em Next.js.
+This backend is part of a fullstack system with a Next.js frontend.
 
 ## Stack
 
 - Python 3.x
 - Django 5.x
 - Django REST Framework
-- gunicorn (servidor produção)
+- gunicorn (production server)
 - whitenoise (static files)
-- SQLite (ambiente local) / PostgreSQL (produção)
+- SQLite (local environment) / PostgreSQL (production)
 
-## Como rodar o projeto
+## How to run
 
-1. Criar ambiente virtual
+1. Create virtual environment
 ```bash
 python -m venv .venv
 ```
-2. Ativar ambiente virtual
+2. Activate virtual environment
 ```bash
 source .venv/bin/activate
 ```
-3. Instalar dependências
+3. Install dependencies
 ```bash
 pip install -r requirements.txt
 ```
-4. Aplicar migrations
+4. Apply migrations
 ```bash
 python manage.py migrate
 ```
-5. Semear dados de demonstração (opcional)
+5. Seed demo data (optional)
 ```bash
 python manage.py seed
 ```
 
-6. Rodar servidor
+6. Run server
 ```bash
 python manage.py runserver
 ```
 
-## API disponível em:
+## API available at:
 
 [http://127.0.0.1:8000/](http://127.0.0.1:8000/)
 
-## Superusuário (admin)
+## Superuser (admin)
 
-Criar usuário admin:
+Create admin user:
 
 ```bash
 python manage.py createsuperuser
 ```
 
-Acessar painel:
+Access admin panel:
 
 [http://127.0.0.1:8000/admin](http://127.0.0.1:8000/admin)
 
-## Endpoints principais
+## Main Endpoints
 
-### Autenticação
+### Authentication
 
-- `POST /api/auth/login/` → Login (retorna tokens JWT)
-- `POST /api/auth/refresh/` → Renovar token
-- `GET /api/auth/me/` → Dados do usuário atual
+- `POST /api/auth/login/` → Login (returns JWT tokens)
+- `POST /api/auth/refresh/` → Refresh token
+- `GET /api/auth/me/` → Current user data
 - `POST /api/auth/logout/` → Logout
 
-### Terapeutas
+### Therapists
 
-- `GET /api/therapists/` → Lista terapeutas ativos
+- `GET /api/therapists/` → List active therapists
 
-### Pacientes
+### Patients
 
-- `GET /api/patients/` → Lista todos os pacientes
-- `POST /api/patients/` → Cria um paciente
-- `GET /api/patients/{id}/` → Detalha um paciente
-- `PUT /api/patients/{id}/` → Atualiza um paciente
-- `DELETE /api/patients/{id}/` → Remove um paciente (soft delete)
+- `GET /api/patients/` → List all patients
+- `POST /api/patients/` → Create a patient
+- `GET /api/patients/{id}/` → Patient details
+- `PUT /api/patients/{id}/` → Update a patient
+- `DELETE /api/patients/{id}/` → Delete a patient (soft delete)
 
-### Sessões
+### Sessions
 
-- `GET /api/sessions/` → Lista sessões (terapeuta vê as suas)
-- `POST /api/sessions/` → Cria sessão
-- `GET /api/sessions/{id}/` → Detalha sessão
-- `PUT /api/sessions/{id}/` → Atualiza sessão
-- `DELETE /api/sessions/{id}/` → Remove sessão
+- `GET /api/sessions/` → List sessions (therapist sees their own)
+- `POST /api/sessions/` → Create session
+- `GET /api/sessions/{id}/` → Session details
+- `PUT /api/sessions/{id}/` → Update session
+- `DELETE /api/sessions/{id}/` → Delete session
 
-### Evoluções
+### Evolutions
 
-- `GET /api/evolutions/` → Lista evoluções
-- `POST /api/evolutions/` → Cria evolução (após sessão concluída)
-- `GET /api/evolutions/{id}/` → Detalha evolução
-- `PUT /api/evolutions/{id}/` → Atualiza evolução
+- `GET /api/evolutions/` → List evolutions
+- `POST /api/evolutions/` → Create evolution (after completed session)
+- `GET /api/evolutions/{id}/` → Evolution details
+- `PUT /api/evolutions/{id}/` → Update evolution
 
 ### Dashboard
 
-- `GET /api/dashboard/` → Estatísticas do painel
+- `GET /api/dashboard/` → Dashboard statistics
 
-### Família (portal do responsável)
+### Family (guardian portal)
 
-- `GET /api/patients/family/` → Paciente vinculado ao email
-- `GET /api/evolutions/family/` → Evoluções liberadas para família
-- `GET /api/evolutions/family/{id}/` → Detalhe de evolução liberada
+- `GET /api/patients/family/` → Patient linked to email
+- `GET /api/evolutions/family/` → Evolutions released to family
+- `GET /api/evolutions/family/{id}/` → Released evolution detail
 
-### Sistema
+### System
 
-- `GET /api/seed/` → Semear dados de demonstração (admin apenas)
-- `GET /api/health/` → Health check (para load balancers)
+- `GET /api/seed/` → Seed demo data (admin only)
+- `GET /api/health/` → Health check (for load balancers)
 
-## Estrutura do modelo (Patient)
+## Patient Model Structure
 
 - `id`
 - `name`
@@ -123,45 +123,45 @@ Acessar painel:
 - `notes`
 - `created_at`
 
-## Configuração do Banco de Dados
+## Database Configuration
 
-### Variáveis de Ambiente
+### Environment Variables
 
-O projeto utiliza `django-environ` e `dj-database-url` para configuração do banco de dados.
+The project uses `django-environ` and `dj-database-url` for database configuration.
 
-| Variável | Descrição | Exemplo |
-|----------|-----------|---------|
-| `SECRET_KEY` | **OBRIGATÓRIO** - Chave secreta do Django | - |
-| `DEBUG` | Modo debug (`True` ou `False`) | `False` em produção |
-| `ALLOWED_HOSTS` | **OBRIGATÓRIO em produção** - Domínios permitidos | `localhost,127.0.0.1` |
-| `CORS_ALLOWED_ORIGINS` | Origens CORS permitidas | `http://localhost:3000` |
-| `DATABASE_URL` | String de conexão completa (formato: `postgresql://user:password@host:port/dbname`) | `postgresql://user:pass@localhost:5432/mydb` |
-| `DJANGO_ENV` | Ambiente de execução (`local` ou `production`) | `local` |
+| Variable | Description | Example |
+|----------|-------------|---------|
+| `SECRET_KEY` | **REQUIRED** - Django secret key | - |
+| `DEBUG` | Debug mode (`True` or `False`) | `False` in production |
+| `ALLOWED_HOSTS` | **REQUIRED in production** - Allowed domains | `localhost,127.0.0.1` |
+| `CORS_ALLOWED_ORIGINS` | Allowed CORS origins | `http://localhost:3000` |
+| `DATABASE_URL` | Full connection string (format: `postgresql://user:password@host:port/dbname`) | `postgresql://user:pass@localhost:5432/mydb` |
+| `DJANGO_ENV` | Execution environment (`local` or `production`) | `local` |
 
-### Desenvolvimento Local (SQLite)
+### Local Development (SQLite)
 
-Por padrão, sem `DATABASE_URL`, o projeto usa SQLite:
-
-```bash
-# Não definir DATABASE_URL = usa SQLite automaticamente
-```
-
-### Produção (PostgreSQL)
-
-Defina a variável `DATABASE_URL` no arquivo `.env.production`:
+By default, without `DATABASE_URL`, the project uses SQLite:
 
 ```bash
-DATABASE_URL=postgresql://usuario:senha@host:5432/nome_do_banco
+# Don't set DATABASE_URL = uses SQLite automatically
 ```
 
-Ou copie o arquivo de exemplo:
+### Production (PostgreSQL)
+
+Set the `DATABASE_URL` variable in the `.env.production` file:
+
+```bash
+DATABASE_URL=postgresql://user:password@host:5432/db_name
+```
+
+Or copy the example file:
 ```bash
 cp .env.production.example .env.production
-# Edite o arquivo com as credenciais do seu banco PostgreSQL
+# Edit the file with your PostgreSQL database credentials
 ```
 
-## Observações
+## Notes
 
-- Projeto em fase de MVP
-- Banco SQLite usado apenas para desenvolvimento local
-- Produção utiliza PostgreSQL com DATABASE_URL
+- Project in MVP phase
+- SQLite used only for local development
+- Production uses PostgreSQL with DATABASE_URL

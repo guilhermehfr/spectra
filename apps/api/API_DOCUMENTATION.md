@@ -1,9 +1,9 @@
 # API Documentation - Spectra Backend
 
-## 🔐 Autenticação
+## 🔐 Authentication
 
 ### Login
-Fazer login com email e senha para obter tokens JWT.
+Login with email and password to obtain JWT tokens.
 
 **Endpoint:**
 ```
@@ -36,14 +36,14 @@ POST /api/auth/login/
 }
 ```
 
-**Erros:**
-- `400`: Credenciais inválidas
-- `400`: Conta desativada
+**Errors:**
+- `400`: Invalid credentials
+- `400`: Deactivated account
 
 ---
 
-### Usuário Atual
-Obter dados do usuário autenticado.
+### Current User
+Get authenticated user data.
 
 **Endpoint:**
 ```
@@ -69,12 +69,12 @@ Authorization: Bearer {access_token}
 }
 ```
 
-**Permissões:** Qualquer usuário autenticado
+**Permissions:** Any authenticated user
 
 ---
 
 ### Logout
-Realizar logout do sistema.
+Logout from the system.
 
 **Endpoint:**
 ```
@@ -100,12 +100,12 @@ Authorization: Bearer {access_token}
 }
 ```
 
-**Permissões:** Qualquer usuário autenticado
+**Permissions:** Any authenticated user
 
 ---
 
 ### Refresh Token
-Renovar o token de acesso usando o refresh token.
+Renew the access token using the refresh token.
 
 **Endpoint:**
 ```
@@ -126,17 +126,17 @@ POST /api/auth/refresh/
 }
 ```
 
-**Headers necessários para requisições autenticadas:**
+**Required headers for authenticated requests:**
 ```
 Authorization: Bearer {access_token}
 ```
 
 ---
 
-## 👥 Terapeutas
+## 👥 Therapists
 
-### Listar Terapeutas
-Retorna lista de terapeutas ativos. Útil para admins ao criar/editar sessões.
+### List Therapists
+Returns a list of active therapists. Useful for admins when creating/editing sessions.
 
 **Endpoint:**
 ```
@@ -164,14 +164,14 @@ Authorization: Bearer {access_token}
 ]
 ```
 
-**Permissões:** Apenas Terapeutas e Admins
+**Permissions:** Therapists and Admins only
 
 ---
 
-## 👥 Pacientes
+## 👥 Patients
 
-### Listar Pacientes
-Listar todos os pacientes do sistema.
+### List Patients
+List all patients in the system.
 
 **Endpoint:**
 ```
@@ -183,7 +183,7 @@ GET /api/patients/
 Authorization: Bearer {access_token}
 ```
 
-**Response (200) - Paginada:**
+**Response (200) - Paginated:**
 ```json
 {
   "count": 4,
@@ -204,18 +204,18 @@ Authorization: Bearer {access_token}
 }
 ```
 
-**Paginação:**
-- `count`: Total de registros
-- `results`: Array com os dados da página atual
-- `next`/`previous`: Links para próxima/página anterior (null se não houver)
-- `PAGE_SIZE`: 20 registros por página (padrão)
+**Pagination:**
+- `count`: Total records
+- `results`: Array with current page data
+- `next`/`previous`: Links to next/previous page (null if none)
+- `PAGE_SIZE`: 20 records per page (default)
 
-**Permissões:** Apenas Terapeutas e Admins
+**Permissions:** Therapists and Admins only
 
 ---
 
-### Obter Paciente da Família
-Obter o paciente associado ao email do responsável logado.
+### Get Family Patient
+Get the patient associated with the logged-in guardian's email.
 
 **Endpoint:**
 ```
@@ -231,7 +231,7 @@ Authorization: Bearer {access_token}
 ```json
 {
   "id": 1,
-  "name": "Leonardo Silva",
+  "name": "Leonard Silva",
   "birth_date": "2017-03-10",
   "guardian_name": "Maria Silva",
   "guardian_email": "maria@spectra.com",
@@ -248,12 +248,12 @@ Authorization: Bearer {access_token}
 }
 ```
 
-**Permissões:** Apenas membros da Família (role: family)
+**Permissions:** Family members only (role: family)
 
 ---
 
-### Criar Paciente
-Criar um novo paciente no sistema.
+### Create Patient
+Create a new patient in the system.
 
 **Endpoint:**
 ```
@@ -291,16 +291,16 @@ Content-Type: application/json
 }
 ```
 
-**Validações:**
-- `name`: Obrigatório, não pode ser vazio
-- `guardian_email`: Deve ser um email válido (opcional)
+**Validations:**
+- `name`: Required, cannot be empty
+- `guardian_email`: Must be a valid email (optional)
 
-**Permissões:** Apenas Terapeutas e Admins
+**Permissions:** Therapists and Admins only
 
 ---
 
-### Detalhes do Paciente
-Obter informações detalhadas de um paciente.
+### Patient Details
+Get detailed information about a patient.
 
 **Endpoint:**
 ```
@@ -326,12 +326,12 @@ Authorization: Bearer {access_token}
 }
 ```
 
-**Permissões:** Apenas Terapeutas e Admins
+**Permissions:** Therapists and Admins only
 
 ---
 
-### Atualizar Paciente
-Atualizar informações de um paciente.
+### Update Patient
+Update a patient's information.
 
 **Endpoint:**
 ```
@@ -369,12 +369,12 @@ Content-Type: application/json
 }
 ```
 
-**Permissões:** Apenas Terapeutas e Admins
+**Permissions:** Therapists and Admins only
 
 ---
 
-### Deletar Paciente
-Remover um paciente do sistema.
+### Delete Patient
+Remove a patient from the system.
 
 **Endpoint:**
 ```
@@ -388,14 +388,14 @@ Authorization: Bearer {access_token}
 
 **Response:** `204 No Content`
 
-**Permissões:** Apenas Terapeutas e Admins
+**Permissions:** Therapists and Admins only
 
 ---
 
-## 📅 Sessões (Agenda)
+## 📅 Sessions (Schedule)
 
-### Listar Sessões
-Listar sessões (Terapeutas vêm as próprias; Admin vê todas).
+### List Sessions
+List sessions (Therapists see their own; Admin sees all).
 
 **Endpoint:**
 ```
@@ -407,7 +407,7 @@ GET /api/sessions/
 Authorization: Bearer {access_token}
 ```
 
-### Criar Sessão
+### Create Session
 **Endpoint:**
 ```
 POST /api/sessions/
@@ -420,23 +420,23 @@ POST /api/sessions/
   "date_time": "2026-05-10T14:00:00Z",
   "status": "scheduled",
   "notes": "Sessão de fonoaudiologia"
-  // "therapist": 2 -> Campo opcional se quem manda for admin; Terapeutas logados marcam pra eles mesmos.
+  // "therapist": 2 -> Optional field if the sender is admin; Logged-in therapists assign to themselves.
 }
 ```
 
-**Validações:**
-- Não permite datas enviadas no passado.
+**Validations:**
+- Does not allow past dates.
 
-### Gerenciar Sessão
+### Manage Session
 `GET/PUT/DELETE /api/sessions/{id}/`
-Atualizar para colocar como `"completed"` depois de realizar.
+Update to set as `"completed"` after it is done.
 
 ---
 
-## 📈 Evolução Terapêutica
+## 📈 Therapeutic Evolution
 
-### Criar Evolução
-Registra uma evolução apenas se a Sessão estiver completa (`"status": "completed"`). Outra regra: Só pode haver 1 evolução por sessão.
+### Create Evolution
+Records an evolution only if the Session is complete (`"status": "completed"`). Another rule: Only 1 evolution per session is allowed.
 
 **Endpoint:**
 ```
@@ -456,21 +456,21 @@ POST /api/evolutions/
 }
 ```
 
-**Campos:**
-- `session` (required): ID da sessão completada
-- `objective` (required): Objetivo da sessão
-- `activities` (required): Atividades realizadas
-- `behavior` (required): Comportamento observado
-- `progress` (required): Progresso do paciente
-- `next_steps` (required): Próximos passos
-- `released_to_family` (optional, default: false): Se a evolução pode ser visualizada pela família
+**Fields:**
+- `session` (required): Completed session ID
+- `objective` (required): Session objective
+- `activities` (required): Activities performed
+- `behavior` (required): Observed behavior
+- `progress` (required): Patient progress
+- `next_steps` (required): Next steps
+- `released_to_family` (optional, default: false): Whether the evolution can be viewed by the family
 
-**Validações:**
-- Sessão deve ter `status: "completed"`
-- Cada sessão pode ter apenas 1 evolução
+**Validations:**
+- Session must have `status: "completed"`
+- Each session can have only 1 evolution
 
-### Listar Evoluções (Clínica)
-Listar todas as evoluções criadas pela clínica.
+### List Evolutions (Clinical)
+List all evolutions created by the clinic.
 
 **Endpoint:**
 ```
@@ -482,7 +482,7 @@ GET /api/evolutions/
 Authorization: Bearer {access_token}
 ```
 
-**Response (200) - Paginada:**
+**Response (200) - Paginated:**
 ```json
 {
   "count": 4,
@@ -509,12 +509,12 @@ Authorization: Bearer {access_token}
 }
 ```
 
-**Permissões:** Apenas Terapeutas e Admins
+**Permissions:** Therapists and Admins only
 
 ---
 
-### Listar Evoluções Liberadas para Família
-Obter lista de evoluções liberadas para visualização pela família.
+### List Evolutions Released to Family
+Get a list of evolutions released for family viewing.
 
 **Endpoint:**
 ```
@@ -526,7 +526,7 @@ GET /api/evolutions/family/
 Authorization: Bearer {access_token}
 ```
 
-**Response (200) - Paginada:**
+**Response (200) - Paginated:**
 ```json
 {
   "count": 2,
@@ -553,21 +553,21 @@ Authorization: Bearer {access_token}
 }
 ```
 
-**Paginação:**
-- `count`: Total de registros
-- `results`: Array com os dados da página atual
-- `next`/`previous`: Links para próxima/página anterior (null se não houver)
+**Pagination:**
+- `count`: Total records
+- `results`: Array with current page data
+- `next`/`previous`: Links to next/previous page (null if none)
 
-**Filtros:**
-- Apenas retorna evoluções onde `released_to_family: true`
-- Ordenado por `created_at` (mais recente primeiro)
+**Filters:**
+- Only returns evolutions where `released_to_family: true`
+- Sorted by `created_at` (most recent first)
 
-**Permissões:** Apenas membros da Família
+**Permissions:** Family members only
 
 ---
 
-### Detalhes da Evolução (Família)
-Obter detalhes de uma evolução específica liberada para o responsável.
+### Evolution Details (Family)
+Get details of a specific evolution released to the guardian.
 
 **Endpoint:**
 ```
@@ -606,18 +606,18 @@ Authorization: Bearer {access_token}
 }
 ```
 
-**Validações:**
-- A evolução precisa estar com `released_to_family: true`
-- O email do responsável (guardian_email) do paciente deve corresponder ao email do usuário logado
+**Validations:**
+- The evolution must have `released_to_family: true`
+- The patient's guardian email (guardian_email) must match the logged-in user's email
 
-**Permissões:** Apenas membros da Família
+**Permissions:** Family members only
 
 ---
 
-### Detalhes e Edição
+### Details and Editing
 `GET/PUT/DELETE /api/evolutions/{id}/`
 
-**PUT Request (atualizar evolução):**
+**PUT Request (update evolution):**
 ```json
 {
   "objective": "Novo objetivo...",
@@ -627,17 +627,17 @@ Authorization: Bearer {access_token}
 
 ---
 
-## 🔐 Roles e Permissões
+## 🔐 Roles and Permissions
 
-### Roles Disponíveis
+### Available Roles
 
-| Role | Descrição | Permissões |
+| Role | Description | Permissions |
 |------|-----------|-----------|
-| **admin** | Administrador | Acesso total a todos os endpoints |
-| **therapist** | Terapeuta | CRUD de pacientes, sessões e evoluções |
-| **family** | Membro da Família | Visualização apenas (leitura) |
+| **admin** | Administrator | Full access to all endpoints |
+| **therapist** | Therapist | CRUD patients, sessions, and evolutions |
+| **family** | Family Member | View only (read) |
 
-### Acesso por Endpoint
+### Access by Endpoint
 
 | Endpoint | Admin | Therapist | Family |
 |----------|-------|-----------|--------|
@@ -646,47 +646,47 @@ Authorization: Bearer {access_token}
 | GET `/auth/me/` | ✅ | ✅ | ✅ |
 | POST `/auth/logout/` | ✅ | ✅ | ✅ |
 | GET `/therapists/` | ✅ | ✅ | ❌ |
-| GET `/dashboard/` | ✅ | ✅ (Dados dele) | ❌ |
+| GET `/dashboard/` | ✅ | ✅ (Their data) | ❌ |
 | GET `/patients/` | ✅ | ✅ | ❌ |
 | GET `/patients/family/` | ❌ | ❌ | ✅ |
 | POST `/patients/` | ✅ | ✅ | ❌ |
 | GET `/patients/{id}/` | ✅ | ✅ | ❌ |
 | PUT `/patients/{id}/` | ✅ | ✅ | ❌ |
 | DELETE `/patients/{id}/` | ✅ | ✅ | ❌ |
-| ALL `/sessions/` | ✅ | ✅ (Apenas as dele) | ❌ |
-| ALL `/evolutions/` | ✅ | ✅ (Apenas as dele) | ❌ |
+| ALL `/sessions/` | ✅ | ✅ (Only theirs) | ❌ |
+| ALL `/evolutions/` | ✅ | ✅ (Only theirs) | ❌ |
 | GET `/evolutions/family/` | ✅ | ✅ | ✅ |
 | GET `/evolutions/family/{id}/` | ❌ | ❌ | ✅ |
 
 ---
 
-## 🛠️ Desenvolvimento Local
+## 🛠️ Local Development
 
-### Setup do Ambiente
+### Environment Setup
 
-1. **Criar virtual environment:**
+1. **Create virtual environment:**
 ```bash
 python -m venv .venv
 source .venv/bin/activate  # Linux/Mac
 .venv\Scripts\activate     # Windows
 ```
 
-2. **Instalar dependências:**
+2. **Install dependencies:**
 ```bash
 pip install -r requirements.txt
 ```
 
-3. **Aplicar migrations:**
+3. **Apply migrations:**
 ```bash
 python manage.py migrate
 ```
 
-4. **Criar superusuário (admin):**
+4. **Create superuser (admin):**
 ```bash
 python manage.py createsuperuser
 ```
 
-5. **Rodar servidor:**
+5. **Run server:**
 ```bash
 python manage.py runserver
 ```
@@ -696,7 +696,7 @@ python manage.py runserver
 ## 📊 Dashboard
 
 ### Get Dashboard Metrics
-Retorna métricas agregadas do painel para o usuário autenticado.
+Returns aggregated dashboard metrics for the authenticated user.
 
 **Endpoint:**
 ```
@@ -746,26 +746,26 @@ Authorization: Bearer {access_token}
 }
 ```
 
-**Campo Descrição:**
-- `today_sessions`: Lista de sessões agendadas para hoje, ordenadas por hora
-- `active_patients`: Total de pacientes não deletados no sistema
-- `pending_evolutions`: Total de sessões completadas sem evolução registrada
+**Field Description:**
+- `today_sessions`: List of sessions scheduled for today, ordered by time
+- `active_patients`: Total non-deleted patients in the system
+- `pending_evolutions`: Total completed sessions without a recorded evolution
 
-**Permissões:** 
-- **Terapeutas**: Veem apenas suas sessões de hoje e suas evoluções pendentes
-- **Admins**: Veem todas as sessões de hoje e todas as evoluções pendentes do sistema
+**Permissions:**
+- **Therapists**: See only their sessions for today and their pending evolutions
+- **Admins**: See all sessions for today and all pending evolutions in the system
 
-**Validações:**
-- Apenas usuários autenticados com role `therapist` ou `admin` têm acesso
-- Retorna `403 Forbidden` se o usuário não tiver permissão
-
----
+**Validations:**
+- Only authenticated users with role `therapist` or `admin` have access
+- Returns `403 Forbidden` if the user does not have permission
 
 ---
 
-## 🌱 Seed (Semear Dados de Demonstração)
+---
 
-Endpoint para popular o banco de dados com dados de demonstração (usuários, pacientes, sessões, evoluções). Útil para ambientes de desenvolvimento e preview.
+## 🌱 Seed (Demo Data)
+
+Endpoint to populate the database with demo data (users, patients, sessions, evolutions). Useful for development and preview environments.
 
 **Endpoint:**
 ```
@@ -781,22 +781,22 @@ Authorization: Bearer {access_token}
 ```json
 {
   "success": true,
-  "message": "Dados de seed inseridos com sucesso."
+  "message": "Seed data inserted successfully."
 }
 ```
 
-**Permissões:** Apenas Admins
+**Permissions:** Admins only
 
 ---
 
-**Status:** 🟢 Fases 1, 2, 3 e 4 Completas (Backend MVP Entregue)  
-**Última atualização:** 06/05/2026
+**Status:** 🟢 Phases 1, 2, 3, and 4 Complete (Backend MVP Delivered)  
+**Last updated:** 06/05/2026
 
 ---
 
 ## 🏥 Health Check
 
-Endpoint para monitoramento e health checks (load balancers, Render, etc).
+Endpoint for monitoring and health checks (load balancers, Render, etc).
 
 **Endpoint:**
 ```
@@ -810,22 +810,22 @@ GET /api/health/
 }
 ```
 
-**Permissões:** Público (sem autenticação)
+**Permissions:** Public (no authentication)
 
 ---
 
 ## 🚀 Deploy (Render)
 
-### Variáveis de Ambiente Obrigatórias
+### Required Environment Variables
 
-| Variável | Descrição |
+| Variable | Description |
 |----------|-----------|
-| `SECRET_KEY` | Chave secreta Django (obrigatório, sem fallback) |
-| `ALLOWED_HOSTS` | Domínios permitidos (obrigatório em produção) |
-| `CORS_ALLOWED_ORIGINS` | Origens CORS permitidas |
-| `DATABASE_URL` | URL de conexão PostgreSQL |
-| `DJANGO_ENV` | Ambiente (`local` ou `production`) |
-| `DEBUG` | Modo debug (`True` apenas em local) |
+| `SECRET_KEY` | Django secret key (required, no fallback) |
+| `ALLOWED_HOSTS` | Allowed domains (required in production) |
+| `CORS_ALLOWED_ORIGINS` | Allowed CORS origins |
+| `DATABASE_URL` | PostgreSQL connection URL |
+| `DJANGO_ENV` | Environment (`local` or `production`) |
+| `DEBUG` | Debug mode (`True` only in local) |
 
 ### Build
 ```bash

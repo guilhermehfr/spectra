@@ -1,0 +1,335 @@
+from django.core.management.base import BaseCommand
+from django.utils import timezone
+from datetime import timedelta
+from core.models import CustomUser, Patient, Session, TherapeuticEvolution
+
+
+class Command(BaseCommand):
+    help = 'Populate the database with test data for development'
+
+    def handle(self, *args, **options):
+        self.stdout.write('Clearing existing data...')
+        self.clear_data()
+
+        self.stdout.write('Creating users...')
+        users = self.create_users()
+
+        self.stdout.write('Creating patients...')
+        patients = self.create_patients(users)
+
+        self.stdout.write('Creating sessions...')
+        sessions = self.create_sessions(users, patients)
+
+        self.stdout.write('Creating evolutions...')
+        self.create_evolutions(sessions, users)
+
+        self.verify_data()
+        self.stdout.write(self.style.SUCCESS('Seed completed successfully!'))
+
+    def clear_data(self):
+        TherapeuticEvolution.objects.all().delete()
+        Session.objects.all().delete()
+        Patient.objects.all().delete()
+        CustomUser.objects.filter(email__endswith='@spectra.com').delete()
+
+    def create_users(self):
+        users_data = [
+            {
+                'email': 'admin@spectra.com',
+                'username': 'admin',
+                'password': 'admin123',
+                'first_name': 'Admin',
+                'last_name': 'User',
+                'role': 'admin',
+            },
+            {
+                'email': 'ana@spectra.com',
+                'username': 'ana',
+                'password': 'therapist123',
+                'first_name': 'Ana',
+                'last_name': 'Costa',
+                'role': 'therapist',
+            },
+            {
+                'email': 'carlos@spectra.com',
+                'username': 'carlos',
+                'password': 'therapist123',
+                'first_name': 'Carlos',
+                'last_name': 'Mendes',
+                'role': 'therapist',
+            },
+            {
+                'email': 'beatriz@spectra.com',
+                'username': 'beatriz',
+                'password': 'therapist123',
+                'first_name': 'Beatriz',
+                'last_name': 'Fonseca',
+                'role': 'therapist',
+            },
+            {
+                'email': 'maria@spectra.com',
+                'username': 'maria',
+                'password': 'family123',
+                'first_name': 'Maria',
+                'last_name': 'Silva',
+                'role': 'family',
+            },
+        ]
+
+        users = {}
+        for user_data in users_data:
+            user = CustomUser.objects.create_user(
+                email=user_data['email'],
+                username=user_data['username'],
+                password=user_data['password'],
+                first_name=user_data['first_name'],
+                last_name=user_data['last_name'],
+                role=user_data['role'],
+                is_active=True,
+            )
+            users[user_data['role']] = user
+            users[user_data['username']] = user
+
+        return users
+
+    def create_patients(self, users):
+        patients_data = [
+            {
+                'name': 'Leonard Silva',
+                'birth_date': '2017-03-10',
+                'guardian_name': 'Maria Silva',
+                'guardian_email': 'maria@spectra.com',
+                'notes': (
+                    'Diagnosis: ASD level 2 (ICD-10: F84.0), with comorbid ADHD predominantly '
+                    'hyperactive-impulsive (ICD-10: F90.1), confirmed by neuropsychological assessment in January 2023. '
+                    'Leonard is 7 years old and attends the 1st grade of elementary school in a regular school with full-time '
+                    'caregiver support. He shows significant delay in expressive language, communicating '
+                    'primarily through vocalizations, gestures, and some isolated words. Receptive understanding is '
+                    'superior to expressive. Demonstrates high responsiveness to ABA therapy, especially in playful '
+                    'contexts with tangible reinforcers (balls, colorful building blocks, and instrumental music). '
+                    'Displays repetitive behaviors like lining up objects and spinning pieces, which do not significantly '
+                    'interfere with his routine. Hyperactivity makes it difficult to maintain attention for more than '
+                    '5 minutes in non-preferred tasks; first-then and token economy strategies have been effective '
+                    'for increasing time-on-task. Does not exhibit self-injurious behaviors. The family is highly '
+                    'engaged and performs generalization of skills in the home environment with the therapist\'s guidance.'
+                ),
+            },
+            {
+                'name': 'Sophia Rodrigues',
+                'birth_date': '2016-07-22',
+                'guardian_name': 'João Rodrigues',
+                'guardian_email': 'joao.rod@email.com',
+                'notes': (
+                    'Diagnosis: ASD level 1 (ICD-10: F84.0), with comorbid Generalized Anxiety Disorder '
+                    '(ICD-10: F41.1), diagnosed by a multidisciplinary team in March 2022. '
+                    'Sophia is 8 years old and is in the 2nd grade of elementary school in a regular school without individual support, '
+                    'with specialized pedagogical monitoring twice a week. Possesses functional verbal communication, '
+                    'forming complete sentences, but with pragmatic difficulties such as topic maintenance, '
+                    'reading non-verbal cues, and managing situations of unexpected routine changes, '
+                    'which often trigger anxiety crises. Shows intense interest in animals, '
+                    'especially dogs and dolphins, and this theme has been used as a motivator in sessions. '
+                    'Anxiety manifests mainly through crying, refusal, and escape behaviors in the face of '
+                    'new tasks or noisy environments. Gradual desensitization, modeling, '
+                    'and emotional self-regulation teaching strategies have shown positive results. Her father participates '
+                    'actively in the biweekly family guidance sessions.'
+                ),
+            },
+            {
+                'name': 'Peter Alves',
+                'birth_date': '2018-11-05',
+                'guardian_name': 'Fernanda Alves',
+                'guardian_email': 'fernanda@email.com',
+                'notes': (
+                    'Diagnosis: ASD level 2 (ICD-10: F84.0), with significant sensory hypersensitivity '
+                    '(tactile, auditory, and olfactory) identified in a sensory integration assessment by the occupational '
+                    'therapist in October 2023. Peter is 6 years old and is in the preschool adaptation phase, '
+                    'attending 3 days a week. Communicates through isolated words and '
+                    'some adapted LIBRAS (Brazilian Sign Language) signs that the family introduced. Responds well to visual schedules '
+                    'with pictograms, which were implemented both in the clinic and in the home environment. '
+                    'Displays intense refusal behaviors to unexpected tactile stimuli (unannounced touch, '
+                    'specific textures of food and clothing), which impacts hygiene and feeding routines. '
+                    'His mother reports frequent episodes of intense crying and impaired self-regulation in '
+                    'noisy environments, such as supermarkets and parties. The current therapeutic plan prioritizes: (1) sensory '
+                    'integration with a personalized sensory diet; (2) expansion of communicative repertoire via PECS '
+                    'and AAC; (3) daily living skills with task chaining for personal hygiene.'
+                ),
+            },
+            {
+                'name': 'Claire Mendes',
+                'birth_date': '2015-04-18',
+                'guardian_name': 'Roberto Mendes',
+                'guardian_email': 'roberto@email.com',
+                'notes': (
+                    'Diagnosis: ASD level 3 (ICD-10: F84.0), with comorbid focal Epilepsy (ICD-10: G40.1), '
+                    'controlled with the use of Sodium Valproate 500mg/day, under monthly neurological follow-up. '
+                    'Claire is 9 years old and is enrolled in a special school, attending 5 days a week. '
+                    'Does not use functional verbal communication; communication occurs mainly through '
+                    'vocalizations, facial expressions, and pointing to objects of immediate interest. An AAC '
+                    'system with a tablet was introduced 4 months ago and Claire shows gradual progress in using '
+                    'pictograms to express basic needs (eating, drinking, bathroom, resting). '
+                    'Requires intensive support in all activities of daily living. Exhibits challenging behaviors '
+                    'like prolonged tantrums (up to 20 minutes) and food refusal for smooth textures. '
+                    'The team holds a monthly meeting with the special school and family to align '
+                    'strategies and monitor behavioral programs. Her father is the primary caregiver and '
+                    'reports significant exhaustion; he was referred to a support group for family members.'
+                ),
+            },
+            {
+                'name': 'Gabriel Ferreira',
+                'birth_date': '2016-09-14',
+                'guardian_name': 'Luciana Ferreira',
+                'guardian_email': 'luciana.ferreira@email.com',
+                'notes': (
+                    'Diagnosis: ASD level 1 (ICD-10: F84.0), with comorbid ADHD predominantly '
+                    'inattentive (ICD-10: F90.0), diagnosed in a multidisciplinary assessment in June 2022. '
+                    'Gabriel is 9 years old and is in the 3rd grade of elementary school in a regular school, with good '
+                    'academic performance in science and math subjects, but shows significant difficulties '
+                    'in Portuguese (especially text production) and in social interactions '
+                    'with peers. Inattention manifests through frequent forgetting of materials, '
+                    'difficulty following multi-step instructions, and a tendency to "zone out" in activities '
+                    'that he considers not very stimulating. Shows special interest in dinosaurs and astronomy, '
+                    'which is widely used as a motivator in sessions. Possesses a rich vocabulary and '
+                    'logical reasoning above average for his age group, but has difficulty calibrating communication '
+                    'to the interlocutor (talks a lot about his interests without noticing the other person\'s disinterest). '
+                    'The therapeutic plan focuses on: pragmatic communication skills, '
+                    'organization and attention self-regulation strategies, and explicit social skills teaching.'
+                ),
+            },
+            {
+                'name': 'Isabella Santana',
+                'birth_date': '2019-02-28',
+                'guardian_name': 'Camila Santana',
+                'guardian_email': 'camila.santana@email.com',
+                'notes': (
+                    'Diagnosis: ASD level 2 (ICD-10: F84.0), with comorbid Separation Anxiety Disorder '
+                    '(ICD-10: F93.0), identified in a psychological assessment in September 2023. '
+                    'Isabella is 6 years old and is not yet enrolled in a school; the family is in the process of '
+                    'searching for an institution with appropriate support. Communicates with short phrases of 2 to 3 words '
+                    'and exhibits functional and non-functional echolalia. Separation anxiety is intense: she cries '
+                    'for up to 30 minutes at the start of each session when her mother walks away, which has been worked on '
+                    'with a gradual desensitization protocol over the last 2 months, with observable progress '
+                    '(reduction to 10 minutes in the last 3 weeks). Shows a strong interest in '
+                    'music and responds very well to activities mediated by songs. Exhibits ritualistic behaviors '
+                    'regarding the order of objects and the entry and exit routines of the therapy '
+                    'room, which have been gradually flexibilized. Her mother participates in all sessions '
+                    'and is in the process of training to manage separation anxiety in the home context.'
+                ),
+            },
+            {
+                'name': 'Matthew Oliveira',
+                'birth_date': '2014-06-03',
+                'guardian_name': 'Paulo Oliveira',
+                'guardian_email': 'paulo.oliveira@email.com',
+                'notes': (
+                    'Diagnosis: ASD level 2 (ICD-10: F84.0), with comorbid Obsessive-Compulsive Disorder '
+                    '(ICD-10: F42), assessed by a child psychiatrist in February 2023, with use of Fluoxetine '
+                    '10mg/day under supervision. Matthew is 11 years old and is in the 5th grade of elementary school, '
+                    'with support from a resource teacher in the alternate shift. Has fluent verbal communication, '
+                    'with organized discourse, but shows marked cognitive rigidity and difficulty tolerating '
+                    'situations that are ambiguous or lack clear rules. Compulsive behaviors include repetitive '
+                    'checking of school materials, a need for symmetry in the organization of the environment, and '
+                    'rituals when entering new spaces. The differentiation between ASD and OCD characteristics '
+                    'is monitored together with the psychiatric team. Shows intense interest in chess '
+                    'and strategy games, a skill that has been used for cognitive flexibility training. '
+                    'The therapeutic plan integrates ABA techniques with elements of adapted CBT, '
+                    'including exposure and response prevention for compulsive rituals.'
+                ),
+            },
+            {
+                'name': 'Laura Pimentel',
+                'birth_date': '2017-12-19',
+                'guardian_name': 'Renata Pimentel',
+                'guardian_email': 'renata.pimentel@email.com',
+                'notes': (
+                    'Diagnosis: ASD level 1 (ICD-10: F84.0), with comorbid Developmental Dyslexia '
+                    '(ICD-10: F81.0), identified in a neuropsychological assessment in April 2024. Laura is '
+                    '7 years old and is in the 1st grade of elementary school. Exhibits developed verbal communication '
+                    'for her age group, with good ability to narrate events and express emotions when '
+                    'she is regulated. School difficulties are concentrated in phonemic decoding and '
+                    'reading fluency, causing frustration and school refusal behaviors (reports from her '
+                    'mother of 2 to 3 episodes per week). Demonstrates above-average ability for visual '
+                    'memory and construction with blocks (LEGO). The therapeutic work integrates: (1) social '
+                    'skills and emotional regulation, focusing on school frustration tolerance; (2) visual '
+                    'compensation strategies to support reading; (3) interface with the school for curricular '
+                    'adaptations. Her mother is a teacher and demonstrates high understanding of her daughter\'s profile, '
+                    'being an active partner in the therapeutic process.'
+                ),
+            },
+            {
+                'name': 'Hector Campos',
+                'birth_date': '2018-04-07',
+                'guardian_name': 'Sandra Campos',
+                'guardian_email': 'sandra.campos@email.com',
+                'notes': (
+                    'Diagnosis: ASD level 2 (ICD-10: F84.0), with comorbid Central Auditory Processing Disorder '
+                    '(CAPD), confirmed by a speech therapist in July 2023. Hector is 7 years old '
+                    'and attends the 1st grade of elementary school with the support of an educational interpreter. '
+                    'Presents expressive language with functional vocabulary, but with difficulty in the '
+                    'comprehension of long instructions, especially in environments with background noise, which '
+                    'is aggravated by CAPD. The school adapted the environment with sound-absorbing panels and '
+                    'the teacher uses a lapel microphone. Shows interest in vehicles and transport, '
+                    'and this theme motivates high engagement in activities. Exhibits a "freezing" behavior '
+                    '(stopping and not responding) when receiving instructions he did not process adequately, '
+                    'often misinterpreted as refusal. The team works with the school '
+                    'and the family for differentiation between non-comprehension and refusal, and for consistent use '
+                    'of visual supports that accompany verbal instructions.'
+                ),
+            },
+            {
+                'name': 'Valentina Cruz',
+                'birth_date': '2015-08-30',
+                'guardian_name': 'André Cruz',
+                'guardian_email': 'andre.cruz@email.com',
+                'notes': (
+                    'Diagnosis: ASD level 3 (ICD-10: F84.0), with comorbid Moderate Intellectual Disability '
+                    '(ICD-10: F71) and Sleep Disorder (ICD-10: G47.0), in follow-up with a '
+                    'pediatric neurologist. Valentina is 10 years old and is enrolled in a full-time special '
+                    'school. Does not have functional verbal communication; uses an AAC system '
+                    'with a high-tech board (tablet with Tobii Snap Core First software) to '
+                    'express needs and preferences in a structured context. The sleep disorder '
+                    '(maintenance insomnia, waking up 3 to 4 times a night) directly impacts '
+                    'performance in sessions and at school; the family is in the process of implementing a '
+                    'sleep hygiene protocol guided by the team. Exhibits low-intensity self-injurious behavior '
+                    '(hitting her hand on her head) associated with moments of frustration and '
+                    'un-signaled transitions. The positive behavior plan (PBS) is in effect, '
+                    'with strategies for anticipating transitions, environmental enrichment, and differential '
+                    'reinforcement of alternative behaviors (DRA). Her father is the primary caregiver and '
+                    'receives monthly support from the clinical team.'
+                ),
+            },
+            {
+                'name': 'Enzo Barbosa',
+                'birth_date': '2020-01-15',
+                'guardian_name': 'Tatiane Barbosa',
+                'guardian_email': 'tatiane.barbosa@email.com',
+                'notes': (
+                    'Diagnosis: ASD level 2 (ICD-10: F84.0), with comorbid Global Developmental Delay '
+                    '(ICD-10: F89), received a recent diagnosis in March 2024 after '
+                    'multidisciplinary assessment. Enzo is 5 years old and is not yet in school; the family '
+                    'is waiting for a spot in a daycare center with support. Does not use verbal communication; communicates through '
+                    'gestures, pointing, and intentional eye contact. Exhibits emerging motor imitation '
+                    'skills, which have been worked on as a gateway for language development. '
+                    'Shows pleasure in fitting, stacking, and exploring objects with different '
+                    'textures. The family received the diagnosis recently and '
+                    'is still in the process of processing and acceptance; the mother reports feelings of guilt '
+                    'and burnout, having been referred for individual psychological support. '
+                    'The current therapeutic plan prioritizes: (1) development of prerequisites for '
+                    'language (imitation, joint attention, functional eye contact); (2) introduction '
+                    'of a simplified AAC system; (3) intensive parent training with a focus on '
+                    'naturalistic developmental behavioral interventions (NDBI).'
+                ),
+            },
+        ]
+
+        patients = {}
+        for patient_data in patients_data:
+            patient = Patient.objects.create(
+                name=patient_data['name'],
+                birth_date=patient_data['birth_date'],
+                guardian_name=patient_data['guardian_name'],
+                guardian_email=patient_data['guardian_email'],
+                notes=patient_data['notes'],
+            )
+            patients[patient.name.split()[0]] = patient
+
+        return patients

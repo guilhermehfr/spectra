@@ -5,26 +5,26 @@ from core.models import CustomUser, Patient, Session, TherapeuticEvolution
 
 
 class Command(BaseCommand):
-    help = 'Popular o banco de dados com dados de teste para desenvolvimento'
+    help = 'Populate the database with test data for development'
 
     def handle(self, *args, **options):
-        self.stdout.write('Limpando dados existentes...')
+        self.stdout.write('Clearing existing data...')
         self.clear_data()
 
-        self.stdout.write('Criando usuários...')
+        self.stdout.write('Creating users...')
         users = self.create_users()
 
-        self.stdout.write('Criando pacientes...')
+        self.stdout.write('Creating patients...')
         patients = self.create_patients(users)
 
-        self.stdout.write('Criando sessões...')
+        self.stdout.write('Creating sessions...')
         sessions = self.create_sessions(users, patients)
 
-        self.stdout.write('Criando evoluções...')
+        self.stdout.write('Creating evolutions...')
         self.create_evolutions(sessions, users)
 
         self.verify_data()
-        self.stdout.write(self.style.SUCCESS('Seed concluído com sucesso!'))
+        self.stdout.write(self.style.SUCCESS('Seed completed successfully!'))
 
     def clear_data(self):
         TherapeuticEvolution.objects.all().delete()
@@ -94,147 +94,145 @@ class Command(BaseCommand):
 
     def create_patients(self, users):
         patients_data = [
-            # ── Pacientes originais (notas expandidas) ──────────────────────
             {
-                'name': 'Leonardo Silva',
+                'name': 'Leonard Silva',
                 'birth_date': '2017-03-10',
                 'guardian_name': 'Maria Silva',
                 'guardian_email': 'maria@spectra.com',
                 'notes': (
-                    'Diagnóstico: TEA nível 2 (CID-10: F84.0), com comorbidade de TDAH predominantemente '
-                    'hiperativo-impulsivo (CID-10: F90.1), confirmado por avaliação neuropsicológica em janeiro de 2023. '
-                    'Leonardo tem 7 anos e frequenta o 1º ano do ensino fundamental em escola regular com suporte de '
-                    'cuidador em tempo integral. Apresenta atraso significativo na linguagem expressiva, comunicando-se '
-                    'principalmente por vocalizações, gestos e algumas palavras isoladas. A compreensão receptiva é '
-                    'superior à expressiva. Demonstra alta responsividade à terapia ABA, especialmente em contextos '
-                    'lúdicos com reforçadores tangíveis (bolas, blocos de encaixe coloridos e música instrumental). '
-                    'Apresenta comportamentos repetitivos como alinhar objetos e girar peças, que não interferem '
-                    'significativamente na rotina. A hiperatividade dificulta a manutenção da atenção por mais de '
-                    '5 minutos em tarefas não preferidas; estratégias de first-then e token economy têm sido eficazes '
-                    'para aumentar o tempo em tarefa. Não apresenta comportamentos autolesivos. A família é altamente '
-                    'engajada e realiza generalização das habilidades no ambiente doméstico com orientação da terapeuta.'
+                    'Diagnosis: ASD level 2 (ICD-10: F84.0), with comorbid ADHD predominantly '
+                    'hyperactive-impulsive (ICD-10: F90.1), confirmed by neuropsychological assessment in January 2023. '
+                    'Leonard is 7 years old and attends the 1st grade of elementary school in a regular school with full-time '
+                    'caregiver support. He shows significant delay in expressive language, communicating '
+                    'primarily through vocalizations, gestures, and some isolated words. Receptive understanding is '
+                    'superior to expressive. Demonstrates high responsiveness to ABA therapy, especially in playful '
+                    'contexts with tangible reinforcers (balls, colorful building blocks, and instrumental music). '
+                    'Displays repetitive behaviors like lining up objects and spinning pieces, which do not significantly '
+                    'interfere with his routine. Hyperactivity makes it difficult to maintain attention for more than '
+                    '5 minutes in non-preferred tasks; first-then and token economy strategies have been effective '
+                    'for increasing time-on-task. Does not exhibit self-injurious behaviors. The family is highly '
+                    'engaged and performs generalization of skills in the home environment with the therapist\'s guidance.'
                 ),
             },
             {
-                'name': 'Sofia Rodrigues',
+                'name': 'Sophia Rodrigues',
                 'birth_date': '2016-07-22',
                 'guardian_name': 'João Rodrigues',
                 'guardian_email': 'joao.rod@email.com',
                 'notes': (
-                    'Diagnóstico: TEA nível 1 (CID-10: F84.0), com comorbidade de Transtorno de Ansiedade '
-                    'Generalizada (CID-10: F41.1), diagnosticada por equipe multiprofissional em março de 2022. '
-                    'Sofia tem 8 anos e está no 2º ano do ensino fundamental em escola regular sem suporte individual, '
-                    'com acompanhamento pedagógico especializado duas vezes por semana. Possui comunicação verbal '
-                    'funcional, formando frases completas, porém com dificuldades pragmáticas como manutenção do '
-                    'tópico, leitura de pistas não-verbais e manejo de situações de mudança inesperada de rotina, '
-                    'que frequentemente desencadeiam crises de ansiedade. Demonstra interesse intenso em animais, '
-                    'especialmente cachorros e golfins, e esse tema tem sido utilizado como motivador em sessões. '
-                    'A ansiedade se manifesta principalmente por choro, recusa e comportamentos de fuga diante de '
-                    'tarefas novas ou ambientes barulhentos. Estratégias de dessensibilização gradual, modelação '
-                    'e ensino de auto-regulação emocional têm apresentado resultados positivos. O pai participa '
-                    'ativamente das sessões de orientação familiar quinzenais.'
+                    'Diagnosis: ASD level 1 (ICD-10: F84.0), with comorbid Generalized Anxiety Disorder '
+                    '(ICD-10: F41.1), diagnosed by a multidisciplinary team in March 2022. '
+                    'Sophia is 8 years old and is in the 2nd grade of elementary school in a regular school without individual support, '
+                    'with specialized pedagogical monitoring twice a week. Possesses functional verbal communication, '
+                    'forming complete sentences, but with pragmatic difficulties such as topic maintenance, '
+                    'reading non-verbal cues, and managing situations of unexpected routine changes, '
+                    'which often trigger anxiety crises. Shows intense interest in animals, '
+                    'especially dogs and dolphins, and this theme has been used as a motivator in sessions. '
+                    'Anxiety manifests mainly through crying, refusal, and escape behaviors in the face of '
+                    'new tasks or noisy environments. Gradual desensitization, modeling, '
+                    'and emotional self-regulation teaching strategies have shown positive results. Her father participates '
+                    'actively in the biweekly family guidance sessions.'
                 ),
             },
             {
-                'name': 'Pedro Alves',
+                'name': 'Peter Alves',
                 'birth_date': '2018-11-05',
                 'guardian_name': 'Fernanda Alves',
                 'guardian_email': 'fernanda@email.com',
                 'notes': (
-                    'Diagnóstico: TEA nível 2 (CID-10: F84.0), com hipersensibilidade sensorial significativa '
-                    '(tátil, auditiva e olfativa) identificada em avaliação de integração sensorial pela terapeuta '
-                    'ocupacional em outubro de 2023. Pedro tem 6 anos e está em fase de adaptação à pré-escola, '
-                    'com frequência parcial de 3 dias por semana. Comunica-se por meio de palavras isoladas e '
-                    'alguns sinais de LIBRAS adaptados que a família introduziu. Responde bem a agendas visuais '
-                    'com pictogramas, as quais foram implementadas tanto na clínica quanto no ambiente doméstico. '
-                    'Apresenta comportamentos de recusa intensa a estímulos táteis inesperados (toque não-anunciado, '
-                    'texturas específicas de alimentos e roupas), o que impacta a rotina de higiene e alimentação. '
-                    'A mãe relata episódios frequentes de choro intenso e auto-regulação prejudicada em ambientes '
-                    'barulhentos, como supermercados e festas. O plano terapêutico atual prioriza: (1) integração '
-                    'sensorial com dieta sensorial personalizada; (2) expansão do repertório comunicativo via PECS '
-                    'e CAA; (3) habilidades de vida diária com cadeia de tarefas para higiene pessoal.'
+                    'Diagnosis: ASD level 2 (ICD-10: F84.0), with significant sensory hypersensitivity '
+                    '(tactile, auditory, and olfactory) identified in a sensory integration assessment by the occupational '
+                    'therapist in October 2023. Peter is 6 years old and is in the preschool adaptation phase, '
+                    'attending 3 days a week. Communicates through isolated words and '
+                    'some adapted LIBRAS (Brazilian Sign Language) signs that the family introduced. Responds well to visual schedules '
+                    'with pictograms, which were implemented both in the clinic and in the home environment. '
+                    'Displays intense refusal behaviors to unexpected tactile stimuli (unannounced touch, '
+                    'specific textures of food and clothing), which impacts hygiene and feeding routines. '
+                    'His mother reports frequent episodes of intense crying and impaired self-regulation in '
+                    'noisy environments, such as supermarkets and parties. The current therapeutic plan prioritizes: (1) sensory '
+                    'integration with a personalized sensory diet; (2) expansion of communicative repertoire via PECS '
+                    'and AAC; (3) daily living skills with task chaining for personal hygiene.'
                 ),
             },
             {
-                'name': 'Clara Mendes',
+                'name': 'Claire Mendes',
                 'birth_date': '2015-04-18',
                 'guardian_name': 'Roberto Mendes',
                 'guardian_email': 'roberto@email.com',
                 'notes': (
-                    'Diagnóstico: TEA nível 3 (CID-10: F84.0), com comorbidade de Epilepsia focal (CID-10: G40.1), '
-                    'controlada com uso de Valproato de Sódio 500mg/dia, sob acompanhamento neurológico mensal. '
-                    'Clara tem 9 anos e está matriculada em escola especial, com frequência de 5 dias por semana. '
-                    'Não utiliza comunicação verbal funcional; a comunicação ocorre principalmente por meio de '
-                    'vocalizações, expressões faciais e pointing para objetos de interesse imediato. Um sistema de '
-                    'CAA com tablet foi introduzido há 4 meses e Clara demonstra progresso gradual no uso de '
-                    'pictogramas para expressar necessidades básicas (comer, beber, banheiro, descansar). '
-                    'Requer suporte intensivo em todas as atividades de vida diária. Apresenta comportamentos '
-                    'desafiadores como birras prolongadas (até 20 minutos) e recusa alimentar para texturas lisas. '
-                    'A equipe realiza reunião mensal com a escola especial e a família para alinhamento de '
-                    'estratégias e monitoramento dos programas comportamentais. O pai é o principal cuidador e '
-                    'relata cansaço significativo; foi encaminhado para grupo de apoio a familiares.'
+                    'Diagnosis: ASD level 3 (ICD-10: F84.0), with comorbid focal Epilepsy (ICD-10: G40.1), '
+                    'controlled with the use of Sodium Valproate 500mg/day, under monthly neurological follow-up. '
+                    'Claire is 9 years old and is enrolled in a special school, attending 5 days a week. '
+                    'Does not use functional verbal communication; communication occurs mainly through '
+                    'vocalizations, facial expressions, and pointing to objects of immediate interest. An AAC '
+                    'system with a tablet was introduced 4 months ago and Claire shows gradual progress in using '
+                    'pictograms to express basic needs (eating, drinking, bathroom, resting). '
+                    'Requires intensive support in all activities of daily living. Exhibits challenging behaviors '
+                    'like prolonged tantrums (up to 20 minutes) and food refusal for smooth textures. '
+                    'The team holds a monthly meeting with the special school and family to align '
+                    'strategies and monitor behavioral programs. Her father is the primary caregiver and '
+                    'reports significant exhaustion; he was referred to a support group for family members.'
                 ),
             },
-            # ── Novos pacientes ─────────────────────────────────────────────
             {
                 'name': 'Gabriel Ferreira',
                 'birth_date': '2016-09-14',
                 'guardian_name': 'Luciana Ferreira',
                 'guardian_email': 'luciana.ferreira@email.com',
                 'notes': (
-                    'Diagnóstico: TEA nível 1 (CID-10: F84.0), com comorbidade de TDAH predominantemente '
-                    'desatento (CID-10: F90.0), diagnosticados em avaliação multidisciplinar em junho de 2022. '
-                    'Gabriel tem 9 anos e cursa o 3º ano do ensino fundamental em escola regular, com bom '
-                    'desempenho acadêmico nas disciplinas de ciências e matemática, mas apresenta dificuldades '
-                    'significativas em língua portuguesa (especialmente produção textual) e nas interações '
-                    'sociais com colegas. A desatenção manifesta-se por esquecimentos frequentes de materiais, '
-                    'dificuldade em seguir instruções com múltiplos passos e tendência a "desligar" em atividades '
-                    'que considera pouco estimulantes. Demonstra interesse especial em dinossauros e astronomia, '
-                    'o que é amplamente utilizado como motivador nas sessões. Possui vocabulário rico e raciocínio '
-                    'lógico acima da média para a faixa etária, porém tem dificuldade em calibrar a comunicação '
-                    'ao interlocutor (fala muito sobre seus interesses sem perceber o desinteresse do outro). '
-                    'O plano terapêutico foca em: habilidades pragmáticas de comunicação, estratégias de '
-                    'organização e autorregulação da atenção, e ensino explícito de habilidades sociais.'
+                    'Diagnosis: ASD level 1 (ICD-10: F84.0), with comorbid ADHD predominantly '
+                    'inattentive (ICD-10: F90.0), diagnosed in a multidisciplinary assessment in June 2022. '
+                    'Gabriel is 9 years old and is in the 3rd grade of elementary school in a regular school, with good '
+                    'academic performance in science and math subjects, but shows significant difficulties '
+                    'in Portuguese (especially text production) and in social interactions '
+                    'with peers. Inattention manifests through frequent forgetting of materials, '
+                    'difficulty following multi-step instructions, and a tendency to "zone out" in activities '
+                    'that he considers not very stimulating. Shows special interest in dinosaurs and astronomy, '
+                    'which is widely used as a motivator in sessions. Possesses a rich vocabulary and '
+                    'logical reasoning above average for his age group, but has difficulty calibrating communication '
+                    'to the interlocutor (talks a lot about his interests without noticing the other person\'s disinterest). '
+                    'The therapeutic plan focuses on: pragmatic communication skills, '
+                    'organization and attention self-regulation strategies, and explicit social skills teaching.'
                 ),
             },
             {
-                'name': 'Isabela Santana',
+                'name': 'Isabella Santana',
                 'birth_date': '2019-02-28',
                 'guardian_name': 'Camila Santana',
                 'guardian_email': 'camila.santana@email.com',
                 'notes': (
-                    'Diagnóstico: TEA nível 2 (CID-10: F84.0), com comorbidade de Transtorno de Ansiedade '
-                    'de Separação (CID-10: F93.0), identificada em avaliação psicológica em setembro de 2023. '
-                    'Isabela tem 6 anos e ainda não está matriculada em escola; a família está em processo de '
-                    'busca por instituição com suporte adequado. Comunica-se com frases curtas de 2 a 3 palavras '
-                    'e apresenta ecolalia funcional e não-funcional. A ansiedade de separação é intensa: chora '
-                    'por até 30 minutos no início de cada sessão quando a mãe se afasta, o que tem sido trabalhado '
-                    'com protocolo de dessensibilização gradual ao longo dos últimos 2 meses, com progresso '
-                    'observável (redução para 10 minutos nas últimas 3 semanas). Demonstra forte interesse em '
-                    'música e responde muito bem a atividades mediadas por canções. Apresenta comportamentos '
-                    'ritualísticos em relação à ordem dos objetos e às rotinas de entrada e saída da sala de '
-                    'atendimento, que têm sido gradualmente flexibilizados. A mãe participa de todas as sessões '
-                    'e está em processo de treinamento para manejo da ansiedade de separação no contexto doméstico.'
+                    'Diagnosis: ASD level 2 (ICD-10: F84.0), with comorbid Separation Anxiety Disorder '
+                    '(ICD-10: F93.0), identified in a psychological assessment in September 2023. '
+                    'Isabella is 6 years old and is not yet enrolled in a school; the family is in the process of '
+                    'searching for an institution with appropriate support. Communicates with short phrases of 2 to 3 words '
+                    'and exhibits functional and non-functional echolalia. Separation anxiety is intense: she cries '
+                    'for up to 30 minutes at the start of each session when her mother walks away, which has been worked on '
+                    'with a gradual desensitization protocol over the last 2 months, with observable progress '
+                    '(reduction to 10 minutes in the last 3 weeks). Shows a strong interest in '
+                    'music and responds very well to activities mediated by songs. Exhibits ritualistic behaviors '
+                    'regarding the order of objects and the entry and exit routines of the therapy '
+                    'room, which have been gradually flexibilized. Her mother participates in all sessions '
+                    'and is in the process of training to manage separation anxiety in the home context.'
                 ),
             },
             {
-                'name': 'Mateus Oliveira',
+                'name': 'Matthew Oliveira',
                 'birth_date': '2014-06-03',
                 'guardian_name': 'Paulo Oliveira',
                 'guardian_email': 'paulo.oliveira@email.com',
                 'notes': (
-                    'Diagnóstico: TEA nível 2 (CID-10: F84.0), com comorbidade de Transtorno Obsessivo-Compulsivo '
-                    '(CID-10: F42), avaliado por psiquiatra infantil em fevereiro de 2023, com uso de Fluoxetina '
-                    '10mg/dia sob acompanhamento. Mateus tem 11 anos e está no 5º ano do ensino fundamental, '
-                    'com suporte de professora de recurso no contra-turno. Possui comunicação verbal fluente, '
-                    'com discurso organizado, mas apresenta rigidez cognitiva acentuada e dificuldade em tolerar '
-                    'situações ambíguas ou sem regras claras. Os comportamentos compulsivos incluem verificação '
-                    'repetitiva de materiais escolares, necessidade de simetria na organização do ambiente e '
-                    'rituais de entrada em novos espaços. A diferenciação entre características do TEA e do TOC '
-                    'é monitorada em conjunto com a equipe psiquiátrica. Demonstra interesse intenso em xadrez '
-                    'e jogos de estratégia, habilidade que tem sido utilizada para treino de flexibilidade '
-                    'cognitiva. O plano terapêutico integra técnicas de ABA com elementos de TCC adaptada, '
-                    'incluindo exposição e prevenção de resposta para os rituais compulsivos.'
+                    'Diagnosis: ASD level 2 (ICD-10: F84.0), with comorbid Obsessive-Compulsive Disorder '
+                    '(ICD-10: F42), assessed by a child psychiatrist in February 2023, with use of Fluoxetine '
+                    '10mg/day under supervision. Matthew is 11 years old and is in the 5th grade of elementary school, '
+                    'with support from a resource teacher in the alternate shift. Has fluent verbal communication, '
+                    'with organized discourse, but shows marked cognitive rigidity and difficulty tolerating '
+                    'situations that are ambiguous or lack clear rules. Compulsive behaviors include repetitive '
+                    'checking of school materials, a need for symmetry in the organization of the environment, and '
+                    'rituals when entering new spaces. The differentiation between ASD and OCD characteristics '
+                    'is monitored together with the psychiatric team. Shows intense interest in chess '
+                    'and strategy games, a skill that has been used for cognitive flexibility training. '
+                    'The therapeutic plan integrates ABA techniques with elements of adapted CBT, '
+                    'including exposure and response prevention for compulsive rituals.'
                 ),
             },
             {
@@ -243,38 +241,38 @@ class Command(BaseCommand):
                 'guardian_name': 'Renata Pimentel',
                 'guardian_email': 'renata.pimentel@email.com',
                 'notes': (
-                    'Diagnóstico: TEA nível 1 (CID-10: F84.0), com comorbidade de Dislexia do Desenvolvimento '
-                    '(CID-10: F81.0), identificada em avaliação neuropsicológica em abril de 2024. Laura tem '
-                    '7 anos e está no 1º ano do ensino fundamental. Apresenta comunicação verbal desenvolvida '
-                    'para a faixa etária, com boa capacidade de narrar eventos e expressar emoções quando '
-                    'está regulada. As dificuldades escolares se concentram na decodificação fonêmica e na '
-                    'fluência leitora, causando frustração e comportamentos de recusa escolar (relatos da '
-                    'mãe de 2 a 3 episódios por semana). Demonstra habilidade acima da média para memória '
-                    'visual e construção com blocos (LEGO). O trabalho terapêutico integra: (1) habilidades '
-                    'sociais e regulação emocional, focando na tolerância à frustração escolar; (2) estratégias '
-                    'de compensação visual para apoio à leitura; (3) interface com a escola para adaptações '
-                    'curriculares. A mãe é professora e demonstra alta compreensão do perfil da filha, '
-                    'sendo parceira ativa no processo terapêutico.'
+                    'Diagnosis: ASD level 1 (ICD-10: F84.0), with comorbid Developmental Dyslexia '
+                    '(ICD-10: F81.0), identified in a neuropsychological assessment in April 2024. Laura is '
+                    '7 years old and is in the 1st grade of elementary school. Exhibits developed verbal communication '
+                    'for her age group, with good ability to narrate events and express emotions when '
+                    'she is regulated. School difficulties are concentrated in phonemic decoding and '
+                    'reading fluency, causing frustration and school refusal behaviors (reports from her '
+                    'mother of 2 to 3 episodes per week). Demonstrates above-average ability for visual '
+                    'memory and construction with blocks (LEGO). The therapeutic work integrates: (1) social '
+                    'skills and emotional regulation, focusing on school frustration tolerance; (2) visual '
+                    'compensation strategies to support reading; (3) interface with the school for curricular '
+                    'adaptations. Her mother is a teacher and demonstrates high understanding of her daughter\'s profile, '
+                    'being an active partner in the therapeutic process.'
                 ),
             },
             {
-                'name': 'Heitor Campos',
+                'name': 'Hector Campos',
                 'birth_date': '2018-04-07',
                 'guardian_name': 'Sandra Campos',
                 'guardian_email': 'sandra.campos@email.com',
                 'notes': (
-                    'Diagnóstico: TEA nível 2 (CID-10: F84.0), com comorbidade de Transtorno de Processamento '
-                    'Auditivo Central (TPAC), confirmado por fonoaudióloga em julho de 2023. Heitor tem 7 anos '
-                    'e frequenta o 1º ano do ensino fundamental com suporte de intérprete educacional. '
-                    'Apresenta linguagem expressiva com vocabulário funcional, porém com dificuldade na '
-                    'compreensão de instruções longas, especialmente em ambientes com ruído de fundo, o que '
-                    'é agravado pelo TPAC. A escola adaptou o ambiente com painéis absorventes de som e '
-                    'o professor utiliza microfone de lapela. Demonstra interesse em veículos e transportes, '
-                    'e esse tema motiva alto engajamento nas atividades. Apresenta comportamento de "congelar" '
-                    '(parar e não responder) quando recebe instruções que não processou adequadamente, '
-                    'frequentemente interpretado erroneamente como recusa. A equipe trabalha com a escola '
-                    'e a família para diferenciação entre não-compreensão e recusa, e para uso consistente '
-                    'de suportes visuais que acompanhem as instruções verbais.'
+                    'Diagnosis: ASD level 2 (ICD-10: F84.0), with comorbid Central Auditory Processing Disorder '
+                    '(CAPD), confirmed by a speech therapist in July 2023. Hector is 7 years old '
+                    'and attends the 1st grade of elementary school with the support of an educational interpreter. '
+                    'Presents expressive language with functional vocabulary, but with difficulty in the '
+                    'comprehension of long instructions, especially in environments with background noise, which '
+                    'is aggravated by CAPD. The school adapted the environment with sound-absorbing panels and '
+                    'the teacher uses a lapel microphone. Shows interest in vehicles and transport, '
+                    'and this theme motivates high engagement in activities. Exhibits a "freezing" behavior '
+                    '(stopping and not responding) when receiving instructions he did not process adequately, '
+                    'often misinterpreted as refusal. The team works with the school '
+                    'and the family for differentiation between non-comprehension and refusal, and for consistent use '
+                    'of visual supports that accompany verbal instructions.'
                 ),
             },
             {
@@ -283,20 +281,20 @@ class Command(BaseCommand):
                 'guardian_name': 'André Cruz',
                 'guardian_email': 'andre.cruz@email.com',
                 'notes': (
-                    'Diagnóstico: TEA nível 3 (CID-10: F84.0), com comorbidade de Deficiência Intelectual '
-                    'Moderada (CID-10: F71) e Transtorno do Sono (CID-10: G47.0), em acompanhamento com '
-                    'neurologista pediátrico. Valentina tem 10 anos e está matriculada em escola especial '
-                    'em período integral. Não possui comunicação verbal funcional; utiliza sistema de CAA '
-                    'com prancha de alta tecnologia (tablet com software Tobii Snap Core First) para '
-                    'expressar necessidades e preferências em contexto estruturado. O distúrbio do sono '
-                    '(insônia de manutenção, acordando 3 a 4 vezes por noite) impacta diretamente o '
-                    'desempenho nas sessões e na escola; a família está em processo de implementação de '
-                    'protocolo de higiene do sono orientado pela equipe. Apresenta comportamento autolesivo '
-                    'de baixa intensidade (bater a mão na cabeça) associado a momentos de frustração e '
-                    'transições não-sinalizadas. O plano de comportamento positivo (PBS) está em vigência, '
-                    'com estratégias de antecipação de transições, enriquecimento ambiental e reforçamento '
-                    'diferencial de comportamentos alternativos (RDA). O pai é o cuidador principal e '
-                    'recebe suporte mensal da equipe clínica.'
+                    'Diagnosis: ASD level 3 (ICD-10: F84.0), with comorbid Moderate Intellectual Disability '
+                    '(ICD-10: F71) and Sleep Disorder (ICD-10: G47.0), in follow-up with a '
+                    'pediatric neurologist. Valentina is 10 years old and is enrolled in a full-time special '
+                    'school. Does not have functional verbal communication; uses an AAC system '
+                    'with a high-tech board (tablet with Tobii Snap Core First software) to '
+                    'express needs and preferences in a structured context. The sleep disorder '
+                    '(maintenance insomnia, waking up 3 to 4 times a night) directly impacts '
+                    'performance in sessions and at school; the family is in the process of implementing a '
+                    'sleep hygiene protocol guided by the team. Exhibits low-intensity self-injurious behavior '
+                    '(hitting her hand on her head) associated with moments of frustration and '
+                    'un-signaled transitions. The positive behavior plan (PBS) is in effect, '
+                    'with strategies for anticipating transitions, environmental enrichment, and differential '
+                    'reinforcement of alternative behaviors (DRA). Her father is the primary caregiver and '
+                    'receives monthly support from the clinical team.'
                 ),
             },
             {
@@ -305,19 +303,19 @@ class Command(BaseCommand):
                 'guardian_name': 'Tatiane Barbosa',
                 'guardian_email': 'tatiane.barbosa@email.com',
                 'notes': (
-                    'Diagnóstico: TEA nível 2 (CID-10: F84.0), com comorbidade de Atraso Global do '
-                    'Desenvolvimento (CID-10: F89), recebeu diagnóstico recente em março de 2024 após '
-                    'avaliação multidisciplinar. Enzo tem 5 anos e ainda não está em escola; a família '
-                    'aguarda vaga em CMEI com suporte. Não utiliza comunicação verbal; comunica-se por '
-                    'gestos, pointing e contato ocular intencional. Apresenta habilidades de imitação '
-                    'motora emergentes, que têm sido trabalhadas como porta de entrada para o desenvolvimento '
-                    'da linguagem. Demonstra prazer em atividades de encaixe, empilhamento e exploração '
-                    'de objetos com diferentes texturas. A família recebeu o diagnóstico recentemente e '
-                    'ainda está em processo de elaboração e aceitação; a mãe relata sentimentos de culpa '
-                    'e sobrecarga, tendo sido encaminhada para acompanhamento psicológico individual. '
-                    'O plano terapêutico atual prioriza: (1) desenvolvimento de pré-requisitos para '
-                    'linguagem (imitação, atenção compartilhada, contato ocular funcional); (2) introdução '
-                    'de sistema de CAA simplificado; (3) treinamento intensivo de pais com foco em '
+                    'Diagnosis: ASD level 2 (ICD-10: F84.0), with comorbid Global Developmental Delay '
+                    '(ICD-10: F89), received a recent diagnosis in March 2024 after '
+                    'multidisciplinary assessment. Enzo is 5 years old and is not yet in school; the family '
+                    'is waiting for a spot in a daycare center with support. Does not use verbal communication; communicates through '
+                    'gestures, pointing, and intentional eye contact. Exhibits emerging motor imitation '
+                    'skills, which have been worked on as a gateway for language development. '
+                    'Shows pleasure in fitting, stacking, and exploring objects with different '
+                    'textures. The family received the diagnosis recently and '
+                    'is still in the process of processing and acceptance; the mother reports feelings of guilt '
+                    'and burnout, having been referred for individual psychological support. '
+                    'The current therapeutic plan prioritizes: (1) development of prerequisites for '
+                    'language (imitation, joint attention, functional eye contact); (2) introduction '
+                    'of a simplified AAC system; (3) intensive parent training with a focus on '
                     'naturalistic developmental behavioral interventions (NDBI).'
                 ),
             },
@@ -343,232 +341,232 @@ class Command(BaseCommand):
         now = timezone.now()
 
         sessions_data = [
-            # ── Leonardo Silva ──────────────────────────────────────────────
-            # Sessões históricas (últimos 3 meses)
+            # ── Leonard Silva ──────────────────────────────────────────────
+            # Historical sessions (last 3 months)
             {
-                'patient': patients['Leonardo'],
+                'patient': patients['Leonard'],
                 'therapist': therapist_ana,
                 'date_time': now - timedelta(days=88),
                 'status': 'completed',
                 'notes': (
-                    'Sessão de 50 minutos focada em PECS Fase 2 - persistência comunicativa. '
-                    'Leonardo praticou o protocolo "esperar enquanto o comunicador não responde": '
-                    'mantinha a imagem por até 10 segundos antes de repetir. '
-                    'Foram realizadas 20 tentativas com 60% de sucesso. '
-                    'Reforço: acesso a tablet com desenho animado por 3 minutos após cada acerto.'
+                    '50-minute session focused on PECS Phase 2 - communicative persistence. '
+                    'Leonard practiced the protocol "wait while the communicator does not respond": '
+                    'held the image for up to 10 seconds before repeating. '
+                    '20 trials were conducted with 60% success. '
+                    'Reinforcement: access to tablet with cartoons for 3 minutes after each correct response.'
                 ),
             },
             {
-                'patient': patients['Leonardo'],
+                'patient': patients['Leonard'],
                 'therapist': therapist_carlos,
                 'date_time': now - timedelta(days=75),
                 'status': 'completed',
                 'notes': (
-                    'Sessão de 50 minutos com foco em imitação verbal de sons vocálicos (/a/, /o/, /u/). '
-                    'Atividades com jogos sonoros: apito, tamborim e bolha de sabão. '
-                    'Leonardo emitiu sons vocálicos em 8 de 15 oportunidades (53%成功率). '
-                    'Progresso em relação à linha de base (2/15). Reforço: snack de cereal.'
+                    '50-minute session focused on verbal imitation of vowel sounds (/a/, /o/, /u/). '
+                    'Activities with sound games: whistle, tambourine, and soap bubbles. '
+                    'Leonard produced vowel sounds in 8 out of 15 opportunities (53%). '
+                    'Progress from baseline (2/15). Reinforcement: cereal snack.'
                 ),
             },
             {
-                'patient': patients['Leonardo'],
+                'patient': patients['Leonard'],
                 'therapist': therapist_ana,
                 'date_time': now - timedelta(days=61),
                 'status': 'completed',
                 'notes': (
-                    'Sessão de 50 minutos dedicada ao treino de contato visual funcional. '
-                    'Protocolo: olhar-pegar (mandatório para receber item desejado). '
-                    'Leonardo atingiu 70% de contato visual espontâneo (7/10 tentativas). '
-                    'Uso de preferir-historinha como recurso motivador.'
+                    '50-minute session dedicated to functional eye contact training. '
+                    'Protocol: look-take (mandatory to receive desired item). '
+                    'Leonard achieved 70% spontaneous eye contact (7/10 trials). '
+                    'Used storybook preference as motivational resource.'
                 ),
             },
             {
-                'patient': patients['Leonardo'],
+                'patient': patients['Leonard'],
                 'therapist': therapist_carlos,
                 'date_time': now - timedelta(days=47),
                 'status': 'completed',
                 'notes': (
-                    'Sessão de 50 minutos com foco em auto-regulação emocional. '
-                    'Ensino da estratégia "parar-respirar-continuar" com suporte visual. '
-                    'Leonardo apresentou 3 episódios de birra durante transições (reduceis). '
-                    'Utilizou o cartão de respiração em 2 de 3 oportunidades. '
-                    'Reforço: tempo extra no tablet (5 min追加).'
+                    '50-minute session focused on emotional self-regulation. '
+                    'Teaching the "stop-breathe-continue" strategy with visual support. '
+                    'Leonard had 3 tantrum episodes during transitions. '
+                    'Used the breathing card in 2 out of 3 opportunities. '
+                    'Reinforcement: extra time on tablet (5 min additional).'
                 ),
             },
             {
-                'patient': patients['Leonardo'],
+                'patient': patients['Leonard'],
                 'therapist': therapist_ana,
                 'date_time': now - timedelta(days=33),
                 'status': 'completed',
                 'notes': (
-                    'Sessão de 50 minutos de habilidades sociais via jogo paralelo -> compartilhado. '
-                    'Atividade: construção conjunta com blocos. Leonardo aceitou dividir espaço '
-                    'com a terapeuta após negociação visual. Manteve interação por 12 minutos contínuos. '
-                    'Uso de reforçador social: elogio específico ("que bom trabalho em equipe!").'
+                    '50-minute session on social skills via parallel -> shared play. '
+                    'Activity: joint construction with blocks. Leonard agreed to share space '
+                    'with the therapist after visual negotiation. Maintained interaction for 12 continuous minutes. '
+                    'Use of social reinforcer: specific praise ("what great teamwork!").'
                 ),
             },
             {
-                'patient': patients['Leonardo'],
+                'patient': patients['Leonard'],
                 'therapist': therapist_carlos,
                 'date_time': now - timedelta(days=19),
                 'status': 'completed',
                 'notes': (
-                    'Sessão de 50 minutos de atenção compartilhada via jogo de causa-e-feito. '
-                    'Atividade: bola que rola e cai no balde, com alternância de turnos. '
-                    'Leonardo solicitou continuidade do jogo em 4 oportunidades (vocalização + gesto). '
-                    'Indicador de atenção joint emergente: seguiu olhar da terapeuta para objeto 3x.'
+                    '50-minute session on joint attention via cause-and-effect play. '
+                    'Activity: ball that rolls and falls into a bucket, with turn-taking. '
+                    'Leonard requested continuation of the game on 4 occasions (vocalization + gesture). '
+                    'Emergent joint attention indicator: followed therapist\'s gaze to object 3x.'
                 ),
             },
-            # Sessões mais recentes (manter as existentes)
+            # More recent sessions (keep existing)
             {
-                'patient': patients['Leonardo'],
+                'patient': patients['Leonard'],
                 'therapist': therapist_ana,
                 'date_time': now - timedelta(days=14),
                 'status': 'completed',
                 'notes': (
-                    'Sessão de 50 minutos focada em comunicação funcional via PECS Fase 1. '
-                    'Leonardo chegou agitado, possivelmente devido à mudança de trajeto relatada pela mãe. '
-                    'Foi necessário período de transição de 8 minutos com atividade de escolha livre '
-                    'antes de iniciar a parte estruturada. Após regulação, engajou-se bem nas atividades. '
-                    'Reforçadores primários utilizados: uva-passa e suco de maçã. Reforçadores secundários: '
-                    'elogio verbal e acesso a 2 minutos de música após cada bloco de tentativas.'
+                    '50-minute session focused on functional communication via PECS Phase 1. '
+                    'Leonard arrived agitated, possibly due to a route change reported by his mother. '
+                    'An 8-minute transition period with free-choice activity was necessary '
+                    'before starting the structured part. After regulation, he engaged well in the activities. '
+                    'Primary reinforcers used: raisins and apple juice. Secondary reinforcers: '
+                    'verbal praise and access to 2 minutes of music after each block of trials.'
                 ),
             },
             {
-                'patient': patients['Leonardo'],
+                'patient': patients['Leonard'],
                 'therapist': therapist_ana,
                 'date_time': now - timedelta(days=7),
                 'status': 'completed',
                 'notes': (
-                    'Sessão de 50 minutos com foco em imitação verbal e expansão de solicitações. '
-                    'Leonardo apresentou boa disposição desde a chegada, o que facilitou a transição '
-                    'para as atividades estruturadas sem necessidade de período de espera. A token economy '
-                    '(5 fichas para ganhar acesso a 5 minutos de atividade preferida) funcionou bem para '
-                    'manter o tempo em tarefa acima de 8 minutos por bloco. A mãe aguardou na sala de espera '
-                    'e foi orientada ao final sobre as estratégias a generalizar em casa durante a semana.'
+                    '50-minute session focused on verbal imitation and expansion of requests. '
+                    'Leonard showed good disposition since arrival, which facilitated the transition '
+                    'to structured activities without needing a waiting period. The token economy '
+                    '(5 tokens to earn access to 5 minutes of preferred activity) worked well to '
+                    'maintain time-on-task above 8 minutes per block. The mother waited in the waiting room '
+                    'and was guided at the end about strategies to generalize at home during the week.'
                 ),
             },
-            # Sessões agendadas
+            # Scheduled sessions
             {
-                'patient': patients['Leonardo'],
+                'patient': patients['Leonard'],
                 'therapist': therapist_ana,
                 'date_time': now + timedelta(days=7),
                 'status': 'scheduled',
                 'notes': (
-                    'Sessão de acompanhamento do programa PECS Fase 2. '
-                    'Avaliar generalização das habilidades de persistência comunicativa. '
-                    'Testar com novo interlocutor (terapeuta auxiliar).'
+                    'Follow-up session for PECS Phase 2 program. '
+                    'Assess generalization of communicative persistence skills. '
+                    'Test with a new communication partner (assistant therapist).'
                 ),
             },
             {
-                'patient': patients['Leonardo'],
+                'patient': patients['Leonard'],
                 'therapist': therapist_carlos,
                 'date_time': now + timedelta(days=14),
                 'status': 'scheduled',
                 'notes': (
-                    'Sessão de orientação familiar com presença da mãe. '
-                    'Revisão de progresso das últimas 4 semanas. '
-                    'Alinhamento de estratégias para generalização em casa.'
+                    'Family guidance session with mother present. '
+                    'Progress review of the last 4 weeks. '
+                    'Alignment of strategies for generalization at home.'
                 ),
             },
-            # ── Sofia Rodrigues ─────────────────────────────────────────────
+            # ── Sophia Rodrigues ─────────────────────────────────────────────
             {
-                'patient': patients['Sofia'],
+                'patient': patients['Sophia'],
                 'therapist': therapist_ana,
                 'date_time': now - timedelta(days=10),
                 'status': 'completed',
                 'notes': (
-                    'Sessão de 50 minutos com foco em habilidades sociais e manejo da ansiedade em '
-                    'situações de mudança de atividade. Sofia chegou ansiosa relatando que houve uma '
-                    'substituição de professor na escola naquela manhã, o que a deixou desregulada. '
-                    'Os primeiros 15 minutos foram dedicados a estratégias de regulação: respiração '
-                    'diafragmática guiada, uso do termômetro de emoções e conversa sobre a situação '
-                    'na escola com validação emocional. Após regulação, foi possível trabalhar a '
-                    'atividade planejada de role-play de interação social com apoio de fantoches.'
+                    '50-minute session focused on social skills and anxiety management in '
+                    'situations of activity change. Sophia arrived anxious reporting a '
+                    'teacher substitution at school that morning, which left her dysregulated. '
+                    'The first 15 minutes were dedicated to regulation strategies: guided '
+                    'diaphragmatic breathing, use of the emotions thermometer, and conversation about '
+                    'the situation at school with emotional validation. After regulation, it was possible to work the '
+                    'planned role-play activity of social interaction with puppet support.'
                 ),
             },
             {
-                'patient': patients['Sofia'],
+                'patient': patients['Sophia'],
                 'therapist': therapist_ana,
                 'date_time': now + timedelta(days=5),
                 'status': 'scheduled',
                 'notes': (
-                    'Sessão programada para continuidade do módulo de habilidades sociais: reconhecimento '
-                    'de expressões faciais e prosódia emocional com uso de cartões ilustrados e vídeos '
-                    'curtos. Introduzir exercício de "detetive social" onde Sofia identifica emoções em '
-                    'cenas do cotidiano escolar. Verificar com a mãe se houve novos episódios de ansiedade '
-                    'na escola na semana corrente e ajustar conteúdo se necessário.'
+                    'Session scheduled for continuity of the social skills module: recognition '
+                    'of facial expressions and emotional prosody using illustrated cards and short '
+                    'videos. Introduce the "social detective" exercise where Sophia identifies emotions in '
+                    'everyday school scenes. Check with the mother if there were new episodes of anxiety '
+                    'at school in the current week and adjust content if necessary.'
                 ),
             },
-            # ── Pedro Alves ─────────────────────────────────────────────────
+            # ── Peter Alves ─────────────────────────────────────────────────
             {
-                'patient': patients['Pedro'],
+                'patient': patients['Peter'],
                 'therapist': therapist_carlos,
                 'date_time': now - timedelta(days=12),
                 'status': 'completed',
                 'notes': (
-                    'Sessão inicial de avaliação funcional e estabelecimento de vínculo terapêutico. '
-                    'Pedro chegou acompanhado pela mãe e demonstrou resistência intensa à separação '
-                    'na porta da sala, necessitando de 15 minutos de transição gradual com a mãe '
-                    'presente e se afastando progressivamente. A sessão foi conduzida majoritariamente '
-                    'em contexto de brincar livre para coleta de informações sobre preferências, '
-                    'repertório comunicativo e respostas a diferentes estímulos sensoriais. '
-                    'Observou-se hipersensibilidade tátil clara ao contato com massinha de modelar '
-                    'e papel crepom. Tolera bem texturas lisas e superfícies firmes.'
+                    'Initial session for functional assessment and therapeutic bond establishment. '
+                    'Peter arrived accompanied by his mother and showed intense resistance to separation '
+                    'at the door, requiring 15 minutes of gradual transition with the mother '
+                    'present and progressively moving away. The session was conducted mostly '
+                    'in free-play context to gather information about preferences, '
+                    'communicative repertoire, and responses to different sensory stimuli. '
+                    'Clear tactile hypersensitivity was observed upon contact with modeling clay '
+                    'and crepe paper. Tolerates smooth textures and firm surfaces well.'
                 ),
             },
             {
-                'patient': patients['Pedro'],
+                'patient': patients['Peter'],
                 'therapist': therapist_carlos,
                 'date_time': now + timedelta(days=2),
                 'status': 'scheduled',
                 'notes': (
-                    'Segunda sessão programada com objetivo de iniciar a dieta sensorial individualizada '
-                    'e introduzir o primeiro conjunto de pictogramas da agenda visual para a rotina '
-                    'da sessão (chegada, atividade 1, lanche, atividade 2, despedida). Incluir atividade '
-                    'de integração sensorial com caixa de areia cinética, avaliando resposta tátil. '
-                    'Verificar com a mãe a implementação da agenda visual em casa e eventuais dificuldades.'
+                    'Second scheduled session with the goal of starting the individualized sensory diet '
+                    'and introducing the first set of pictograms from the visual schedule for the session '
+                    'routine (arrival, activity 1, snack, activity 2, goodbye). Include sensory '
+                    'integration activity with a kinetic sand box, assessing tactile response. '
+                    'Check with the mother about the implementation of the visual schedule at home and any difficulties.'
                 ),
             },
             {
-                'patient': patients['Pedro'],
+                'patient': patients['Peter'],
                 'therapist': therapist_carlos,
                 'date_time': now + timedelta(days=9),
                 'status': 'scheduled',
                 'notes': (
-                    'Sessão de continuidade com revisão da agenda visual e expansão do vocabulário '
-                    'em PECS. Planejar atividades de matching e discriminação de imagens como pré-requisito '
-                    'para o PECS Fase 1. Incluir dieta sensorial com atividades proprioceptivas '
-                    '(empurrar e puxar objetos, atividades com resistência) para regulação inicial.'
+                    'Continuity session with review of the visual schedule and expansion of vocabulary '
+                    'in PECS. Plan matching and image discrimination activities as prerequisites '
+                    'for PECS Phase 1. Include sensory diet with proprioceptive activities '
+                    '(push and pull objects, resistance activities) for initial regulation.'
                 ),
             },
-            # ── Clara Mendes ─────────────────────────────────────────────────
+            # ── Claire Mendes ─────────────────────────────────────────────────
             {
-                'patient': patients['Clara'],
+                'patient': patients['Claire'],
                 'therapist': therapist_carlos,
                 'date_time': now - timedelta(days=3),
                 'status': 'canceled',
                 'notes': (
-                    'Sessão cancelada pela família com 2 horas de antecedência. O responsável informou '
-                    'que Clara apresentou crise epiléptica na noite anterior com duração de 3 minutos, '
-                    'seguida de sono prolongado (período pós-ictal). Neurologista foi acionado e orientou '
-                    'repouso por 24 horas e monitoramento. Sessão reagendada. Equipe foi informada e '
-                    'anotação realizada no prontuário para acompanhamento da frequência de crises no mês.'
+                    'Session canceled by the family with 2 hours notice. The caregiver reported '
+                    'that Claire had an epileptic seizure the previous night lasting 3 minutes, '
+                    'followed by prolonged sleep (post-ictal period). Neurologist was contacted and advised '
+                    'rest for 24 hours and monitoring. Session rescheduled. Team was informed and '
+                    'note recorded in the chart for tracking seizure frequency in the month.'
                 ),
             },
             {
-                'patient': patients['Clara'],
+                'patient': patients['Claire'],
                 'therapist': therapist_carlos,
                 'date_time': now - timedelta(days=1),
                 'status': 'completed',
                 'notes': (
-                    'Sessão de 45 minutos (reduzida em relação ao padrão de 50 devido ao estado de '
-                    'Clara no início — apresentava irritabilidade e baixa tolerância à frustração). '
-                    'A sessão foi reestruturada para priorizar atividades de regulação sensorial e '
-                    'comunicação básica via CAA, suspendendo os programas de habilidades acadêmicas '
-                    'funcionais planejados. Foram realizadas atividades de integração sensorial com '
-                    'cobertor weighted (10 min), balanço linear (8 min) e exploração de caixa de areia. '
-                    'Clara se regulou progressivamente e finalizou a sessão de forma tranquila.'
+                    '45-minute session (reduced from the standard 50 due to Claire\'s '
+                    'state at the start — she showed irritability and low frustration tolerance). '
+                    'The session was restructured to prioritize sensory regulation activities and '
+                    'basic communication via AAC, suspending the planned functional academic '
+                    'skills programs. Sensory integration activities were carried out with '
+                    'weighted blanket (10 min), linear swing (8 min), and sandbox exploration. '
+                    'Claire progressively regulated herself and finished the session calmly.'
                 ),
             },
             # ── Gabriel Ferreira ─────────────────────────────────────────────
@@ -578,13 +576,13 @@ class Command(BaseCommand):
                 'date_time': now - timedelta(days=11),
                 'status': 'completed',
                 'notes': (
-                    'Sessão de 50 minutos com foco em habilidades pragmáticas de comunicação. '
-                    'Gabriel chegou animado e iniciou imediatamente um monólogo sobre dinossauros '
-                    'do período Jurássico, o que foi utilizado como ponto de entrada para trabalhar '
-                    'a habilidade de "checar o interesse do ouvinte" e fazer perguntas ao interlocutor. '
-                    'Foram realizados role-plays de conversas equilibradas usando o "balão de fala" '
-                    'como suporte visual para o tempo de cada turno conversacional. Gabriel compreendeu '
-                    'bem a proposta e conseguiu moderar o monólogo quando recebeu o sinal combinado.'
+                    '50-minute session focused on pragmatic communication skills. '
+                    'Gabriel arrived excited and immediately started a monologue about dinosaurs '
+                    'from the Jurassic period, which was used as an entry point to work '
+                    'on the skill of "checking the listener\'s interest" and asking questions to the interlocutor. '
+                    'Role-plays of balanced conversations were conducted using the "speech bubble" '
+                    'as a visual support for the time of each conversational turn. Gabriel understood '
+                    'the proposal well and managed to moderate his monologue when receiving the agreed signal.'
                 ),
             },
             {
@@ -593,73 +591,73 @@ class Command(BaseCommand):
                 'date_time': now + timedelta(days=4),
                 'status': 'scheduled',
                 'notes': (
-                    'Sessão programada para continuidade do treino de habilidades conversacionais, '
-                    'com introdução do exercício de "perspectiva do outro" usando o recurso de '
-                    'histórias sociais. Trabalhar especificamente a habilidade de identificar quando '
-                    'o interlocutor está entediado ou querendo mudar o assunto, utilizando cenas em '
-                    'vídeo como estímulo. Verificar com a mãe relatos de generalização no ambiente escolar.'
+                    'Session scheduled for continuity of conversational skills training, '
+                    'with introduction of the "other\'s perspective" exercise using social '
+                    'stories as a resource. Specifically work on the ability to identify when '
+                    'the interlocutor is bored or wanting to change the subject, using video '
+                    'scenes as stimulus. Check with the mother for reports of generalization in the school environment.'
                 ),
             },
-            # ── Isabela Santana ───────────────────────────────────────────────
+            # ── Isabella Santana ───────────────────────────────────────────────
             {
-                'patient': patients['Isabela'],
+                'patient': patients['Isabella'],
                 'therapist': therapist_beatriz,
                 'date_time': now - timedelta(days=9),
                 'status': 'completed',
                 'notes': (
-                    'Sessão de 50 minutos com protocolo de dessensibilização à separação materna em '
-                    'andamento (semana 6). A mãe permaneceu na sala pelos primeiros 10 minutos, '
-                    'aguardou do lado de fora com a porta entreaberta por 15 minutos e, então, '
-                    'retirou-se para a sala de espera pelo restante da sessão. Isabela chorou por '
-                    'aproximadamente 8 minutos após a saída definitiva da mãe (redução em relação '
-                    'aos 18 minutos da semana anterior). A música foi utilizada como regulador, '
-                    'e a canção favorita de Isabela ("Aquarela" de Toquinho) funcionou como âncora '
-                    'de regulação emocional. Finalizou a sessão engajada e sorrindo.'
+                    '50-minute session with ongoing maternal separation desensitization '
+                    'protocol (week 6). The mother remained in the room for the first 10 minutes, '
+                    'waited outside with the door ajar for 15 minutes, and then '
+                    'withdrew to the waiting room for the remainder of the session. Isabella cried for '
+                    'approximately 8 minutes after the mother\'s definitive departure (reduction compared '
+                    'to 18 minutes the previous week). Music was used as a regulator, '
+                    'and Isabella\'s favorite song ("Aquarela" by Toquinho) served as an anchor '
+                    'for emotional regulation. Finished the session engaged and smiling.'
                 ),
             },
             {
-                'patient': patients['Isabela'],
+                'patient': patients['Isabella'],
                 'therapist': therapist_beatriz,
                 'date_time': now + timedelta(days=6),
                 'status': 'scheduled',
                 'notes': (
-                    'Sessão planejada para avançar para a etapa 7 do protocolo de dessensibilização: '
-                    'mãe sai imediatamente ao início da sessão, sem período de permanência. Preparar '
-                    'estratégias de antecipação (usar o painel de rotina da sessão para mostrar que '
-                    'a mãe volta ao final) e ter o recurso musical disponível imediatamente. '
-                    'Documentar tempo até regulação e comparar com sessão anterior.'
+                    'Session planned to advance to step 7 of the desensitization protocol: '
+                    'mother leaves immediately at the start of the session, without a staying period. Prepare '
+                    'anticipation strategies (use the session routine board to show that '
+                    'mother returns at the end) and have the musical resource available immediately. '
+                    'Document time to regulation and compare with previous session.'
                 ),
             },
-            # ── Mateus Oliveira ───────────────────────────────────────────────
+            # ── Matthew Oliveira ───────────────────────────────────────────────
             {
-                'patient': patients['Mateus'],
+                'patient': patients['Matthew'],
                 'therapist': therapist_beatriz,
                 'date_time': now - timedelta(days=8),
                 'status': 'completed',
                 'notes': (
-                    'Sessão de 50 minutos integrando estratégias de ABA e TCC adaptada para manejo '
-                    'de comportamentos compulsivos. Mateus relatou semana difícil na escola: ficou '
-                    '20 minutos verificando a mochila antes de entrar na sala de aula, gerando '
-                    'conflito com a professora. Realizou-se análise funcional do comportamento de '
-                    'verificação junto com Mateus, identificando o antecedente (dúvida sobre ter '
-                    'trazido a agenda) e a consequência (alívio temporário da ansiedade). '
-                    'Introduziu-se a técnica de "adiamento da compulsão" com registro em cartão, '
-                    'que Mateus aceitou bem. Praticou 3 tentativas de exposição com prevenção de '
-                    'resposta durante a sessão com sucesso parcial.'
+                    '50-minute session integrating ABA and adapted CBT strategies for managing '
+                    'compulsive behaviors. Matthew reported a difficult week at school: he spent '
+                    '20 minutes checking his backpack before entering the classroom, causing '
+                    'conflict with the teacher. A functional analysis of the checking '
+                    'behavior was conducted together with Matthew, identifying the antecedent (doubt about having '
+                    'brought the planner) and the consequence (temporary relief of anxiety). '
+                    'The "compulsion delay" technique was introduced with a card for recording, '
+                    'which Matthew accepted well. He practiced 3 exposure with response '
+                    'prevention trials during the session with partial success.'
                 ),
             },
             {
-                'patient': patients['Mateus'],
+                'patient': patients['Matthew'],
                 'therapist': therapist_beatriz,
                 'date_time': now + timedelta(days=7),
                 'status': 'scheduled',
                 'notes': (
-                    'Sessão para revisão do uso do cartão de adiamento da compulsão na semana. '
-                    'Planejar nova rodada de exposição com prevenção de resposta para o ritual '
-                    'de verificação da mochila, aumentando o tempo de adiamento de 2 para 5 minutos. '
-                    'Trabalhar flexibilidade cognitiva via jogo de xadrez com variante de regras '
-                    'modificadas (técnica de "xadrez caótico" para treinamento de adaptação a mudanças). '
-                    'Verificar com o pai relatos sobre os rituais em casa e na escola.'
+                    'Session to review the use of the compulsion delay card during the week. '
+                    'Plan a new round of exposure with response prevention for the backpack '
+                    'checking ritual, increasing delay time from 2 to 5 minutes. '
+                    'Work on cognitive flexibility via chess with modified rules '
+                    '("chaotic chess" technique for training adaptation to changes). '
+                    'Check with the father for reports about rituals at home and at school.'
                 ),
             },
             # ── Laura Pimentel ────────────────────────────────────────────────
@@ -669,15 +667,15 @@ class Command(BaseCommand):
                 'date_time': now - timedelta(days=6),
                 'status': 'completed',
                 'notes': (
-                    'Sessão de 50 minutos com foco em regulação emocional e tolerância à frustração '
-                    'associada às dificuldades escolares. Laura chegou com expressão de raiva, '
-                    'relatando que havia "errado tudo" na atividade de leitura em sala. Os primeiros '
-                    '10 minutos foram dedicados à validação emocional e ao uso do termômetro de '
-                    'emoções para nomear e graduar o que sentia. Em seguida, foi realizada atividade '
-                    'de construção com LEGO (competência preservada) como regulador positivo, '
-                    'transitando após 15 minutos para atividade de pré-leitura com suporte visual '
-                    'de alta estrutura (cartões de rima com imagens). Laura finalizou a sessão '
-                    'regulada e com autoavaliação positiva sobre a parte de construção.'
+                    '50-minute session focused on emotional regulation and frustration tolerance '
+                    'associated with school difficulties. Laura arrived with an angry expression, '
+                    'reporting that she had "gotten everything wrong" in the reading activity in class. The first '
+                    '10 minutes were dedicated to emotional validation and using the emotions '
+                    'thermometer to name and grade what she was feeling. Then a LEGO '
+                    'building activity (preserved competence) was carried out as a positive regulator, '
+                    'transitioning after 15 minutes to a pre-reading activity with high-structure '
+                    'visual support (rhyming cards with images). Laura finished the session '
+                    'regulated and with a positive self-assessment about the building part.'
                 ),
             },
             {
@@ -686,42 +684,42 @@ class Command(BaseCommand):
                 'date_time': now + timedelta(days=8),
                 'status': 'scheduled',
                 'notes': (
-                    'Sessão para continuidade do trabalho de regulação emocional e introdução de '
-                    'estratégias de compensação visual para leitura (uso de régua de leitura colorida '
-                    'e fonte OpenDyslexic em materiais impressos). Planejar atividade de "livro do '
-                    'que eu sei fazer bem" para fortalecimento da autoestima e narrativa de competência. '
-                    'Conversar com a mãe sobre adaptações formais para solicitar à escola.'
+                    'Session for continuity of emotional regulation work and introduction of '
+                    'visual compensation strategies for reading (use of colored reading ruler '
+                    'and OpenDyslexic font in printed materials). Plan the "book of '
+                    'things I do well" activity to strengthen self-esteem and competence narrative. '
+                    'Talk with the mother about formal adaptations to request from the school.'
                 ),
             },
-            # ── Heitor Campos ─────────────────────────────────────────────────
+            # ── Hector Campos ─────────────────────────────────────────────────
             {
-                'patient': patients['Heitor'],
+                'patient': patients['Hector'],
                 'therapist': therapist_carlos,
                 'date_time': now - timedelta(days=5),
                 'status': 'completed',
                 'notes': (
-                    'Sessão de 50 minutos com foco em compreensão de instruções e uso de suportes '
-                    'visuais complementares à comunicação verbal. Heitor estava bem-disposto e '
-                    'engajou-se com facilidade nas atividades temáticas de veículos. Foram '
-                    'trabalhadas instruções de 2 passos com suporte visual simultâneo (pictograma '
-                    'ao lado da instrução falada), e Heitor respondeu corretamente em 7 de 10 '
-                    'tentativas, sendo que nas 3 tentativas sem suporte visual o desempenho caiu '
-                    'para 2 de 5 acertos, confirmando a dependência do suporte visual para '
-                    'processamento auditivo em contexto ruidoso.'
+                    '50-minute session focused on comprehension of instructions and use of visual '
+                    'supports complementary to verbal communication. Hector was in good spirits and '
+                    'engaged easily with vehicle-themed activities. '
+                    'Two-step instructions with simultaneous visual support were practiced (pictogram '
+                    'next to the spoken instruction), and Hector responded correctly in 7 out of 10 '
+                    'trials, while in the 3 trials without visual support performance dropped '
+                    'to 2 out of 5 correct, confirming dependence on visual support for '
+                    'auditory processing in a noisy context.'
                 ),
             },
             {
-                'patient': patients['Heitor'],
+                'patient': patients['Hector'],
                 'therapist': therapist_carlos,
                 'date_time': now + timedelta(days=1),
                 'status': 'scheduled',
                 'notes': (
-                    'Sessão para generalização das instruções com suporte visual para contexto '
-                    'de grupo pequeno (2 pacientes), simulando o ambiente de sala de aula. '
-                    'Treinar Heitor no uso do sinal combinado ("não entendi") para solicitar '
-                    'repetição de instrução, reduzindo o comportamento de congelar. '
-                    'Preparar material de orientação para a escola sobre o uso do sinal combinado '
-                    'e sobre a diferença entre não-compreensão e recusa.'
+                    'Session for generalization of instructions with visual support for a '
+                    'small group context (2 patients), simulating the classroom environment. '
+                    'Train Hector in using the agreed signal ("I didn\'t understand") to request '
+                    'repetition of instruction, reducing the freezing behavior. '
+                    'Prepare guidance material for the school about using the agreed signal '
+                    'and about the difference between non-comprehension and refusal.'
                 ),
             },
             # ── Valentina Cruz ────────────────────────────────────────────────
@@ -731,14 +729,14 @@ class Command(BaseCommand):
                 'date_time': now - timedelta(days=4),
                 'status': 'completed',
                 'notes': (
-                    'Sessão de 45 minutos com foco em comunicação via CAA e manejo do comportamento '
-                    'autolesivo (BAL) em transições. Valentina apresentou 2 episódios de BAL (bater '
-                    'a mão na cabeça) durante a transição da atividade de encaixe para a atividade '
-                    'de lanche, ambos de baixa intensidade e duração inferior a 10 segundos. '
-                    'O protocolo PBS foi aplicado: antecipação visual da transição com 3 minutos '
-                    'de antecedência, uso de timer visual e reforçamento imediato de espera calma. '
-                    'No uso do CAA, Valentina selecionou espontaneamente os ícones "água" e '
-                    '"descansar" em 2 ocasiões distintas, sendo ambas funcionais e atendidas.'
+                    '45-minute session focused on communication via AAC and management of self-injurious '
+                    'behavior (SIB) during transitions. Valentina had 2 episodes of SIB (hitting '
+                    'her hand on her head) during the transition from the fitting activity to the snack '
+                    'activity, both of low intensity and duration under 10 seconds. '
+                    'The PBS protocol was applied: visual anticipation of the transition with 3 minutes '
+                    'advance notice, use of visual timer, and immediate reinforcement of calm waiting. '
+                    'In AAC use, Valentina spontaneously selected the icons "water" and '
+                    '"rest" on 2 separate occasions, both functional and attended to.'
                 ),
             },
             {
@@ -747,11 +745,11 @@ class Command(BaseCommand):
                 'date_time': now + timedelta(days=6),
                 'status': 'scheduled',
                 'notes': (
-                    'Sessão de continuidade com revisão dos dados de frequência do BAL nas últimas '
-                    '2 semanas e ajuste do protocolo PBS se necessário. Expandir o vocabulário '
-                    'funcional no CAA para incluir ícones de emoções básicas (feliz, triste, '
-                    'com dor, com medo). Conversar com o pai sobre a implementação do protocolo '
-                    'de higiene do sono e avaliar adesão e eficácia inicial.'
+                    'Continuity session with review of SIB frequency data from the last '
+                    '2 weeks and adjustment of the PBS protocol if necessary. Expand the functional '
+                    'vocabulary in AAC to include icons for basic emotions (happy, sad, '
+                    'in pain, scared). Talk to the father about the implementation of the sleep '
+                    'hygiene protocol and assess adherence and initial effectiveness.'
                 ),
             },
             # ── Enzo Barbosa ──────────────────────────────────────────────────
@@ -761,15 +759,15 @@ class Command(BaseCommand):
                 'date_time': now - timedelta(days=13),
                 'status': 'completed',
                 'notes': (
-                    'Sessão inicial de avaliação de pré-requisitos para linguagem e estabelecimento '
-                    'de vínculo terapêutico. Enzo foi acompanhado pela mãe durante toda a sessão '
-                    '(protocolo de inclusão parental total nas primeiras 4 semanas). Foram observadas '
-                    'habilidades de imitação motora grosseira presentes (palmas, bater na mesa), '
-                    'imitação motora fina ausente, atenção compartilhada emergente (segue o apontar '
-                    'do terapeuta em 3 de 8 tentativas) e contato ocular intencional presente em '
-                    'contextos de solicitação. A mãe foi orientada sobre as estratégias de NDBI '
-                    'a implementar em casa: seguir a liderança da criança, comentar sem exigir, '
-                    'posicionar-se no nível visual de Enzo e criar oportunidades de comunicação.'
+                    'Initial session for assessment of prerequisites for language and establishment '
+                    'of therapeutic bond. Enzo was accompanied by his mother throughout the session '
+                    '(full parental inclusion protocol for the first 4 weeks). Gross motor imitation '
+                    'skills were present (clapping, hitting table), fine motor imitation absent, '
+                    'emergent joint attention (follows therapist\'s pointing '
+                    'in 3 out of 8 trials), and intentional eye contact present in '
+                    'requesting contexts. The mother was guided on NDBI strategies '
+                    'to implement at home: follow the child\'s lead, comment without demanding, '
+                    'position at Enzo\'s eye level and create communication opportunities.'
                 ),
             },
             {
@@ -778,12 +776,12 @@ class Command(BaseCommand):
                 'date_time': now + timedelta(days=3),
                 'status': 'scheduled',
                 'notes': (
-                    'Segunda sessão com foco em imitação motora fina e expansão da atenção '
-                    'compartilhada. Planejar atividades de imitação em frente ao espelho e '
-                    'jogos de causa-e-efeito (brinquedos musicais, bolas que rolam). '
-                    'Revisar com a mãe as estratégias NDBI da semana anterior: o que funcionou, '
-                    'o que gerou dificuldade e ajustar orientações. Introduzir o primeiro '
-                    'pictograma de CAA (ícone de "mais") em contexto de atividade preferida.'
+                    'Second session focused on fine motor imitation and expansion of joint '
+                    'attention. Plan imitation activities in front of the mirror and '
+                    'cause-and-effect games (musical toys, balls that roll). '
+                    'Review with the mother the NDBI strategies from the previous week: what worked, '
+                    'what caused difficulty, and adjust guidance. Introduce the first '
+                    'AAC pictogram ("more" icon) in a preferred activity context.'
                 ),
             },
         ]
@@ -806,736 +804,736 @@ class Command(BaseCommand):
 
     def create_evolutions(self, sessions, users):
         evolutions_data = [
-            # ── Leonardo – sessão 1 (88 dias atrás / PECS Fase 2) ───────────
+            # ── Leonard - session 1 (88 days ago / PECS Phase 2) ───────────
             {
-                'session_key': 'Leonardo_completed',
+                'session_key': 'Leonard_completed',
                 'session_index': 0,
                 'objective': (
-                    'Ensinar persistência comunicativa via PECS Fase 2: Leonardo mantém '
-                    'a imagem até obter resposta do comunicador.'
+                    'Teach communicative persistence via PECS Phase 2: Leonard holds '
+                    'the image until he gets a response from the communicator.'
                 ),
                 'activities': (
-                    'Protocolo "esperar resposta": terapeuta segura imagem sem entregar item. '
-                    'Leonardo espera até 10 segundos. 20 tentativas, 12 acertos (60%).'
+                    'Protocol "wait for response": therapist holds the image without delivering the item. '
+                    'Leonard waits up to 10 seconds. 20 trials, 12 correct (60%).'
                 ),
                 'behavior': (
-                    'Leonardo demonstrou frustração leve em 4 tentativas (empurra imagem). '
-                    'Nos acertos, entregou imagem com firmeza. Manteve motivação alta.'
+                    'Leonard showed mild frustration in 4 trials (pushes image away). '
+                    'On correct trials, he delivered the image firmly. Maintained high motivation.'
                 ),
                 'progress': (
-                    'Linha de base: 0% de persistência. Resultado: 60% — progresso significativo. '
-                    'Critério: 80% para avançAR de fase.'
+                    'Baseline: 0% persistence. Result: 60% — significant progress. '
+                    'Criterion: 80% to advance to next phase.'
                 ),
                 'next_steps': (
-                    'Aumentar tempo de espera para 15 segundos. Introduzir 2 comunicadores.'
+                    'Increase wait time to 15 seconds. Introduce 2 communicators.'
                 ),
                 'released_to_family': True,
             },
-            # ── Leonardo – sessão 2 (75 dias atrás / Imitação verbal) ────────
+            # ── Leonard - session 2 (75 days ago / Verbal imitation) ────────
             {
-                'session_key': 'Leonardo_completed',
+                'session_key': 'Leonard_completed',
                 'session_index': 1,
                 'objective': (
-                    'Estabelecer imitação verbal de vogais em contexto lúdico.'
+                    'Establish verbal imitation of vowels in a playful context.'
                 ),
                 'activities': (
-                    'Jogos sonoros: apito, tamborim, bolha de sabão. '
-                    '15 oportunidades de imitação após modelagem.'
+                    'Sound games: whistle, tambourine, soap bubbles. '
+                    '15 imitation opportunities after modeling.'
                 ),
                 'behavior': (
-                    'Leonardo emitiu /a/, /o/, /u/ em 8 de 15 tentativas (53%). '
-                    'Associou som à ação de soprar. Sem comportamentos disruptivos.'
+                    'Leonard produced /a/, /o/, /u/ in 8 out of 15 trials (53%). '
+                    'Associated sound with the action of blowing. No disruptive behaviors.'
                 ),
                 'progress': (
-                    'Linha de base: 2/15 (13%). Sessão atual: 8/15 (53%). '
-                    'Aumento de 40 pontos percentuais.'
+                    'Baseline: 2/15 (13%). Current session: 8/15 (53%). '
+                    'Increase of 40 percentage points.'
                 ),
                 'next_steps': (
-                    'Continuar com sons bilabiais (/p/, /b/, /m/). Usar snack como reforçador.'
+                    'Continue with bilabial sounds (/p/, /b/, /m/). Use snack as reinforcer.'
                 ),
                 'released_to_family': False,
             },
-            # ── Leonardo – sessão 3 (61 dias atrás / Contato visual) ──────────
+            # ── Leonard - session 3 (61 days ago / Eye contact) ──────────
             {
-                'session_key': 'Leonardo_completed',
+                'session_key': 'Leonard_completed',
                 'session_index': 2,
                 'objective': (
-                    'Aumentar contato visual funcional para 80% das solicitações.'
+                    'Increase functional eye contact to 80% of requests.'
                 ),
                 'activities': (
-                    'Protocolo "olhar-pegar": item dado apenas após contato visual >1s. '
-                    '10 tentativas com preferir-historinha como motivador.'
+                    'Protocol "look-take": item given only after eye contact >1s. '
+                    '10 trials with storybook preference as motivator.'
                 ),
                 'behavior': (
-                    'Leonardo alcançou 70% de contato visual espontâneo (7/10). '
-                    'Nos outros 3, precisou de prompt visual (sinal de "olha").'
+                    'Leonard achieved 70% spontaneous eye contact (7/10). '
+                    'In the other 3, needed visual prompt (signal to "look").'
                 ),
                 'progress': (
-                    'Linha de base: 30%. Sessão: 70%. Muito bom progresso.'
+                    'Baseline: 30%. Session: 70%. Very good progress.'
                 ),
                 'next_steps': (
-                    'Reduzir prompt visual. Chegar a 80% sem ajuda.'
+                    'Reduce visual prompt. Reach 80% without help.'
                 ),
                 'released_to_family': True,
             },
-            # ── Leonardo – sessão 4 (47 dias atrás / Regulação emocional) ─────
+            # ── Leonard - session 4 (47 days ago / Emotional regulation) ─────
             {
-                'session_key': 'Leonardo_completed',
+                'session_key': 'Leonard_completed',
                 'session_index': 3,
                 'objective': (
-                    'Ensinar estratégia "parar-respirar-continuar" com suporte visual.'
+                    'Teach "stop-breathe-continue" strategy with visual support.'
                 ),
                 'activities': (
-                    'Cartão visual de respiração. 3 episódios de birra durante transições. '
-                    'Prática da estratégia em cada episódio.'
+                    'Visual breathing card. 3 tantrum episodes during transitions. '
+                    'Strategy practice in each episode.'
                 ),
                 'behavior': (
-                    '3 birras breves (30-60 seg). Usou cartão de respiração em 2/3 oportunidades. '
-                    'Autoregulação improving.'
+                    '3 brief tantrums (30-60 sec). Used breathing card in 2/3 opportunities. '
+                    'Self-regulation improving.'
                 ),
                 'progress': (
-                    'Antes: 0 uso da estratégia. Agora: 2/3 oportunidades (67%).'
+                    'Before: 0 use of strategy. Now: 2/3 opportunities (67%).'
                 ),
                 'next_steps': (
-                    'Praticar estratégia em ambiente natural (casa, escola).'
+                    'Practice strategy in natural environment (home, school).'
                 ),
                 'released_to_family': False,
             },
-            # ── Leonardo – sessão 5 (33 dias atrás / Habilidades sociais) ─────
+            # ── Leonard - session 5 (33 days ago / Social skills) ─────
             {
-                'session_key': 'Leonardo_completed',
+                'session_key': 'Leonard_completed',
                 'session_index': 4,
                 'objective': (
-                    'Transicionar de jogo paralelo para interação compartilhada.'
+                    'Transition from parallel play to shared interaction.'
                 ),
                 'activities': (
-                    'Construção conjunta com blocos. Negoção visual de espaço. '
-                    'Turnos alternados por 12 minutos.'
+                    'Joint construction with blocks. Visual negotiation of space. '
+                    'Alternating turns for 12 minutes.'
                 ),
                 'behavior': (
-                    'Leonardo aceitou dividir espaço. Manteve interação 12 min contínuos. '
-                    'Iniciou contato visual espontâneo para verificar terapeuta 4x.'
+                    'Leonard agreed to share space. Maintained interaction for 12 continuous minutes. '
+                    'Initiated spontaneous eye contact to check therapist 4x.'
                 ),
                 'progress': (
-                    'Primeira sessão de interação compartilhada. Objetivo atingido!'
+                    'First session of shared interaction. Goal achieved!'
                 ),
                 'next_steps': (
-                    'Introduzir segundo paciente em atividade estruturada (sessão dupla).'
+                    'Introduce second patient in structured activity (dual session).'
                 ),
                 'released_to_family': True,
             },
-            # ── Leonardo – sessão 6 (19 dias atrás / Atenção compartilhada) ───
+            # ── Leonard - session 6 (19 days ago / Joint attention) ───
             {
-                'session_key': 'Leonardo_completed',
+                'session_key': 'Leonard_completed',
                 'session_index': 5,
                 'objective': (
-                    'Desenvolver atenção compartilhada via jogo de causa-e-feito.'
+                    'Develop joint attention via cause-and-effect play.'
                 ),
                 'activities': (
-                    'Bola que rola e cai no balde. Alternância de turnos. '
-                    '4 oportunidades de solicitação de continuidade.'
+                    'Ball that rolls and falls into a bucket. Turn-taking. '
+                    '4 opportunities to request continuation.'
                 ),
                 'behavior': (
-                    'Leonardo solicitou continuidade 4x (vocalização + gesto). '
-                    'Seguiu olhar da terapeuta para objeto 3x — atenção joint emergente!'
+                    'Leonard requested continuation 4x (vocalization + gesture). '
+                    'Followed therapist\'s gaze to object 3x — emergent joint attention!'
                 ),
                 'progress': (
-                    'Primeira evidência clara de atenção compartilhada. Marco importante!'
+                    'First clear evidence of joint attention. Important milestone!'
                 ),
                 'next_steps': (
-                    'Generalizar atenção joint com outros jogos e interlocutores.'
+                    'Generalize joint attention with other games and communication partners.'
                 ),
                 'released_to_family': False,
             },
-            # ── Leonardo – sessão 7 (14 dias atrás / PECS Fase 1) ─────────────
+            # ── Leonard - session 7 (14 days ago / PECS Phase 1) ─────────────
             {
-                'session_key': 'Leonardo_completed',
+                'session_key': 'Leonard_completed',
                 'session_index': 6,
                 'objective': (
-                    'Estabelecer troca comunicativa funcional via PECS Fase 1: Leonardo entrega '
-                    'espontaneamente a imagem de um item desejado ao comunicador para obtê-lo, '
-                    'sem prompting físico.'
+                    'Establish functional communicative exchange via PECS Phase 1: Leonard spontaneously '
+                    'hands the image of a desired item to the communicator to obtain it, '
+                    'without physical prompting.'
                 ),
                 'activities': (
-                    'Treino de tentativas discretas (DTT) com 4 itens altamente preferidos '
-                    '(uva-passa, bolinha vermelha, bolha de sabão e música no tablet). '
-                    'Foram realizadas 30 tentativas distribuídas em 3 blocos de 10, com intervalo '
-                    'de 2 minutos de atividade livre entre blocos. A terapeuta posicionou-se em '
-                    'frente a Leonardo com o item visível e a imagem correspondente disponível '
-                    'sobre a mesa. Prompting físico total foi utilizado nas primeiras tentativas '
-                    'e retirado gradualmente ao longo dos blocos (fading). Ao final, foram '
-                    'realizadas 5 tentativas de generalização com a terapeuta auxiliar como '
-                    'novo comunicador.'
+                    'Discrete trial training (DTT) with 4 highly preferred items '
+                    '(raisins, red ball, soap bubbles, and music on tablet). '
+                    '30 trials were conducted distributed across 3 blocks of 10, with a 2-minute '
+                    'free activity break between blocks. The therapist positioned herself '
+                    'in front of Leonard with the item visible and the corresponding image available '
+                    'on the table. Full physical prompting was used in the first trials '
+                    'and gradually faded across blocks. At the end, '
+                    '5 generalization trials were conducted with the assistant therapist as '
+                    'a new communication partner.'
                 ),
                 'behavior': (
-                    'Leonardo demonstrou motivação alta pelos itens selecionados. Apresentou '
-                    'comportamento de olhar alternado entre o item e a terapeuta em 6 tentativas, '
-                    'indicando intencionalidade comunicativa emergente. Houve 2 episódios breves '
-                    'de distração (se levantou e foi em direção à janela), sendo redirecionado '
-                    'com prompt gestual. Não foram observados comportamentos disruptivos. '
-                    'Na generalização com a terapeuta auxiliar, entregou a imagem em 3 de 5 '
-                    'tentativas com prompting mínimo (toque no cotovelo).'
+                    'Leonard showed high motivation for the selected items. He demonstrated '
+                    'alternating gaze behavior between the item and the therapist in 6 trials, '
+                    'indicating emerging communicative intentionality. There were 2 brief episodes '
+                    'of distraction (got up and went toward the window), being redirected '
+                    'with a gestural prompt. No disruptive behaviors were observed. '
+                    'In generalization with the assistant therapist, he handed over the image in 3 out of 5 '
+                    'trials with minimal prompting (elbow touch).'
                 ),
                 'progress': (
-                    'Linha de base (semana anterior): 2 solicitações espontâneas por sessão. '
-                    'Resultado desta sessão: 8 solicitações espontâneas (sem prompting físico) '
-                    'nas tentativas de probe inseridas nos blocos. Critério de domínio para '
-                    'avanço de fase: 80% de independência em 3 sessões consecutivas com 2 '
-                    'comunicadores distintos. Desempenho atual: 67% de independência com '
-                    'comunicador principal.'
+                    'Baseline (previous week): 2 spontaneous requests per session. '
+                    'Result of this session: 8 spontaneous requests (without physical prompting) '
+                    'in the probe trials inserted across blocks. Mastery criterion for '
+                    'phase advancement: 80% independence in 3 consecutive sessions with 2 '
+                    'distinct communicators. Current performance: 67% independence with '
+                    'primary communicator.'
                 ),
                 'next_steps': (
-                    'Continuar PECS Fase 1 até atingir critério de domínio (80% com 2 '
-                    'comunicadores). Introduzir gradualmente novos comunicadores (mãe, '
-                    'professora de apoio). Iniciar planejamento de PECS Fase 2 '
-                    '(persistência — o que fazer quando o comunicador não responde imediatamente). '
-                    'Orientar mãe a criar 3 oportunidades diárias de solicitação via PECS em casa.'
+                    'Continue PECS Phase 1 until mastery criterion is reached (80% with 2 '
+                    'communicators). Gradually introduce new communication partners (mother, '
+                    'support teacher). Start planning PECS Phase 2 '
+                    '(persistence — what to do when the communicator does not respond immediately). '
+                    'Guide the mother to create 3 daily opportunities for requesting via PECS at home.'
                 ),
                 'released_to_family': True,
             },
-            # ── Leonardo – sessão 8 (7 dias atrás) ───────────────────────────
+            # ── Leonard - session 8 (7 days ago) ───────────────────────────
             {
-                'session_key': 'Leonardo_completed',
+                'session_key': 'Leonard_completed',
                 'session_index': 7,
                 'objective': (
-                    'Expandir repertório de solicitações espontâneas via PECS para 5 itens '
-                    'distintos e iniciar imitação verbal de sons vocálicos em contexto lúdico.'
+                    'Expand repertoire of spontaneous requests via PECS to 5 distinct '
+                    'items and begin verbal imitation of vowel sounds in a playful context.'
                 ),
                 'activities': (
-                    'Bloco 1 (20 min): PECS Fase 1 com 5 itens (adicionados: espaguete de '
-                    'brinquedo e apito). 25 tentativas distribuídas em 2 blocos. '
-                    'Bloco 2 (20 min): Imitação verbal com jogos sonoros — bolha de sabão '
-                    '(incentiva sopro e vocalização), apito colorido e instrumento de percussão. '
-                    'A terapeuta modelava sons vocálicos (/a/, /o/, /u/) após cada ação com '
-                    'o brinquedo e aguardava 5 segundos para tentativa de imitação. '
-                    'Bloco 3 (10 min): Token economy — Leonardo acumulou fichas em atividades '
-                    'dos blocos anteriores e trocou por 8 minutos de acesso ao tablet com música.'
+                    'Block 1 (20 min): PECS Phase 1 with 5 items (added: toy '
+                    'spaghetti and whistle). 25 trials distributed across 2 blocks. '
+                    'Block 2 (20 min): Verbal imitation with sound games — soap bubbles '
+                    '(encourages blowing and vocalization), colored whistle, and percussion instrument. '
+                    'The therapist modeled vowel sounds (/a/, /o/, /u/) after each action with '
+                    'the toy and waited 5 seconds for an imitation attempt. '
+                    'Block 3 (10 min): Token economy — Leonard accumulated tokens in activities '
+                    'from previous blocks and exchanged them for 8 minutes of access to tablet with music.'
                 ),
                 'behavior': (
-                    'Leonardo iniciou a sessão regulado e motivado. Permaneceu em tarefa por '
-                    'blocos de até 12 minutos sem necessidade de redirecionamento, o que representa '
-                    'melhora em relação à sessão anterior (máximo de 8 minutos). '
-                    'Vocalizou /a/ e /u/ de forma espontânea em 4 ocasiões durante o jogo '
-                    'com o apito, associando a vocalização à ação de soprar — comportamento '
-                    'não observado em sessões anteriores. Apresentou 1 episódio de birra '
-                    'breve (30 seg) quando o acesso ao tablet foi encerrado, resolvido com '
-                    'antecipação verbal da próxima atividade.'
+                    'Leonard started the session regulated and motivated. Remained on task for '
+                    'blocks of up to 12 minutes without needing redirection, which represents '
+                    'improvement from the previous session (maximum of 8 minutes). '
+                    'Vocalized /a/ and /u/ spontaneously on 4 occasions during the whistle '
+                    'game, associating the vocalization with the action of blowing — behavior '
+                    'not observed in previous sessions. Had 1 brief tantrum '
+                    'episode (30 sec) when tablet access was ended, resolved with '
+                    'verbal anticipation of the next activity.'
                 ),
                 'progress': (
-                    'PECS: independência de 80% com comunicador principal para 3 dos 5 itens '
-                    '(uva-passa, bolinha, música). Itens novos (espaguete e apito) ainda com '
-                    'prompting mínimo (50% de independência). Critério de domínio ainda não '
-                    'atingido para todos os itens com 2 comunicadores. '
-                    'Imitação verbal: 4 vocalizações espontâneas de vogais — aumento significativo '
-                    'em relação à linha de base (0 vocalizações espontâneas em contexto de imitação).'
+                    'PECS: 80% independence with primary communicator for 3 of the 5 items '
+                    '(raisins, ball, music). New items (spaghetti and whistle) still with '
+                    'minimal prompting (50% independence). Mastery criterion not yet '
+                    'reached for all items with 2 communicators. '
+                    'Verbal imitation: 4 spontaneous vowel vocalizations — significant increase '
+                    'from baseline (0 spontaneous vocalizations in imitation context).'
                 ),
                 'next_steps': (
-                    'Atingir 80% de independência nos itens novos no PECS. Introduzir mãe como '
-                    'comunicador secundário nas últimas 10 tentativas da próxima sessão. '
-                    'Continuar programa de imitação verbal com foco em sons bilabiais (/p/, /b/, /m/). '
-                    'Introduzir palavras funcionais "mais" e "terminou" em contexto de atividade '
-                    'preferida (tablet), associando palavra falada ao gesto de apontar.'
+                    'Reach 80% independence on new items in PECS. Introduce mother as '
+                    'secondary communicator in the last 10 trials of the next session. '
+                    'Continue verbal imitation program focusing on bilabial sounds (/p/, /b/, /m/). '
+                    'Introduce functional words "more" and "finished" in a preferred activity '
+                    'context (tablet), associating spoken word with the pointing gesture.'
                 ),
                 'released_to_family': False,
             },
-            # ── Sofia – sessão (10 dias atrás) ──────────────────────────────
+            # ── Sophia - session (10 days ago) ──────────────────────────────
             {
-                'session_key': 'Sofia_completed',
+                'session_key': 'Sophia_completed',
                 'session_index': 0,
                 'objective': (
-                    'Desenvolver habilidades de regulação emocional diante de mudanças inesperadas '
-                    'na rotina e treinar estratégias de auto-regulação para uso independente no '
-                    'contexto escolar.'
+                    'Develop emotional regulation skills in the face of unexpected changes '
+                    'in routine and train self-regulation strategies for independent use in '
+                    'the school context.'
                 ),
                 'activities': (
-                    'Bloco 1 (15 min): Regulação emocional emergencial — respiração diafragmática '
-                    '(3 séries de 4 respirações), uso do termômetro de emoções (escala 1-5) para '
-                    'nomear e graduar o que sentia sobre a situação escolar, e conversa estruturada '
-                    'com validação emocional ("faz sentido se sentir assim quando algo muda de repente"). '
-                    'Bloco 2 (25 min): Role-play de interação social com fantoches — dois cenários '
-                    '(pedir para entrar na brincadeira e lidar com um "não" dos colegas). '
-                    'Sofia escolheu os fantoches e dirigiu o segundo cenário de forma espontânea. '
-                    'Bloco 3 (10 min): Revisão das estratégias de regulação e construção do '
-                    '"cartão de bolso" com 3 estratégias escolhidas por Sofia para usar na escola.'
+                    'Block 1 (15 min): Emergency emotional regulation — diaphragmatic breathing '
+                    '(3 sets of 4 breaths), use of the emotions thermometer (scale 1-5) to '
+                    'name and grade what she felt about the school situation, and structured conversation '
+                    'with emotional validation ("it makes sense to feel this way when something changes suddenly"). '
+                    'Block 2 (25 min): Social interaction role-play with puppets — two scenarios '
+                    '(asking to join a game and dealing with a "no" from peers). '
+                    'Sophia chose the puppets and directed the second scenario spontaneously. '
+                    'Block 3 (10 min): Review of regulation strategies and creation of a '
+                    '"pocket card" with 3 strategies chosen by Sophia to use at school.'
                 ),
                 'behavior': (
-                    'Sofia chegou visivelmente ansiosa (relatou coração acelerado e estômago '
-                    '"apertado"). Respondeu bem às estratégias de regulação do bloco 1, atingindo '
-                    'nível 2 no termômetro de emoções ao final do bloco (entrou em nível 4). '
-                    'No role-play, demonstrou iniciativas sociais adequadas e criatividade na '
-                    'condução do cenário. Em um momento, o fantoche do colega disse "não pode entrar", '
-                    'e Sofia ficou imóvel por 8 segundos antes de continuar — comportamento de '
-                    'congelamento típico diante de rejeição. Foi possível trabalhar a situação '
-                    'in loco com a terapeuta modelando a resposta verbal adequada.'
+                    'Sophia arrived visibly anxious (reported racing heart and stomach '
+                    '"in knots"). Responded well to the regulation strategies in block 1, reaching '
+                    'level 2 on the emotions thermometer at the end of the block (entered at level 4). '
+                    'In the role-play, she demonstrated appropriate social initiations and creativity in '
+                    'conducting the scenario. At one point, the peer puppet said "you can\'t come in", '
+                    'and Sophia froze for 8 seconds before continuing — typical freezing '
+                    'behavior in the face of rejection. It was possible to work on the situation '
+                    'in situ with the therapist modeling the appropriate verbal response.'
                 ),
                 'progress': (
-                    'Regulação emocional: tempo para atingir nível 2 no termômetro caiu de '
-                    '25 minutos (sessão de 3 semanas atrás) para 15 minutos nesta sessão. '
-                    'Habilidades sociais: aumentou de 2 para 5 iniciativas sociais espontâneas '
-                    'durante o role-play sem prompting verbal. Sofia utilizou espontaneamente '
-                    'a estratégia de respiração 1 vez durante a sessão quando ficou frustrada '
-                    'com o fantoche, o que representa uso funcional e independente da estratégia.'
+                    'Emotional regulation: time to reach level 2 on the thermometer decreased from '
+                    '25 minutes (session 3 weeks ago) to 15 minutes in this session. '
+                    'Social skills: increased from 2 to 5 spontaneous social initiations '
+                    'during role-play without verbal prompting. Sophia spontaneously used '
+                    'the breathing strategy 1 time during the session when she got frustrated '
+                    'with the puppet, which represents functional and independent use of the strategy.'
                 ),
                 'next_steps': (
-                    'Verificar uso do cartão de bolso na escola com a mãe (seguir com a pedagoga '
-                    'de apoio sobre integração do cartão na rotina escolar). Trabalhar cenas '
-                    'de rejeição social com gradação de dificuldade crescente. Introduzir o '
-                    'exercício de "detetive social" para identificação de emoções em rostos '
-                    'e vozes de cenas cotidianas (vídeos curtos sem áudio + com áudio).'
+                    'Check use of the pocket card at school with the mother (follow up with the pedagogical '
+                    'support about integrating the card into the school routine). Work on social rejection '
+                    'scenes with increasing difficulty gradation. Introduce the '
+                    '"social detective" exercise for identifying emotions in faces '
+                    'and voices from everyday scenes (short videos without audio + with audio).'
                 ),
                 'released_to_family': False,
             },
-            # ── Pedro – sessão (12 dias atrás) ──────────────────────────────
+            # ── Peter - session (12 days ago) ──────────────────────────────
             {
-                'session_key': 'Pedro_completed',
+                'session_key': 'Peter_completed',
                 'session_index': 0,
                 'objective': (
-                    'Realizar avaliação funcional inicial do repertório comportamental, comunicativo '
-                    'e sensorial de Pedro, e estabelecer aliança terapêutica com a criança e a família.'
+                    'Conduct initial functional assessment of Peter\'s behavioral, communicative, '
+                    'and sensory repertoire, and establish therapeutic alliance with the child and family.'
                 ),
                 'activities': (
-                    'Sessão de avaliação em contexto naturalístico de brincar livre. '
-                    'Disponibilizados materiais variados: blocos de encaixe, massinha, '
-                    'papel crepom, areia cinética, carrinhos e panelinhas de cozinha de brinquedo. '
-                    'A terapeuta observou e registrou: (1) repertório de imitação motora; '
-                    '(2) respostas a diferentes texturas; (3) vocalizações e tentativas '
-                    'comunicativas; (4) comportamentos de interesse restrito ou repetitivo; '
-                    '(5) tolerância à presença do adulto desconhecido. '
-                    'A mãe foi entrevistada com o roteiro do VINELAND-3 (habilidades adaptativas) '
-                    'durante os primeiros 20 minutos enquanto Pedro explorava o ambiente.'
+                    'Assessment session in a naturalistic free-play context. '
+                    'Varied materials made available: interlocking blocks, modeling clay, '
+                    'crepe paper, kinetic sand, cars, and toy kitchen sets. '
+                    'The therapist observed and recorded: (1) motor imitation repertoire; '
+                    '(2) responses to different textures; (3) vocalizations and communicative '
+                    'attempts; (4) restricted or repetitive interest behaviors; '
+                    '(5) tolerance to the unknown adult\'s presence. '
+                    'The mother was interviewed using the VINELAND-3 (adaptive skills) script '
+                    'during the first 20 minutes while Peter explored the environment.'
                 ),
                 'behavior': (
-                    'Pedro explorou os materiais de forma sistemática, testando cada item '
-                    'individualmente. Retirou a mão imediatamente ao contato com massinha '
-                    '(expressão de nojo, vocalização de recusa) e com papel crepom (mesmo padrão). '
-                    'Tolerou bem os blocos de encaixe, carrinhos e a areia cinética por mais '
-                    'de 3 minutos. Imitou 2 gestos da terapeuta (palmas e bater na mesa) '
-                    'de forma espontânea. Não utilizou palavras, comunicou-se por pointing, '
-                    'toque no braço da terapeuta e vocalizações afirmativas (/uh/) e negativas '
-                    '(/eh/ com balanço de cabeça). Tolerou a presença da terapeuta a 50 cm '
-                    'sem sinais de desconforto após os primeiros 10 minutos.'
+                    'Peter explored the materials systematically, testing each item '
+                    'individually. Pulled his hand away immediately upon contact with modeling clay '
+                    '(expression of disgust, refusal vocalization) and with crepe paper (same pattern). '
+                    'Tolerated interlocking blocks, cars, and kinetic sand well for more '
+                    'than 3 minutes. Imitated 2 gestures from the therapist (clapping and hitting table) '
+                    'spontaneously. Did not use words, communicated through pointing, '
+                    'touching the therapist\'s arm, and affirmative (/uh/) and negative '
+                    '(/eh/ with head shake) vocalizations. Tolerated the therapist\'s presence at 50 cm '
+                    'without signs of discomfort after the first 10 minutes.'
                 ),
                 'progress': (
-                    'Avaliação inicial concluída. Perfil preliminar: hipersensibilidade tátil '
-                    'marcada para texturas moles e irregulares; imitação motora grosseira presente; '
-                    'comunicação pré-verbal com intencionalidade comunicativa clara; tolerância '
-                    'a adulto desconhecido dentro do esperado para o perfil. Dados do VINELAND-3 '
-                    'coletados com a mãe: atraso significativo em comunicação expressiva e '
-                    'habilidades de vida diária; socialização e motricidade dentro da faixa '
-                    'esperada para o nível de desenvolvimento.'
+                    'Initial assessment completed. Preliminary profile: marked tactile hypersensitivity '
+                    'for soft and irregular textures; gross motor imitation present; '
+                    'pre-verbal communication with clear communicative intentionality; tolerance '
+                    'to unknown adult within expected range for the profile. VINELAND-3 data '
+                    'collected with mother: significant delay in expressive communication and '
+                    'daily living skills; socialization and motor skills within the expected '
+                    'range for developmental level.'
                 ),
                 'next_steps': (
-                    'Elaborar Plano de Intervenção Individualizado (PII) com base na avaliação. '
-                    'Prioridades: (1) dieta sensorial para hipersensibilidade tátil; '
-                    '(2) introdução de agenda visual para estruturar a rotina das sessões; '
-                    '(3) PECS Fase 1 com itens preferidos identificados hoje. '
-                    'Encaminhar para avaliação de integração sensorial pela TO parceira da clínica.'
+                    'Develop Individualized Intervention Plan (IIP) based on the assessment. '
+                    'Priorities: (1) sensory diet for tactile hypersensitivity; '
+                    '(2) introduction of visual schedule to structure session routine; '
+                    '(3) PECS Phase 1 with preferred items identified today. '
+                    'Refer for sensory integration assessment by the clinic\'s partner OT.'
                 ),
                 'released_to_family': True,
             },
-            # ── Clara – sessão (1 dia atrás) ─────────────────────────────────
+            # ── Claire - session (1 day ago) ─────────────────────────────────
             {
-                'session_key': 'Clara_completed',
+                'session_key': 'Claire_completed',
                 'session_index': 0,
                 'objective': (
-                    'Promover regulação sensorial e emocional após semana com intercorrência '
-                    'neurológica, e manter engajamento com o sistema de CAA em contexto '
-                    'de baixa demanda.'
+                    'Promote sensory and emotional regulation after a week with '
+                    'neurological intercurrence, and maintain engagement with the AAC system in a '
+                    'low-demand context.'
                 ),
                 'activities': (
-                    'Bloco 1 – Regulação sensorial (23 min): cobertor weighted sobre o colo e '
-                    'ombros (10 min), seguido de balanço linear em rede (8 min) com ritmo lento '
-                    'e música instrumental de baixo volume, finalizando com exploração livre '
-                    'de caixa de areia cinética (5 min). '
-                    'Bloco 2 – CAA e comunicação (17 min): atividade de encaixe de peças grandes '
-                    'com oportunidades estruturadas de solicitação via tablet CAA. '
-                    'A terapeuta criou situações de falta de peça para motivar a solicitação '
-                    'de "mais". Foram realizadas 10 tentativas de solicitação, aceitando também '
-                    'pointing para o tablet como forma comunicativa alternativa.'
+                    'Block 1 – Sensory regulation (23 min): weighted blanket on lap and '
+                    'shoulders (10 min), followed by linear swing in a hammock (8 min) with slow rhythm '
+                    'and low-volume instrumental music, ending with free exploration '
+                    'of kinetic sandbox (5 min). '
+                    'Block 2 – AAC and communication (17 min): large piece fitting activity '
+                    'with structured opportunities for requesting via tablet AAC. '
+                    'The therapist created situations of missing pieces to motivate requesting '
+                    '"more". 10 requesting trials were conducted, also accepting '
+                    'pointing to the tablet as an alternative communicative form.'
                 ),
                 'behavior': (
-                    'Clara chegou com expressão fechada e resistiu ao contato visual nos '
-                    'primeiros 5 minutos. Ao início do cobertor weighted, relaxou progressivamente '
-                    '(musculatura facial e ombros visivelmente mais relaxados em 4 minutos). '
-                    'No balanço, verbalizou /ah/ e /oh/ com tom de prazer, comportamentos '
-                    'vocais presentes apenas em estados de alta regulação. '
-                    'No bloco de CAA, selecionou o ícone "água" de forma espontânea ao perceber '
-                    'a garrafinha sobre a mesa (não estava no plano, mas foi atendida imediatamente '
-                    'como reforçamento do comportamento comunicativo funcional) e o ícone '
-                    '"mais" em 4 de 10 tentativas com prompting mínimo (apontar para o tablet).'
+                    'Claire arrived with a closed expression and resisted eye contact in the '
+                    'first 5 minutes. At the start of the weighted blanket, she progressively relaxed '
+                    '(facial muscles and shoulders visibly more relaxed in 4 minutes). '
+                    'On the swing, she vocalized /ah/ and /oh/ with a tone of pleasure, vocal '
+                    'behaviors present only in states of high regulation. '
+                    'In the AAC block, she selected the "water" icon spontaneously upon noticing '
+                    'the water bottle on the table (it was not in the plan, but was attended to immediately '
+                    'as reinforcement of functional communicative behavior) and the '
+                    '"more" icon in 4 out of 10 trials with minimal prompting (pointing to the tablet).'
                 ),
                 'progress': (
-                    'Regulação sensorial: atingiu estado de regulação em 23 minutos (média das '
-                    'últimas 4 sessões sem intercorrência: 15 minutos — aumento esperado dado '
-                    'o contexto da semana com crise epiléptica). '
-                    'CAA: 4 seleções com prompting mínimo + 1 espontânea (ícone "água") — '
-                    'melhor desempenho comunicativo espontâneo registrado até o momento. '
-                    'BAL: 0 episódios nesta sessão (média de 2-3 nas sessões anteriores), '
-                    'possivelmente favorecido pelo formato de baixa demanda adotado.'
+                    'Sensory regulation: reached regulation state in 23 minutes (average of the '
+                    'last 4 sessions without intercurrence: 15 minutes — expected increase given '
+                    'the week\'s context with epileptic seizure). '
+                    'AAC: 4 selections with minimal prompting + 1 spontaneous (icon "water") — '
+                    'best spontaneous communicative performance recorded to date. '
+                    'SIB: 0 episodes in this session (average of 2-3 in previous sessions), '
+                    'possibly favored by the low-demand format adopted.'
                 ),
                 'next_steps': (
-                    'Retomar programas suspensos (habilidades funcionais) na próxima sessão '
-                    'se Clara estiver regulada desde a chegada. Discutir com o neurologista '
-                    'o impacto da crise no desempenho nas sessões seguintes. '
-                    'Expandir vocabulário do CAA: adicionar ícones "terminou", "não quero" '
-                    'e "ajuda" nas próximas 2 sessões. Reforçar com o pai a importância de '
-                    'manter a rotina de sinalização de transições em casa.'
+                    'Resume suspended programs (functional skills) in the next session '
+                    'if Claire is regulated from arrival. Discuss with the neurologist '
+                    'the impact of the seizure on performance in subsequent sessions. '
+                    'Expand AAC vocabulary: add icons "finished", "I don\'t want" '
+                    'and "help" in the next 2 sessions. Reinforce with the father the importance of '
+                    'maintaining the transition signaling routine at home.'
                 ),
                 'released_to_family': True,
             },
-            # ── Gabriel – sessão (11 dias atrás) ─────────────────────────────
+            # ── Gabriel - session (11 days ago) ─────────────────────────────
             {
                 'session_key': 'Gabriel_completed',
                 'session_index': 0,
                 'objective': (
-                    'Desenvolver a habilidade de regulação do turno conversacional: fazer '
-                    'perguntas ao interlocutor, verificar o interesse do outro e modular '
-                    'o tempo de fala sobre temas de interesse próprio.'
+                    'Develop conversational turn regulation skill: ask '
+                    'questions to the interlocutor, check the other\'s interest, and modulate '
+                    'speaking time about topics of own interest.'
                 ),
                 'activities': (
-                    'Bloco 1 (10 min): Conversa livre sobre dinossauros — a terapeuta '
-                    'registrou o tempo de monólogo e o número de perguntas feitas a ela. '
-                    'Linha de base observacional: 8 minutos de monólogo, 0 perguntas. '
-                    'Bloco 2 (25 min): Ensino explícito do conceito de "turno conversacional" '
-                    'com o suporte visual do "balão de fala" (cartão com ampulheta de 30 seg '
-                    'que passa de mão em mão). Role-play de conversa sobre dinossauros e '
-                    'sobre o tema preferido da terapeuta (culinária), com inversão de papéis. '
-                    'Bloco 3 (15 min): Prática naturalística — conversa livre com o suporte '
-                    'do balão de fala, com Gabriel sendo responsável por passar o balão.'
+                    'Block 1 (10 min): Free conversation about dinosaurs — the therapist '
+                    'recorded monologue time and number of questions asked to her. '
+                    'Observational baseline: 8 minutes of monologue, 0 questions. '
+                    'Block 2 (25 min): Explicit teaching of the "conversational turn" concept '
+                    'with the visual support of the "speech bubble" (card with a 30-second hourglass '
+                    'that passes from hand to hand). Role-play of conversation about dinosaurs and '
+                    'about the therapist\'s preferred topic (cooking), with role reversal. '
+                    'Block 3 (15 min): Naturalistic practice — free conversation with the '
+                    'speech bubble support, with Gabriel being responsible for passing the bubble.'
                 ),
                 'behavior': (
-                    'Gabriel compreendeu rapidamente a proposta do balão de fala e demonstrou '
-                    'motivação para o exercício, comparando-o a uma "regra de jogo". '
-                    'No bloco 2, fez 5 perguntas para a terapeuta sobre culinária (tema não '
-                    'preferido), sendo 2 genuínas e 3 claramente formuladas para "cumprir o '
-                    'protocolo" — diferença apontada pela terapeuta com humor e sem julgamento. '
-                    'No bloco 3, passou o balão em 4 de 6 momentos adequados, perdendo os '
-                    '2 momentos em que estava no meio de uma informação que considerava '
-                    '"muito importante". Reconheceu a dificuldade quando questionado.'
+                    'Gabriel quickly understood the speech bubble proposal and showed '
+                    'motivation for the exercise, comparing it to a "game rule". '
+                    'In block 2, he asked 5 questions to the therapist about cooking (non-preferred '
+                    'topic), 2 genuine and 3 clearly formulated to "follow the '
+                    'protocol" — difference pointed out by the therapist with humor and without judgment. '
+                    'In block 3, he passed the bubble in 4 out of 6 appropriate moments, missing '
+                    'the 2 moments when he was in the middle of information he considered '
+                    '"very important". Recognized the difficulty when questioned.'
                 ),
                 'progress': (
-                    'Linha de base: 0 perguntas espontâneas ao interlocutor, monólogo de 8 min. '
-                    'Resultado desta sessão (bloco naturalístico): 4 perguntas espontâneas, '
-                    'monólogo máximo de 2 minutos antes de passar o balão. '
-                    'Reconhecimento do conceito de turno conversacional: presente e verbalizado '
-                    'pelo próprio Gabriel ("eu sei que fico falando muito de dinossauro").'
+                    'Baseline: 0 spontaneous questions to interlocutor, 8 min monologue. '
+                    'Result of this session (naturalistic block): 4 spontaneous questions, '
+                    'maximum monologue of 2 minutes before passing the bubble. '
+                    'Recognition of the conversational turn concept: present and verbalized '
+                    'by Gabriel himself ("I know I keep talking a lot about dinosaurs").'
                 ),
                 'next_steps': (
-                    'Retirar gradualmente o suporte do balão de fala, substituindo por '
-                    'sinal gestual discreto (toque no ombro). Introduzir o exercício de '
-                    '"perspectiva do outro" com histórias sociais ilustradas. Solicitar à '
-                    'mãe que registre situações de conversa em casa onde Gabriel utiliza '
-                    'espontaneamente o turno conversacional, para análise na próxima sessão.'
+                    'Gradually remove the speech bubble support, replacing it with '
+                    'a discreet gestural signal (shoulder tap). Introduce the '
+                    '"other\'s perspective" exercise with illustrated social stories. Ask the '
+                    'mother to record conversation situations at home where Gabriel spontaneously '
+                    'uses conversational turn, for analysis in the next session.'
                 ),
                 'released_to_family': False,
             },
-            # ── Isabela – sessão (9 dias atrás) ──────────────────────────────
+            # ── Isabella - session (9 days ago) ──────────────────────────────
             {
-                'session_key': 'Isabela_completed',
+                'session_key': 'Isabella_completed',
                 'session_index': 0,
                 'objective': (
-                    'Avançar no protocolo de dessensibilização à separação materna (etapa 6): '
-                    'mãe permanece 10 min, aguarda 15 min do lado de fora com porta entreaberta '
-                    'e retira-se para a sala de espera pelo tempo restante. Manter comunicação '
-                    'funcional e engajamento em atividades mediadas por música.'
+                    'Advance in the maternal separation desensitization protocol (step 6): '
+                    'mother stays 10 min, waits 15 min outside with door ajar '
+                    'and withdraws to the waiting room for the remaining time. Maintain functional '
+                    'communication and engagement in music-mediated activities.'
                 ),
                 'activities': (
-                    'Etapa de transição (25 min): conforme protocolo de dessensibilização, '
-                    'com presença gradualmente reduzida da mãe. Durante o período sem a mãe, '
-                    'a terapeuta utilizou imediatamente a playlist preferida de Isabela '
-                    '(músicas do Toquinho e do Palavra Cantada) como âncora de regulação. '
-                    'Atividades durante a sessão: encaixe de figuras geométricas com música '
-                    'de fundo, jogo de imitar gestos da música ("Se essa rua fosse minha") '
-                    'e atividade de "banda musical" com instrumentos de percussão pequenos. '
-                    'Nos últimos 5 minutos, a mãe entrou suavemente e Isabela a cumprimentou '
-                    'com abraço — reforçando o retorno previsível da figura de apego.'
+                    'Transition step (25 min): according to the desensitization protocol, '
+                    'with gradually reduced mother presence. During the period without the mother, '
+                    'the therapist immediately used Isabella\'s preferred playlist '
+                    '(songs by Toquinho and Palavra Cantada) as a regulation anchor. '
+                    'Activities during the session: fitting geometric shapes with background '
+                    'music, gesture imitation game with song ("If This Street Were Mine") '
+                    'and a "musical band" activity with small percussion instruments. '
+                    'In the last 5 minutes, the mother entered gently and Isabella greeted her '
+                    'with a hug — reinforcing the predictable return of the attachment figure.'
                 ),
                 'behavior': (
-                    'Isabela demonstrou ansiedade antecipada antes da sessão, relatada pela '
-                    'mãe na sala de espera ("ela perguntou 5 vezes se eu ia ficar"). '
-                    'No momento da saída definitiva da mãe, chorou por 8 minutos (anterior: '
-                    '18 min), sendo consolada pela música e pelo engajamento gradual '
-                    'da terapeuta com os instrumentos. O choro cessou de forma autônoma, '
-                    'sem necessidade de retorno da mãe — marco importante no protocolo. '
-                    'Após regulação, participou das atividades musicais com alto engajamento '
-                    'e iniciou espontaneamente vocalizações de letras de música.'
+                    'Isabella showed anticipatory anxiety before the session, reported by the '
+                    'mother in the waiting room ("she asked 5 times if I was going to stay"). '
+                    'At the moment of the mother\'s definitive departure, she cried for 8 minutes (previous: '
+                    '18 min), being comforted by music and gradual engagement '
+                    'of the therapist with the instruments. The crying ceased autonomously, '
+                    'without need for the mother\'s return — important milestone in the protocol. '
+                    'After regulation, she participated in the musical activities with high engagement '
+                    'and spontaneously started vocalizing song lyrics.'
                 ),
                 'progress': (
-                    'Protocolo de dessensibilização: tempo de choro pós-separação reduziu de '
-                    '18 para 8 minutos (redução de 56% em relação à semana anterior). '
-                    'Regulação autônoma atingida sem retorno da mãe pela primeira vez no protocolo. '
-                    'Comunicação funcional: 3 solicitações espontâneas durante a sessão '
-                    '("mais música", "essa" apontando para instrumento, "não" ao encerrar atividade).'
+                    'Desensitization protocol: post-separation crying time reduced from '
+                    '18 to 8 minutes (56% reduction compared to previous week). '
+                    'Autonomous regulation achieved without mother\'s return for the first time in the protocol. '
+                    'Functional communication: 3 spontaneous requests during the session '
+                    '("more music", "this" pointing to instrument, "no" when ending activity).'
                 ),
                 'next_steps': (
-                    'Avançar para etapa 7: mãe sai imediatamente no início da sessão. '
-                    'Manter a música como estratégia de regulação de transição. '
-                    'Introduzir painel visual "a mamãe volta quando o relógio chegar aqui" '
-                    'como suporte de antecipação temporal. Orientar a mãe a manter a '
-                    'despedida breve e confiante, sem demonstrar ansiedade visível.'
+                    'Advance to step 7: mother leaves immediately at the beginning of the session. '
+                    'Maintain music as a transition regulation strategy. '
+                    'Introduce visual board "mommy comes back when the clock gets here" '
+                    'as a temporal anticipation support. Guide the mother to keep the '
+                    'goodbye brief and confident, without showing visible anxiety.'
                 ),
                 'released_to_family': True,
             },
-            # ── Mateus – sessão (8 dias atrás) ───────────────────────────────
+            # ── Matthew - session (8 days ago) ───────────────────────────────
             {
-                'session_key': 'Mateus_completed',
+                'session_key': 'Matthew_completed',
                 'session_index': 0,
                 'objective': (
-                    'Realizar análise funcional do comportamento de verificação da mochila '
-                    'e introduzir a técnica de adiamento da compulsão como primeira estratégia '
-                    'de exposição com prevenção de resposta (EPR).'
+                    'Conduct functional analysis of the backpack checking behavior '
+                    'and introduce the compulsion delay technique as a first strategy '
+                    'of exposure with response prevention (ERP).'
                 ),
                 'activities': (
-                    'Bloco 1 (20 min): Análise funcional colaborativa — a terapeuta e Mateus '
-                    'preencheram juntos um "diagrama ABC" (Antecedente-Comportamento-Consequência) '
-                    'descrevendo o episódio da semana na escola. Mateus identificou o antecedente '
-                    '("não sei se trouxe a agenda") e a consequência ("fico menos nervoso por '
-                    'um tempo"). A terapeuta introduziu o conceito de "ciclo da ansiedade" '
-                    'com analogia de jogo de vídeogame (a compulsão é um "power-up falso" '
-                    'que não resolve o boss final). '
-                    'Bloco 2 (20 min): Introdução da técnica de adiamento + treino de EPR. '
-                    'Mateus praticou adiar a verificação por 2 minutos em 3 tentativas simuladas '
-                    '(a terapeuta escondia um item da mesa e Mateus registrava a dúvida no '
-                    'cartão e aguardava o timer). '
-                    'Bloco 3 (10 min): Partida de xadrez para encerramento, reforçando flexibilidade '
-                    'e auto-regulação em contexto de jogo.'
+                    'Block 1 (20 min): Collaborative functional analysis — the therapist and Matthew '
+                    'filled out together an "ABC diagram" (Antecedent-Behavior-Consequence) '
+                    'describing the week\'s episode at school. Matthew identified the antecedent '
+                    '("I don\'t know if I brought the planner") and the consequence ("I feel less nervous for '
+                    'a while"). The therapist introduced the concept of the "anxiety cycle" '
+                    'with a video game analogy (the compulsion is a "fake power-up" '
+                    'that doesn\'t solve the final boss). '
+                    'Block 2 (20 min): Introduction of the delay technique + ERP training. '
+                    'Matthew practiced delaying the checking by 2 minutes in 3 simulated trials '
+                    '(the therapist hid an item from the table and Matthew recorded the doubt on the '
+                    'card and waited for the timer). '
+                    'Block 3 (10 min): Chess game to wrap up, reinforcing flexibility '
+                    'and self-regulation in a game context.'
                 ),
                 'behavior': (
-                    'Mateus engajou-se ativamente na análise funcional e demonstrou boa '
-                    'capacidade de insight ao reconhecer o padrão do ciclo da ansiedade. '
-                    'Nas tentativas de EPR simulada: conseguiu aguardar os 2 minutos em 2 '
-                    'de 3 tentativas; na terceira tentativa, "verificou" o item escondido '
-                    'aos 90 segundos, reconhecendo imediatamente que havia cedido. '
-                    'Verbalizou "é mais difícil do que parece na teoria" — demonstrando '
-                    'autoconsciência adequada. No xadrez, fez movimento inusual no final '
-                    'do jogo e ficou visivelmente tenso por 15 segundos antes de aceitar a '
-                    'perda — foi possível trabalhar o momento in loco.'
+                    'Matthew actively engaged in the functional analysis and showed good '
+                    'insight ability by recognizing the anxiety cycle pattern. '
+                    'In the simulated ERP trials: managed to wait the 2 minutes in 2 '
+                    'out of 3 trials; in the third trial, "checked" the hidden item '
+                    'at 90 seconds, immediately recognizing he had given in. '
+                    'Verbalized "it\'s harder than it seems in theory" — demonstrating '
+                    'adequate self-awareness. In chess, made an unusual move at the end '
+                    'of the game and was visibly tense for 15 seconds before accepting the '
+                    'loss — it was possible to work on the moment in situ.'
                 ),
                 'progress': (
-                    'Primeira sessão formal de EPR: desempenho de 67% (2/3 tentativas bem-sucedidas) '
-                    'com duração de 2 minutos é considerado bom início para EPR. '
-                    'Insight sobre o ciclo da ansiedade: presente e verbalizado pelo próprio Mateus. '
-                    'Uso do cartão de registro: aceito e utilizado sem resistência — aderência '
-                    'ao instrumento é pré-requisito para EPR ambulatorial eficaz.'
+                    'First formal ERP session: 67% performance (2/3 successful trials) '
+                    'with 2-minute duration is considered a good start for ERP. '
+                    'Insight about the anxiety cycle: present and verbalized by Matthew himself. '
+                    'Use of the recording card: accepted and used without resistance — adherence '
+                    'to the instrument is a prerequisite for effective outpatient ERP.'
                 ),
                 'next_steps': (
-                    'Revisar uso do cartão de adiamento na semana. Aumentar tempo de adiamento '
-                    'de 2 para 5 minutos nas próximas tentativas de EPR. Trabalhar o ritual '
-                    'de simetria da mesa escolar (segundo ritual em grau de angústia segundo '
-                    'a hierarquia construída com Mateus). Continuar o xadrez como ferramenta '
-                    'de treino de tolerância à incerteza e à derrota.'
+                    'Review use of the delay card during the week. Increase delay time '
+                    'from 2 to 5 minutes in the next ERP trials. Work on the desk symmetry '
+                    'ritual (second ritual in degree of distress according to '
+                    'the hierarchy built with Matthew). Continue chess as a tool '
+                    'for training tolerance to uncertainty and defeat.'
                 ),
                 'released_to_family': False,
             },
-            # ── Laura – sessão (6 dias atrás) ────────────────────────────────
+            # ── Laura - session (6 days ago) ────────────────────────────────
             {
                 'session_key': 'Laura_completed',
                 'session_index': 0,
                 'objective': (
-                    'Trabalhar regulação emocional diante de situações de frustração escolar '
-                    'associadas às dificuldades de leitura, e iniciar atividade de pré-leitura '
-                    'com suporte visual de alta estrutura em estado regulado.'
+                    'Work on emotional regulation in situations of school frustration '
+                    'associated with reading difficulties, and initiate a pre-reading '
+                    'activity with high-structure visual support in a regulated state.'
                 ),
                 'activities': (
-                    'Bloco 1 – Regulação emocional (25 min): Acolhimento da frustração com '
-                    'conversa estruturada ("o que aconteceu, o que senti, o que meu corpo fez"). '
-                    'Uso do termômetro de emoções para graduar a raiva (Laura marcou 4/5). '
-                    'Atividade de construção livre com LEGO por 15 minutos como regulador '
-                    'positivo (competência preservada e prazerosa). Laura construiu um '
-                    'zoológico com animais de LEGO e narrou a história espontaneamente — '
-                    'habilidade expressiva verbal intacta e criativa. '
-                    'Bloco 2 – Pré-leitura com suporte visual (20 min): cartões de rima '
-                    'com imagens (ex.: BOLA/ESCOLA com ilustrações), atividade de '
-                    '"encontrar o par sonoro" sem exigência de leitura convencional. '
-                    'Suporte visual de alta estrutura reduziu a demanda de decodificação '
-                    'fonêmica e permitiu sucesso na tarefa.'
+                    'Block 1 – Emotional regulation (25 min): Welcoming of frustration with '
+                    'structured conversation ("what happened, what I felt, what my body did"). '
+                    'Use of the emotions thermometer to grade anger (Laura marked 4/5). '
+                    'Free LEGO building activity for 15 minutes as a positive regulator '
+                    '(preserved and pleasurable competence). Laura built a '
+                    'zoo with LEGO animals and narrated the story spontaneously — '
+                    'intact and creative verbal expressive skill. '
+                    'Block 2 – Pre-reading with visual support (20 min): rhyming cards '
+                    'with images (e.g., BALL/WALL with illustrations), '
+                    '"find the sound pair" activity without requiring conventional reading. '
+                    'High-structure visual support reduced the phonemic decoding demand '
+                    'and allowed success in the task.'
                 ),
                 'behavior': (
-                    'Laura entrou na sala com sobrancelhas franzidas e cruzou os braços '
-                    'ao sentar — linguagem corporal de raiva clara. Respondeu ao '
-                    'acolhimento com frases curtas inicialmente, abrindo-se progressivamente. '
-                    'No LEGO, relaxou visivelmente e iniciou narrativa espontânea e elaborada '
-                    'sobre os animais do zoológico. Na atividade de rima, acertou 8 de 10 '
-                    'pares sem errar nenhum dos pares com suporte visual completo. '
-                    'Em 1 cartão sem imagem (inserido intencionalmente), ficou travada por '
-                    '12 segundos e depois disse "esse eu não sei, não tem figura" — '
-                    'demonstrando consciência da estratégia compensatória que utiliza.'
+                    'Laura entered the room with furrowed brows and crossed her arms '
+                    'when sitting down — clear angry body language. Responded to '
+                    'welcoming with short sentences initially, opening up progressively. '
+                    'With LEGO, visibly relaxed and initiated spontaneous and elaborate narrative '
+                    'about the zoo animals. In the rhyming activity, got 8 out of 10 '
+                    'pairs correct without missing any pair with full visual support. '
+                    'On 1 card without an image (inserted intentionally), got stuck for '
+                    '12 seconds and then said "I don\'t know this one, there\'s no picture" — '
+                    'demonstrating awareness of the compensatory strategy she uses.'
                 ),
                 'progress': (
-                    'Regulação emocional: tempo para atingir nível 2 no termômetro foi de '
-                    '22 minutos (benchmark anterior: 30 minutos — redução de 27%). '
-                    'Pré-leitura: 80% de acerto com suporte visual completo. Sem suporte: '
-                    '0% (1 tentativa) — confirma dependência de suporte visual como estratégia '
-                    'compensatória funcional. Narrativa espontânea: 4 minutos de narração '
-                    'coerente e criativa — recurso preservado a ser explorado terapeuticamente.'
+                    'Emotional regulation: time to reach level 2 on the thermometer was '
+                    '22 minutes (previous benchmark: 30 minutes — 27% reduction). '
+                    'Pre-reading: 80% accuracy with full visual support. Without support: '
+                    '0% (1 trial) — confirms dependence on visual support as a functional '
+                    'compensatory strategy. Spontaneous narrative: 4 minutes of coherent '
+                    'and creative narration — preserved resource to be explored therapeutically.'
                 ),
                 'next_steps': (
-                    'Introduzir régua de leitura colorida e avaliar impacto na tarefa de '
-                    'decodificação na próxima sessão. Criar com Laura o "livro do que eu '
-                    'sei fazer bem" — primeiro capítulo sobre LEGO e narração de histórias. '
-                    'Elaborar carta de orientação para a escola solicitando: uso de fonte '
-                    'ampliada, régua de leitura, tempo adicional em atividades escritas '
-                    'e avaliação oral como alternativa. Compartilhar relatório parcial '
-                    'com a mãe na próxima sessão de orientação familiar.'
+                    'Introduce colored reading ruler and assess impact on decoding '
+                    'task in the next session. Create with Laura the "book of things I '
+                    'do well" — first chapter about LEGO and storytelling. '
+                    'Draft guidance letter for the school requesting: use of enlarged '
+                    'font, reading ruler, additional time in written activities, '
+                    'and oral assessment as an alternative. Share a partial report '
+                    'with the mother in the next family guidance session.'
                 ),
                 'released_to_family': False,
             },
-            # ── Heitor – sessão (5 dias atrás) ───────────────────────────────
+            # ── Hector - session (5 days ago) ───────────────────────────────
             {
-                'session_key': 'Heitor_completed',
+                'session_key': 'Hector_completed',
                 'session_index': 0,
                 'objective': (
-                    'Avaliar a dependência do suporte visual para compreensão de instruções '
-                    'de 2 passos em diferentes condições de ruído e introduzir o sinal '
-                    'combinado de "não entendi" para solicitação de repetição.'
+                    'Assess dependence on visual support for comprehension of 2-step '
+                    'instructions under different noise conditions and introduce the agreed '
+                    'signal "I didn\'t understand" for requesting repetition.'
                 ),
                 'activities': (
-                    'Bloco 1 (15 min): Instrução de 2 passos COM suporte visual simultâneo '
-                    '(pictograma ao lado da fala) em ambiente silencioso — 10 tentativas. '
-                    'Bloco 2 (15 min): Instrução de 2 passos SEM suporte visual em '
-                    'ambiente silencioso — 5 tentativas. '
-                    'Bloco 3 (10 min): Instrução de 2 passos SEM suporte visual com ruído '
-                    'de fundo controlado (gravação de sala de aula em volume baixo) — '
-                    '5 tentativas. '
-                    'Bloco 4 (10 min): Ensino do sinal combinado "não entendi" (mão aberta '
-                    'em frente ao rosto) com modelação e prática em 6 oportunidades '
-                    'criadas intencionalmente (instrução deliberadamente rápida e baixa).'
+                    'Block 1 (15 min): 2-step instruction WITH simultaneous visual support '
+                    '(pictogram next to speech) in silent environment — 10 trials. '
+                    'Block 2 (15 min): 2-step instruction WITHOUT visual support in '
+                    'silent environment — 5 trials. '
+                    'Block 3 (10 min): 2-step instruction WITHOUT visual support with controlled '
+                    'background noise (recording of classroom at low volume) — '
+                    '5 trials. '
+                    'Block 4 (10 min): Teaching the agreed signal "I didn\'t understand" (open hand '
+                    'in front of face) with modeling and practice in 6 opportunities '
+                    'intentionally created (deliberately fast and low instruction).'
                 ),
                 'behavior': (
-                    'Heitor engajou-se bem nos blocos 1 e 2, demonstrando entusiasmo '
-                    'pelos materiais temáticos de veículos utilizados nas instruções '
-                    '("coloque o caminhão na garagem e empurre o trem para a ponte"). '
-                    'No bloco 3, apresentou o comportamento de "congelar" em 3 de 5 '
-                    'tentativas, olhando para a terapeuta por até 6 segundos sem agir. '
-                    'No bloco 4, aprendeu o sinal com facilidade e o utilizou '
-                    'espontaneamente na 5ª oportunidade — dentro do que se esperava '
-                    'para uma primeira exposição ao sinal.'
+                    'Hector engaged well in blocks 1 and 2, showing enthusiasm '
+                    'for the vehicle-themed materials used in the instructions '
+                    '("put the truck in the garage and push the train to the bridge"). '
+                    'In block 3, he showed the "freezing" behavior in 3 out of 5 '
+                    'trials, looking at the therapist for up to 6 seconds without acting. '
+                    'In block 4, he learned the signal easily and used it '
+                    'spontaneously in the 5th opportunity — within what was expected '
+                    'for a first exposure to the signal.'
                 ),
                 'progress': (
-                    'Com suporte visual, ambiente silencioso: 7/10 acertos (70%). '
-                    'Sem suporte visual, ambiente silencioso: 2/5 acertos (40%). '
-                    'Sem suporte visual, com ruído: 1/5 acertos (20%) + 3 congelamentos. '
-                    'Dados confirmam hipótese de dependência significativa do suporte '
-                    'visual, especialmente em ambiente com ruído — consistente com TPAC. '
-                    'Aprendizado do sinal "não entendi": 1 uso espontâneo em 6 tentativas '
-                    '(17% — esperado para primeira exposição).'
+                    'With visual support, silent environment: 7/10 correct (70%). '
+                    'Without visual support, silent environment: 2/5 correct (40%). '
+                    'Without visual support, with noise: 1/5 correct (20%) + 3 instances of freezing. '
+                    'Data confirm the hypothesis of significant dependence on visual '
+                    'support, especially in a noisy environment — consistent with CAPD. '
+                    'Learning of the "I didn\'t understand" signal: 1 spontaneous use in 6 trials '
+                    '(17% — expected for first exposure).'
                 ),
                 'next_steps': (
-                    'Generalizar o sinal "não entendi" em contexto de grupo pequeno (2 crianças). '
-                    'Preparar material de orientação para a escola descrevendo: diferença entre '
-                    'não-compreensão e recusa, protocolo de uso do sinal combinado e como '
-                    'o professor deve responder (repetir com suporte visual, não apenas '
-                    'aumentar o volume). Encaminhar dados da sessão para a fonoaudióloga '
-                    'responsável pelo acompanhamento do TPAC.'
+                    'Generalize the "I didn\'t understand" signal in a small group context (2 children). '
+                    'Prepare guidance material for the school describing: difference between '
+                    'non-comprehension and refusal, protocol for using the agreed signal, and how '
+                    'the teacher should respond (repeat with visual support, not just '
+                    'increase volume). Refer session data to the speech therapist '
+                    'responsible for CAPD follow-up.'
                 ),
                 'released_to_family': True,
             },
-            # ── Valentina – sessão (4 dias atrás) ────────────────────────────
+            # ── Valentina - session (4 days ago) ────────────────────────────
             {
                 'session_key': 'Valentina_completed',
                 'session_index': 0,
                 'objective': (
-                    'Manter e expandir o uso funcional do sistema de CAA para expressão de '
-                    'necessidades básicas, e aplicar o protocolo PBS para redução de '
-                    'comportamento autolesivo (BAL) em momentos de transição.'
+                    'Maintain and expand functional use of the AAC system for expressing '
+                    'basic needs, and apply the PBS protocol for reduction of '
+                    'self-injurious behavior (SIB) during transition moments.'
                 ),
                 'activities': (
-                    'Bloco 1 – Regulação e CAA (20 min): Atividade de encaixe de peças grandes '
-                    'com oportunidades estruturadas de uso do CAA. A terapeuta criou '
-                    '10 oportunidades de solicitação: 5 para "mais peças" e 5 para "ajuda". '
-                    'O tablet com Tobii Snap Core First foi posicionado a 30 cm da mão '
-                    'dominante de Valentina. '
-                    'Bloco 2 – Transições com PBS (15 min): 3 transições planejadas entre '
-                    'atividades, cada uma antecipada com timer visual de 3 minutos, '
-                    'aviso verbal + pictograma e reforçamento imediato de espera calma. '
-                    'Bloco 3 – Lanche funcional (10 min): Valentina utilizou o CAA para '
-                    'solicitar itens do lanche (já familiarizado com os ícones "água", '
-                    '"bolacha" e "terminou").'
+                    'Block 1 – Regulation and AAC (20 min): Large piece fitting activity '
+                    'with structured opportunities for AAC use. The therapist created '
+                    '10 requesting opportunities: 5 for "more pieces" and 5 for "help". '
+                    'The tablet with Tobii Snap Core First was positioned 30 cm from Valentina\'s '
+                    'dominant hand. '
+                    'Block 2 – Transitions with PBS (15 min): 3 planned transitions between '
+                    'activities, each anticipated with a 3-minute visual timer, '
+                    'verbal warning + pictogram, and immediate reinforcement of calm waiting. '
+                    'Block 3 – Functional snack (10 min): Valentina used the AAC to '
+                    'request snack items (already familiar with the icons "water", '
+                    '"cookie", and "finished").'
                 ),
                 'behavior': (
-                    'Valentina chegou com disposição adequada (sem sinais de privação de '
-                    'sono excessiva relatada pelo pai). Nas oportunidades de CAA do bloco 1: '
-                    'selecionou "mais" com prompting mínimo (apontar para o tablet) em 4/5 '
-                    'tentativas, e "ajuda" com prompting médio (guia de mão) em 3/5 tentativas. '
-                    'Nos 2 episódios de BAL registrados, ambos ocorreram no início '
-                    'da transição (antes do timer completar), ambos de baixa intensidade '
-                    '(duração menor que 5 segundos). Após o timer e o aviso visual, '
-                    'não houve BAL nas transições subsequentes — sugerindo que a '
-                    'antecipação está funcionando como estratégia de prevenção.'
+                    'Valentina arrived in adequate disposition (no signs of excessive sleep '
+                    'deprivation reported by the father). In the AAC opportunities of block 1: '
+                    'selected "more" with minimal prompting (pointing to the tablet) in 4/5 '
+                    'trials, and "help" with medium prompting (hand guidance) in 3/5 trials. '
+                    'In the 2 SIB episodes recorded, both occurred at the beginning '
+                    'of the transition (before the timer finished), both of low intensity '
+                    '(duration less than 5 seconds). After the timer and visual warning, '
+                    'there was no SIB in the subsequent transitions — suggesting that '
+                    'anticipation is working as a prevention strategy.'
                 ),
                 'progress': (
-                    'CAA – "mais": 4/5 com prompting mínimo (80%) — próximo do critério de '
-                    'domínio para redução de prompting. '
-                    'CAA – "ajuda": 3/5 com prompting médio (60%) — em andamento. '
-                    'CAA espontâneo: seleção de "água" no lanche sem prompting (1 ocorrência). '
-                    'BAL: 2 episódios (ambos no início de transições) vs. média de 4-5 por '
-                    'sessão nas últimas 3 semanas — redução de ~55%, atribuída à implementação '
-                    'consistente do protocolo PBS.'
+                    'AAC – "more": 4/5 with minimal prompting (80%) — close to mastery '
+                    'criterion for prompting reduction. '
+                    'AAC – "help": 3/5 with medium prompting (60%) — in progress. '
+                    'Spontaneous AAC: selection of "water" during snack without prompting (1 occurrence). '
+                    'SIB: 2 episodes (both at the beginning of transitions) vs. average of 4-5 per '
+                    'session in the last 3 weeks — ~55% reduction, attributed to consistent '
+                    'implementation of the PBS protocol.'
                 ),
                 'next_steps': (
-                    'Reduzir nível de prompting para "mais" (de apontar para o tablet para '
-                    'olhar expectante). Intensificar treino de "ajuda" mantendo prompting atual. '
-                    'Adicionar ícones "feliz", "triste" e "com dor" ao vocabulário do CAA. '
-                    'Verificar com o pai a implementação do protocolo de transições em casa '
-                    '(avaliar adesão e barreiras). Solicitar ao pai dados de frequência de '
-                    'BAL em casa na semana anterior à próxima sessão.'
+                    'Reduce prompting level for "more" (from pointing to the tablet to '
+                    'expectant looking). Intensify "help" training maintaining current prompting. '
+                    'Add icons "happy", "sad", and "in pain" to the AAC vocabulary. '
+                    'Check with the father about implementation of the transition protocol at home '
+                    '(assess adherence and barriers). Request from the father SIB frequency '
+                    'data at home from the week before the next session.'
                 ),
                 'released_to_family': False,
             },
-            # ── Enzo – sessão (13 dias atrás) ────────────────────────────────
+            # ── Enzo - session (13 days ago) ────────────────────────────────
             {
                 'session_key': 'Enzo_completed',
                 'session_index': 0,
                 'objective': (
-                    'Avaliar repertório de imitação motora, atenção compartilhada e '
-                    'intenção comunicativa como pré-requisitos para o desenvolvimento '
-                    'da linguagem, e iniciar orientação parental em estratégias NDBI.'
+                    'Assess motor imitation repertoire, joint attention, and '
+                    'communicative intent as prerequisites for language '
+                    'development, and initiate parental guidance in NDBI strategies.'
                 ),
                 'activities': (
-                    'Sessão de avaliação e orientação com inclusão parental total (mãe '
-                    'presente durante toda a sessão). '
-                    'Parte 1 – Avaliação de imitação (15 min): A terapeuta modelou 10 ações '
-                    'motoras grosseiras (palmas, bater mesa, levantar braços, bater pés) '
-                    'e 5 ações motoras finas (pinça, empilhar 2 cubos, girar colher). '
-                    'Parte 2 – Avaliação de atenção compartilhada (15 min): Atividades '
-                    'de apontar + seguir olhar com 8 tentativas cada. '
-                    'Parte 3 – Observação de comunicação espontânea (10 min): Brincar '
-                    'livre com brinquedos de causa-e-efeito e empilhamento. '
-                    'Parte 4 – Orientação parental (10 min): A terapeuta demonstrou as '
-                    '5 estratégias NDBI básicas com a mãe praticando cada uma com Enzo.'
+                    'Assessment and guidance session with full parental inclusion (mother '
+                    'present throughout the session). '
+                    'Part 1 – Imitation assessment (15 min): The therapist modeled 10 gross '
+                    'motor actions (clapping, hitting table, raising arms, stomping feet) '
+                    'and 5 fine motor actions (pincer grasp, stacking 2 cubes, turning spoon). '
+                    'Part 2 – Joint attention assessment (15 min): Pointing + gaze following '
+                    'activities with 8 trials each. '
+                    'Part 3 – Spontaneous communication observation (10 min): Free '
+                    'play with cause-and-effect and stacking toys. '
+                    'Part 4 – Parental guidance (10 min): The therapist demonstrated the '
+                    '5 basic NDBI strategies with the mother practicing each one with Enzo.'
                 ),
                 'behavior': (
-                    'Enzo explorou os brinquedos de forma ativa e prazerosa. '
-                    'Imitação motora grosseira: 6/10 ações imitadas de forma espontânea '
-                    '(palmas, bater mesa, levantar braços — as mais dinâmicas e visualmente '
-                    'salientes). Imitação motora fina: 0/5 — ausente nesta avaliação. '
-                    'Seguir apontar da terapeuta: 3/8 tentativas com olhar para o objeto '
-                    'indicado (atenção compartilhada responsiva emergente). '
-                    'Intenção comunicativa: pointing para brinquedo desejado em 4 '
-                    'ocasiões espontâneas, toque no braço da terapeuta em 2 ocasiões '
-                    '(comunicação pré-verbal intencional confirmada). '
-                    'A mãe praticou as estratégias NDBI com engajamento e fez '
-                    'perguntas pertinentes sobre como aplicá-las na troca de fraldas '
-                    'e na hora do banho.'
+                    'Enzo explored the toys actively and with pleasure. '
+                    'Gross motor imitation: 6/10 actions imitated spontaneously '
+                    '(clapping, hitting table, raising arms — the most dynamic and visually '
+                    'salient). Fine motor imitation: 0/5 — absent in this assessment. '
+                    'Following therapist\'s pointing: 3/8 trials with gaze toward the indicated '
+                    'object (emergent responsive joint attention). '
+                    'Communicative intent: pointing to desired toy on 4 '
+                    'spontaneous occasions, touching the therapist\'s arm on 2 occasions '
+                    '(intentional pre-verbal communication confirmed). '
+                    'The mother practiced the NDBI strategies with engagement and asked '
+                    'pertinent questions about how to apply them during diaper changes '
+                    'and bath time.'
                 ),
                 'progress': (
-                    'Avaliação inicial concluída. Perfil de pré-requisitos: imitação '
-                    'motora grosseira emergente (60%); imitação motora fina ausente; '
-                    'atenção compartilhada responsiva emergente (38%); intencionalidade '
-                    'comunicativa presente (pointing e toque ao adulto). '
-                    'Orientação parental: mãe demonstrou compreensão das 5 estratégias '
-                    'NDBI e praticou todas durante a sessão com assistência da terapeuta. '
-                    'Diagnóstico recente ainda em elaboração pela família — mãe mostrou '
-                    'emocionar-se em 1 momento ao observar Enzo imitando palmas.'
+                    'Initial assessment completed. Prerequisite profile: gross '
+                    'motor imitation emerging (60%); fine motor imitation absent; '
+                    'responsive joint attention emerging (38%); communicative '
+                    'intentionality present (pointing and touching adult). '
+                    'Parental guidance: mother demonstrated understanding of the 5 NDBI '
+                    'strategies and practiced all during the session with therapist assistance. '
+                    'Recent diagnosis still being processed by the family — mother showed '
+                    'emotion at 1 moment while watching Enzo imitating clapping.'
                 ),
                 'next_steps': (
-                    'Iniciar programa formal de imitação motora fina (empilhar, apontar, '
-                    'encaixar) como pré-requisito para linguagem. Expandir atenção '
-                    'compartilhada com jogos de causa-e-efeito e atividades com espelho. '
-                    'Introduzir o primeiro ícone de CAA ("mais") em contexto de atividade '
-                    'altamente preferida. Verificar na próxima sessão como a mãe '
-                    'implementou as estratégias NDBI na rotina doméstica e ajustar '
-                    'orientações conforme dificuldades relatadas.'
+                    'Start formal fine motor imitation program (stacking, pointing, '
+                    'fitting) as a prerequisite for language. Expand joint '
+                    'attention with cause-and-effect games and mirror activities. '
+                    'Introduce the first AAC icon ("more") in a highly preferred '
+                    'activity context. Check in the next session how the mother '
+                    'implemented the NDBI strategies in the home routine and adjust '
+                    'guidance according to reported difficulties.'
                 ),
                 'released_to_family': True,
             },
@@ -1570,9 +1568,9 @@ class Command(BaseCommand):
         evolution_count = TherapeuticEvolution.objects.count()
 
         self.stdout.write(self.style.SUCCESS(
-            f'\nVerificação de dados:\n'
-            f'  Usuários: {user_count}\n'
-            f'  Pacientes: {patient_count}\n'
-            f'  Sessões: {session_count}\n'
-            f'  Evoluções: {evolution_count}\n'
+            f'\nData verification:\n'
+            f'  Users: {user_count}\n'
+            f'  Patients: {patient_count}\n'
+            f'  Sessions: {session_count}\n'
+            f'  Evolutions: {evolution_count}\n'
         ))
