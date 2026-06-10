@@ -8,7 +8,8 @@ Parte do monorepo Spectra, esta é uma aplicação Next.js 16 construída com Re
 - **UI**: React 19, Tailwind CSS 4
 - **Linguagem**: TypeScript
 - **Linting/Formatting**: ESLint com configuração Next.js + Prettier
-- **Autenticação**: Cookie-based com middleware Next.js
+- **i18n**: next-intl com suporte a PT-BR e EN (cookie `locale`)
+- **Autenticação**: Cookie-based (JWT em `access_token`)
 - **Mock**: MSW com estado centralizado em memória
 
 ## Autenticação
@@ -35,6 +36,17 @@ O sistema de autenticação usa cookies para manter a sessão do usuário:
 - **Rotas públicas**: `/`, `/login/*` (acesso livre)
 - **Rotas protegidas**: `/clinic/*` e `/family/*` requerem autenticação
 - **Redirect**: Usuários não autenticados são redirecionados para `/` (página inicial)
+
+## Internacionalização (i18n)
+
+O app usa **next-intl** com roteamento de idioma único (sem `[locale]` na URL):
+
+- **Locale cookie**: `locale` armazena `'en'` ou `'pt-BR'` (padrão: `'en'`)
+- **LanguageToggle**: Única instância no layout raiz (`fixed top-4 right-4 z-[60]`)
+- **Client Components**: `useTranslations('Namespace')` para strings traduzíveis
+- **Server Components**: `getTranslations('Namespace')` de `next-intl/server`
+- **Server Actions**: `getServerT()` de `@/lib/utils/translationUtils`
+- **Arquivos de tradução**: `messages/en.json` e `messages/pt-BR.json` (mesmas chaves, valores diferentes)
 
 ### Formulários de Login
 
@@ -105,6 +117,7 @@ src/lib/api/
 | `NEXT_PUBLIC_API_URL`      | URL da API do backend                          | `http://127.0.0.1:8000` |
 | `NEXT_PUBLIC_DISABLE_MSW`  | `false` = mock enabled, `true` = API real      | `false`                 |
 | `NEXT_PUBLIC_MOCK_USER_ID` | ID do usuário mock padrão (em desenvolvimento) | `1`                     |
+| `locale` (cookie)          | Idioma: `'en'` ou `'pt-BR'`                    | `'en'`                  |
 
 ## Começando
 
@@ -128,13 +141,13 @@ Abra [http://localhost:3000](http://localhost:3000) no seu navegador para ver o 
 
 ```
 apps/web/
+├── messages/                       # Traduções (en.json, pt-BR.json)
 ├── src/
 │   ├── app/
 │   │   ├── page.tsx              # Página inicial
-│   │   ├── layout.tsx            # Layout raiz
+│   │   ├── layout.tsx            # Layout raiz + NextIntlClientProvider + LanguageToggle
 │   │   ├── globals.css           # Estilos globais
-│   │   ├── middleware.ts         # Autenticação
-│   │   ├── actions/              # Server Actions
+│   │   ├── actions/              # Server Actions (usam getServerT())
 │   │   ├── login/                 # Páginas de login
 │   │   │   ├── clinic/            # Login da clínica
 │   │   │   └── family/            # Login da família
@@ -150,21 +163,26 @@ apps/web/
 │   │   └── ui/                    # Componentes UI
 │   │       ├── clinic/            # Componentes específicos da clínica
 │   │       ├── family/            # Componentes específicos da família
-│   │       └── shared/            # Componentes compartilhados
+│   │       └── shared/            # Componentes compartilhados (incl. LanguageToggle)
+│   ├── i18n/
+│   │   └── request.ts            # Resolução de locale (cookie → locale)
 │   ├── lib/
 │   │   ├── api/                  # Clientes de API (mock/real)
-│   │   ├── types.ts               # Tipos TypeScript
+│   │   ├── types.ts               # Tipos TypeScript (incl. Messages)
 │   │   ├── auth*.ts               # Autenticação
 │   │   └── utils/                # Funções utilitárias
 │   │       ├── index.ts           # Exportação barrel
-│   │       ├── dateUtils.ts       # Formatação de datas relativas em português
+│   │       ├── dateUtils.ts       # Formatação de datas (locale-aware)
 │   │       ├── stringUtils.ts     # Extração de iniciais de nomes
 │   │       ├── userUtils.ts       # Resolução de usuário (resolveUser)
-│   │       ├── greetingUtils.ts   # Geração de saudações
-│   │       ├── dateRangeUtils.ts  # Cálculos de intervalo de datas
+│   │       ├── greetingUtils.ts   # Geração de saudações (locale-aware)
+│   │       ├── dateRangeUtils.ts  # Cálculos de intervalo de datas (locale-aware)
 │   │       ├── statsUtils.ts      # Cálculos de estatísticas
-│   │       ├── envUtils.ts        # Verificações de ambiente
-│   │       └── redirectUtils.ts   # Redirects por role
+│   │       ├── envUtils.ts        # Verificações de ambiente (getUseMock)
+│   │       ├── redirectUtils.ts   # Redirects por role
+│   │       ├── permissionUtils.ts # Permissões de sessões/evoluções
+│   │       ├── sessionStatusUtils.ts # Status de sessão (locale-aware)
+│   │       └── translationUtils.ts   # getServerT() para server actions
 │   └── mocks/                     # MSW para desenvolvimento
 │       ├── state.ts               # Estado centralizado
 │       └── data/                  # Dados mock
