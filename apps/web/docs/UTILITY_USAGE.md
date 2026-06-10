@@ -72,7 +72,14 @@ const redirect = getLoginRedirectForPath('/clinic/patients') // '/login/clinic'
 ### Date Utilities (`src/lib/utils/dateUtils.ts`)
 
 ```tsx
-import { formatDate, formatDateShort, formatDateLong, formatDateTime, formatDateTimeISO, getRelativeDate } from '@/lib/utils/dateUtils'
+import {
+  formatDate,
+  formatDateShort,
+  formatDateLong,
+  formatDateTime,
+  formatDateTimeISO,
+  getRelativeDate,
+} from '@/lib/utils/dateUtils'
 
 const label = getRelativeDate('2026-05-04') // Returns: "Hoje", "Ontem", "Há 3 dias", etc.
 const formatted = formatDate('2026-05-28') // Returns: "28/05/2026"
@@ -154,7 +161,13 @@ const recent = filterRecentSessions(allSessions, 7) // Last 7 days
 ### Permission Utilities (`src/lib/utils/permissionUtils.ts`)
 
 ```tsx
-import { canEditSession, canDeleteSession, canEditEvolution, canDeleteEvolution, canReleaseEvolution } from '@/lib/utils/permissionUtils'
+import {
+  canEditSession,
+  canDeleteSession,
+  canEditEvolution,
+  canDeleteEvolution,
+  canReleaseEvolution,
+} from '@/lib/utils/permissionUtils'
 
 // Check if user can edit/delete a session
 const canEdit = canEditSession(session, user)
@@ -173,7 +186,12 @@ const canRelease = canReleaseEvolution(evolution, user)
 ### Session Status Utilities (`src/lib/utils/sessionStatusUtils.ts`)
 
 ```tsx
-import { normalizeSessionStatus, getSessionStatusDisplay, getStatusLabel, getStatusClassName } from '@/lib/utils/sessionStatusUtils'
+import {
+  normalizeSessionStatus,
+  getSessionStatusDisplay,
+  getStatusLabel,
+  getStatusClassName,
+} from '@/lib/utils/sessionStatusUtils'
 
 // Normalize session status string
 const normalized = normalizeSessionStatus('completed') // Returns: 'completed'

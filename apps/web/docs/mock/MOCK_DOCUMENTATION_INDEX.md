@@ -415,7 +415,7 @@ Mock mode has negligible latency, making it excellent for rapid development and 
 ## Document Metadata
 
 | Property         | Value             |
-| ----------------- | ----------------- |
+| ---------------- | ----------------- |
 | Created          | May 4, 2026       |
 | Last Updated     | June 5, 2026      |
 | Coverage         | Complete          |

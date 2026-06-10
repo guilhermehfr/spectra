@@ -62,12 +62,12 @@ User: Maria Silva (id=4, email=maria@gmail.com)
 
 ## Current Mock Data Counts
 
-| Entity     | Total | Notes                                 |
-| ---------- | ----- | ------------------------------------- |
-| Users      | 4     | 1 admin, 2 therapists, 1 family       |
-| Patients   | 14    | All active                            |
-| Sessions   | 13    | 7 completed, 4 scheduled, 1 canceled  |
-| Evolutions | 7     | 4 released to family, 3 not released  |
+| Entity     | Total | Notes                                |
+| ---------- | ----- | ------------------------------------ |
+| Users      | 4     | 1 admin, 2 therapists, 1 family      |
+| Patients   | 14    | All active                           |
+| Sessions   | 13    | 7 completed, 4 scheduled, 1 canceled |
+| Evolutions | 7     | 4 released to family, 3 not released |
 
 ---
 
