@@ -4,6 +4,7 @@ import { authService } from '@/lib/authService'
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { getDashboardUrl, getLoginUrl } from '@/lib/utils/redirectUtils'
+import { getServerT } from '@/lib/utils/translationUtils'
 import type { UserRole } from '@/lib/types'
 
 type LoginActionState = {
@@ -15,13 +16,14 @@ export async function loginAction(
   _: LoginActionState,
   formData: FormData
 ): Promise<LoginActionState> {
+  const t = await getServerT()
   const email = formData.get('email')?.toString().trim() || ''
   const password = formData.get('password')?.toString().trim() || ''
 
   if (!email || !password) {
     return {
       email,
-      error: 'Digite seu email e senha para continuar',
+      error: t('Actions.emailAndPasswordRequired'),
     }
   }
 
@@ -30,7 +32,7 @@ export async function loginAction(
   if (!emailRegex.test(email)) {
     return {
       email,
-      error: 'Formato de email inválido',
+      error: t('Actions.invalidEmailFormat'),
     }
   }
 
@@ -54,7 +56,7 @@ export async function loginAction(
 
     return {
       email,
-      error: 'Função de usuário desconhecida',
+      error: t('Actions.unknownRole'),
     }
   } catch (error) {
     const digest = (error as Error & { digest?: string }).digest
@@ -65,7 +67,7 @@ export async function loginAction(
 
     return {
       email,
-      error: 'Credenciais inválidas',
+      error: t('Login.invalidCredentials'),
     }
   }
 }

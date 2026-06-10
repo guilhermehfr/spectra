@@ -3,6 +3,7 @@
 import { revalidatePath } from 'next/cache'
 import { createPatient, updatePatient, deletePatient } from '@/lib/api/clinic'
 import { revalidatePatients, revalidatePatient, revalidateDashboard } from '@/lib/api/http'
+import { getServerT } from '@/lib/utils/translationUtils'
 import type { CreatePatientInput, UpdatePatientInput } from '@/lib/types'
 
 export interface PatientFormState {
@@ -15,6 +16,7 @@ export async function createPatientAction(
   _: PatientFormState,
   formData: FormData
 ): Promise<PatientFormState> {
+  const t = await getServerT()
   const name = formData.get('name')?.toString().trim() || ''
   const birth_date = formData.get('birth_date')?.toString().trim() || ''
   const guardian_name = formData.get('guardian_name')?.toString().trim() || ''
@@ -24,20 +26,20 @@ export async function createPatientAction(
   const errors: Record<string, string> = {}
 
   if (!name) {
-    errors.name = 'Nome é obrigatório'
+    errors.name = t('Actions.nameRequired')
   }
   if (!birth_date) {
-    errors.birth_date = 'Data de nascimento é obrigatória'
+    errors.birth_date = t('Actions.birthDateRequired')
   }
   if (!guardian_name) {
-    errors.guardian_name = 'Responsável é obrigatório'
+    errors.guardian_name = t('Actions.guardianNameRequired')
   }
   if (!guardian_email) {
-    errors.guardian_email = 'Email do responsável é obrigatório'
+    errors.guardian_email = t('Actions.guardianEmailRequired')
   } else {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
     if (!emailRegex.test(guardian_email)) {
-      errors.guardian_email = 'Email inválido'
+      errors.guardian_email = t('Actions.invalidEmail')
     }
   }
 
@@ -72,7 +74,7 @@ export async function createPatientAction(
     console.error('Failed to create patient:', error)
     return {
       success: false,
-      error: 'Falha ao cadastrar paciente. Tente novamente.',
+      error: t('Actions.createPatientFailed'),
     }
   }
 }
@@ -81,6 +83,7 @@ export async function updatePatientAction(
   _: PatientFormState,
   formData: FormData
 ): Promise<PatientFormState> {
+  const t = await getServerT()
   const id = formData.get('id')?.toString()
   const name = formData.get('name')?.toString().trim() || ''
   const birth_date = formData.get('birth_date')?.toString().trim() || ''
@@ -89,31 +92,31 @@ export async function updatePatientAction(
   const notes = formData.get('notes')?.toString().trim() || ''
 
   if (!id) {
-    return { success: false, error: 'ID do paciente não encontrado' }
+    return { success: false, error: t('Actions.patientIdNotFound') }
   }
 
   const patientId = parseInt(id, 10)
   if (isNaN(patientId)) {
-    return { success: false, error: 'ID do paciente inválido' }
+    return { success: false, error: t('Actions.patientIdInvalid') }
   }
 
   const errors: Record<string, string> = {}
 
   if (!name) {
-    errors.name = 'Nome é obrigatório'
+    errors.name = t('Actions.nameRequired')
   }
   if (!birth_date) {
-    errors.birth_date = 'Data de nascimento é obrigatória'
+    errors.birth_date = t('Actions.birthDateRequired')
   }
   if (!guardian_name) {
-    errors.guardian_name = 'Responsável é obrigatório'
+    errors.guardian_name = t('Actions.guardianNameRequired')
   }
   if (!guardian_email) {
-    errors.guardian_email = 'Email do responsável é obrigatório'
+    errors.guardian_email = t('Actions.guardianEmailRequired')
   } else {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
     if (!emailRegex.test(guardian_email)) {
-      errors.guardian_email = 'Email inválido'
+      errors.guardian_email = t('Actions.invalidEmail')
     }
   }
 
@@ -141,7 +144,7 @@ export async function updatePatientAction(
     console.error('Failed to update patient:', error)
     return {
       success: false,
-      error: 'Falha ao atualizar paciente. Tente novamente.',
+      error: t('Actions.updatePatientFailed'),
     }
   }
 }

@@ -20,12 +20,23 @@ export function normalizeSessionStatus(status: string | undefined): SessionStatu
   return 'scheduled'
 }
 
-export function getSessionStatusDisplay(rawStatus: string | undefined) {
+export function getSessionStatusDisplay(
+  rawStatus: string | undefined,
+  t?: (key: string, params?: Record<string, string | number>) => string
+) {
   const normalized = normalizeSessionStatus(rawStatus)
-  return statusDisplayConfig[normalized]
+  const config = statusDisplayConfig[normalized]
+  if (t) {
+    return { ...config, label: t(normalized) }
+  }
+  return config
 }
 
-export function getStatusLabel(status: SessionStatus): string {
+export function getStatusLabel(
+  status: SessionStatus,
+  t?: (key: string, params?: Record<string, string | number>) => string
+): string {
+  if (t) return t(status)
   return statusDisplayConfig[status]?.label ?? 'Indefinido'
 }
 

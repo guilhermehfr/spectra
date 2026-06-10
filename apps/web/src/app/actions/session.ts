@@ -12,6 +12,7 @@ import {
 } from '@/lib/api/http'
 import { resolveUser } from '@/lib/utils/userUtils'
 import { canEditSession, canDeleteSession } from '@/lib/utils/permissionUtils'
+import { getServerT } from '@/lib/utils/translationUtils'
 import type { CreateSessionInput, UpdateSessionInput } from '@/lib/types'
 
 function convertToISO8601(dateTime: string): string {
@@ -30,6 +31,7 @@ export async function createSessionAction(
   _: SessionFormState,
   formData: FormData
 ): Promise<SessionFormState> {
+  const t = await getServerT()
   const patient = formData.get('patient')?.toString()
   const therapist = formData.get('therapist')?.toString()
   const date_time = formData.get('date_time')?.toString() || ''
@@ -38,13 +40,13 @@ export async function createSessionAction(
   const errors: Record<string, string> = {}
 
   if (!patient) {
-    errors.patient = 'Paciente é obrigatório'
+    errors.patient = t('Actions.patientRequired')
   }
   if (!therapist) {
-    errors.therapist = 'Terapeuta é obrigatório'
+    errors.therapist = t('Actions.therapistRequired')
   }
   if (!date_time) {
-    errors.date_time = 'Data e horário são obrigatórios'
+    errors.date_time = t('Actions.dateTimeRequired')
   }
 
   if (Object.keys(errors).length > 0) {
@@ -82,7 +84,7 @@ export async function createSessionAction(
     console.error('Failed to create session:', error)
     return {
       success: false,
-      error: 'Falha ao criar sessão. Tente novamente.',
+      error: t('Actions.createSessionFailed'),
     }
   }
 }
@@ -91,6 +93,7 @@ export async function updateSessionAction(
   _: SessionFormState,
   formData: FormData
 ): Promise<SessionFormState> {
+  const t = await getServerT()
   const sessionId = formData.get('id')?.toString()
   const patient = formData.get('patient')?.toString()
   const therapist = formData.get('therapist')?.toString()
@@ -99,27 +102,27 @@ export async function updateSessionAction(
   const status = formData.get('status')?.toString() as 'scheduled' | 'completed' | 'canceled'
 
   if (!sessionId) {
-    return { success: false, error: 'ID da sessão não encontrado' }
+    return { success: false, error: t('Actions.sessionIdNotFound') }
   }
 
   const id = parseInt(sessionId, 10)
   if (isNaN(id)) {
-    return { success: false, error: 'ID da sessão inválido' }
+    return { success: false, error: t('Actions.sessionIdInvalid') }
   }
 
   const errors: Record<string, string> = {}
 
   if (!patient) {
-    errors.patient = 'Paciente é obrigatório'
+    errors.patient = t('Actions.patientRequired')
   }
   if (!therapist) {
-    errors.therapist = 'Terapeuta é obrigatório'
+    errors.therapist = t('Actions.therapistRequired')
   }
   if (!date_time) {
-    errors.date_time = 'Data e horário são obrigatórios'
+    errors.date_time = t('Actions.dateTimeRequired')
   }
   if (!status) {
-    errors.status = 'Status é obrigatório'
+    errors.status = t('Actions.statusRequired')
   }
 
   if (Object.keys(errors).length > 0) {
@@ -130,11 +133,11 @@ export async function updateSessionAction(
   const existingSession = await getSession(id)
 
   if (!existingSession) {
-    return { success: false, error: 'Sessão não encontrada' }
+    return { success: false, error: t('Actions.sessionNotFound') }
   }
 
   if (!canEditSession(existingSession, user)) {
-    return { success: false, error: 'Você não tem permissão para editar esta sessão' }
+    return { success: false, error: t('Actions.noPermissionEditSession') }
   }
 
   try {
@@ -167,22 +170,23 @@ export async function updateSessionAction(
     console.error('Failed to update session:', error)
     return {
       success: false,
-      error: 'Falha ao atualizar sessão. Tente novamente.',
+      error: t('Actions.updateSessionFailed'),
     }
   }
 }
 
 export async function deleteSessionAction(sessionId: number, patientId: number): Promise<void> {
+  const t = await getServerT()
   try {
     const user = await resolveUser()
     const session = await getSession(sessionId)
 
     if (!session) {
-      throw new Error('Sessão não encontrada')
+      throw new Error(t('Actions.sessionNotFound'))
     }
 
     if (!canDeleteSession(session, user)) {
-      throw new Error('Você não tem permissão para excluir esta sessão')
+      throw new Error(t('Actions.noPermissionDeleteSession'))
     }
 
     await deleteSession(sessionId)

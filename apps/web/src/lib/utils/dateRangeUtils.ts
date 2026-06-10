@@ -12,19 +12,30 @@ export function getDaysAgo(days: number): Date {
 
 type Session = { date_time: string }
 
-const DAY_LABELS = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb']
+const PT_DAY_LABELS = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb']
+const EN_DAY_LABELS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
 
-export function aggregateByDayOfWeek(sessions: Session[]): { day: string; sessions: number }[] {
+const LOCALE_DAY_LABELS: Record<string, string[]> = {
+  'pt-BR': PT_DAY_LABELS,
+  en: EN_DAY_LABELS,
+}
+
+export function aggregateByDayOfWeek(
+  sessions: Session[],
+  locale: string = 'pt-BR'
+): { day: string; sessions: number }[] {
+  const dayLabels = LOCALE_DAY_LABELS[locale] || PT_DAY_LABELS
+
   const dayMap: Record<string, number> = {}
 
   sessions.forEach((session) => {
     const date = new Date(session.date_time)
     const dayIndex = date.getDay()
-    const dayLabel = DAY_LABELS[dayIndex]
+    const dayLabel = dayLabels[dayIndex]
     dayMap[dayLabel] = (dayMap[dayLabel] || 0) + 1
   })
 
-  return DAY_LABELS.map((day) => ({
+  return dayLabels.map((day) => ({
     day,
     sessions: dayMap[day] || 0,
   }))

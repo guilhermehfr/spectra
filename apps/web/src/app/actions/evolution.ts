@@ -10,6 +10,7 @@ import {
 } from '@/lib/api/http'
 import { resolveUser } from '@/lib/utils/userUtils'
 import { canEditEvolution, canReleaseEvolution } from '@/lib/utils/permissionUtils'
+import { getServerT } from '@/lib/utils/translationUtils'
 import type { CreateEvolutionInput } from '@/lib/types'
 
 export interface EvolutionFormState {
@@ -22,6 +23,7 @@ export async function createEvolutionAction(
   _: EvolutionFormState,
   formData: FormData
 ): Promise<EvolutionFormState> {
+  const t = await getServerT()
   const sessionId = formData.get('session')?.toString()
   const objective = formData.get('objective')?.toString().trim() || ''
   const activities = formData.get('activities')?.toString().trim() || ''
@@ -33,22 +35,22 @@ export async function createEvolutionAction(
   const errors: Record<string, string> = {}
 
   if (!sessionId) {
-    errors.session = 'Sessão não encontrada'
+    errors.session = t('Actions.sessionNotFound')
   }
   if (!objective) {
-    errors.objective = 'Objetivo é obrigatório'
+    errors.objective = t('Actions.objectiveRequired')
   }
   if (!activities) {
-    errors.activities = 'Atividades é obrigatória'
+    errors.activities = t('Actions.activitiesRequired')
   }
   if (!behavior) {
-    errors.behavior = 'Comportamento é obrigatório'
+    errors.behavior = t('Actions.behaviorRequired')
   }
   if (!progress) {
-    errors.progress = 'Progresso é obrigatório'
+    errors.progress = t('Actions.progressRequired')
   }
   if (!next_steps) {
-    errors.next_steps = 'Próximos passos são obrigatórios'
+    errors.next_steps = t('Actions.nextStepsRequired')
   }
 
   if (Object.keys(errors).length > 0) {
@@ -62,7 +64,7 @@ export async function createEvolutionAction(
     const session = await getSession(sessionIdNum)
 
     if (!session) {
-      return { success: false, error: 'Sessão não encontrada' }
+      return { success: false, error: t('Actions.sessionNotFound') }
     }
 
     const user = await resolveUser()
@@ -70,7 +72,7 @@ export async function createEvolutionAction(
     if (session.therapist !== user.id && user.role !== 'admin') {
       return {
         success: false,
-        error: 'Você não tem permissão para criar evolução para esta sessão',
+        error: t('Actions.noPermissionCreateEvolution'),
       }
     }
 
@@ -95,7 +97,6 @@ export async function createEvolutionAction(
     }
     revalidateDashboard()
 
-    // Get patient ID to invalidate patient detail
     if (session) {
       revalidatePath(`/clinic/patients/${session.patient}`)
     }
@@ -109,7 +110,7 @@ export async function createEvolutionAction(
     console.error('Failed to create evolution:', error)
     return {
       success: false,
-      error: 'Falha ao criar evolução. Tente novamente.',
+      error: t('Actions.createEvolutionFailed'),
     }
   }
 }
@@ -122,6 +123,7 @@ export async function updateEvolutionAction(
   _: EvolutionFormState,
   formData: FormData
 ): Promise<EvolutionFormState> {
+  const t = await getServerT()
   const evolutionId = formData.get('id')?.toString()
   const objective = formData.get('objective')?.toString().trim() || ''
   const activities = formData.get('activities')?.toString().trim() || ''
@@ -131,30 +133,30 @@ export async function updateEvolutionAction(
   const released_to_family = formData.get('released_to_family') === 'on'
 
   if (!evolutionId) {
-    return { success: false, error: 'ID da evolução não encontrado' }
+    return { success: false, error: t('Actions.evolutionIdNotFound') }
   }
 
   const id = parseInt(evolutionId, 10)
   if (isNaN(id)) {
-    return { success: false, error: 'ID da evolução inválido' }
+    return { success: false, error: t('Actions.evolutionIdInvalid') }
   }
 
   const errors: Record<string, string> = {}
 
   if (!objective) {
-    errors.objective = 'Objetivo é obrigatório'
+    errors.objective = t('Actions.objectiveRequired')
   }
   if (!activities) {
-    errors.activities = 'Atividades é obrigatória'
+    errors.activities = t('Actions.activitiesRequired')
   }
   if (!behavior) {
-    errors.behavior = 'Comportamento é obrigatório'
+    errors.behavior = t('Actions.behaviorRequired')
   }
   if (!progress) {
-    errors.progress = 'Progresso é obrigatório'
+    errors.progress = t('Actions.progressRequired')
   }
   if (!next_steps) {
-    errors.next_steps = 'Próximos passos são obrigatórios'
+    errors.next_steps = t('Actions.nextStepsRequired')
   }
 
   if (Object.keys(errors).length > 0) {
@@ -165,17 +167,17 @@ export async function updateEvolutionAction(
   const existingEvolution = await getEvolution(id)
 
   if (!existingEvolution) {
-    return { success: false, error: 'Evolução não encontrada' }
+    return { success: false, error: t('Actions.evolutionNotFound') }
   }
 
   const { getSession } = await import('@/lib/api/clinic')
   const session = await getSession(existingEvolution.session)
   if (!session) {
-    return { success: false, error: 'Sessão não encontrada' }
+    return { success: false, error: t('Actions.sessionNotFound') }
   }
 
   if (!canEditEvolution(existingEvolution, user, session.therapist)) {
-    return { success: false, error: 'Você não tem permissão para editar esta evolução' }
+    return { success: false, error: t('Actions.noPermissionEditEvolution') }
   }
 
   try {
@@ -198,7 +200,6 @@ export async function updateEvolutionAction(
       revalidateEvolution(id)
     }
 
-    // Get session to invalidate patient detail
     const { getEvolution } = await import('@/lib/api/clinic')
     const evolution = await getEvolution(id)
     if (evolution) {
@@ -219,7 +220,7 @@ export async function updateEvolutionAction(
     console.error('Failed to update evolution:', error)
     return {
       success: false,
-      error: 'Falha ao atualizar evolução. Tente novamente.',
+      error: t('Actions.updateEvolutionFailed'),
     }
   }
 }
@@ -230,22 +231,23 @@ export interface ReleaseEvolutionState {
 }
 
 export async function releaseEvolutionAction(evolutionId: number): Promise<ReleaseEvolutionState> {
+  const t = await getServerT()
   try {
     const { patchEvolution, getEvolution, getSession } = await import('@/lib/api/clinic')
 
     const existing = await getEvolution(evolutionId)
     if (!existing) {
-      return { success: false, error: 'Evolução não encontrada.' }
+      return { success: false, error: t('Actions.evolutionNotFound') }
     }
 
     const session = await getSession(existing.session)
     if (!session) {
-      return { success: false, error: 'Sessão não encontrada.' }
+      return { success: false, error: t('Actions.sessionNotFound') }
     }
 
     const user = await resolveUser()
     if (!canReleaseEvolution(existing, user, session.therapist)) {
-      return { success: false, error: 'Você não tem permissão para liberar esta evolução.' }
+      return { success: false, error: t('Actions.noPermissionReleaseEvolution') }
     }
 
     await patchEvolution(evolutionId, {
@@ -266,7 +268,7 @@ export async function releaseEvolutionAction(evolutionId: number): Promise<Relea
     console.error('Failed to release evolution:', error)
     return {
       success: false,
-      error: 'Falha ao liberar evolução para a família. Tente novamente.',
+      error: t('Actions.releaseEvolutionFailed'),
     }
   }
 }
