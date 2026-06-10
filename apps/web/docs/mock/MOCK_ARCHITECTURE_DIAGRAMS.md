@@ -202,7 +202,7 @@
        │
        │   Result: {
        │     id: 1,
-       │     name: 'Leonardo Silva',
+       │     name: 'Leonard Silva',
        │     guardian_email: 'maria@gmail.com'
        │   }
        │
@@ -240,7 +240,7 @@
 │ Render Dashboard:                                              │
 │                                                                │
 │ ┌──────┐  Olá, Maria Silva                                    │
-│ │ LS   │  Histórico de Leonardo Silva                         │
+│ │ LS   │  Histórico de Leonard Silva                         │
 │ └──────┘
 │
 │ ┌────────────────────────────────────────────┐
@@ -576,7 +576,7 @@
                   │ createSession() looks up related data
                   ↓
         ┌──────────────────────┐
-        │ Find patient: 1      │ → Leonardo Silva
+        │ Find patient: 1      │ → Leonard Silva
         │ Find therapist: 2    │ → Ana Lima
         └──────────────────────┘
                   │
@@ -587,7 +587,7 @@
 │  {                                                       │
 │    id: 1,                  ← Auto-incremented           │
 │    patient: 1,             ← ID (original)              │
-│    patient_name: 'Leonardo Silva',    ← Denormalized    │
+│    patient_name: 'Leonard Silva',    ← Denormalized    │
 │    therapist: 2,           ← ID (original)              │
 │    therapist_name: 'Ana Lima',        ← Denormalized    │
 │    date_time: '2026-04-29T09:00:00Z',                  │
@@ -605,7 +605,7 @@
 │        UI Renders Session Card                           │
 │                                                          │
 │   ┌────────────────────────────────────┐               │
-│   │ Leonardo Silva                     │               │
+│   │ Leonard Silva                     │               │
 │   │ Therapist: Ana Lima                │               │
 │   │ Time: 09:00                        │               │
 │   │ Status: Scheduled                  │               │

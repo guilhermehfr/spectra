@@ -197,7 +197,7 @@ mockTokens = {
 mockPatients = [
   {
     id: 1,
-    name: 'Leonardo Silva',
+    name: 'Leonard Silva',
     birth_date: '2017-03-10',
     guardian_name: 'Maria Silva',
     guardian_email: 'maria@gmail.com', // Linked to family user
@@ -215,7 +215,7 @@ mockSessions = [
   {
     id: 1,
     patient: 1, // ID reference
-    patient_name: 'Leonardo Silva', // Denormalized
+    patient_name: 'Leonard Silva', // Denormalized
     therapist: 2, // ID reference
     therapist_name: 'Ana Lima', // Denormalized
     date_time: '2026-04-29T09:00:00Z',
@@ -529,7 +529,7 @@ getPatientByGuardianEmail('maria@gmail.com')
     ├─ MOCK: state.getPatientByGuardianEmail('maria@gmail.com')
     └─ REAL: HTTP GET /api/patients/ → find by guardian_email
     ↓
-patient = { id: 1, name: 'Leonardo Silva', guardian_email: 'maria@gmail.com', ... }
+patient = { id: 1, name: 'Leonard Silva', guardian_email: 'maria@gmail.com', ... }
     ↓
 getFamilyEvolutions()
     ↓
@@ -641,7 +641,7 @@ Display:
 | admin@spectra.com  | admin     | any      | -              | Clinic portal access              |
 | ana@spectra.com    | therapist | any      | -              | Therapist (created session 1, 2)  |
 | carlos@spectra.com | therapist | any      | -              | Therapist (created sessions 3, 4) |
-| maria@gmail.com    | family    | any      | Leonardo Silva | Family portal access              |
+| maria@gmail.com    | family    | any      | Leonard Silva | Family portal access              |
 
 ---
 
@@ -693,7 +693,7 @@ const getImpl = async () => {
 
 ```typescript
 // Input: { patient: 1, therapist: 2, date_time: '...', ... }
-// Store: { id: X, patient: 1, patient_name: 'Leonardo Silva', therapist: 2, therapist_name: 'Ana Lima', ... }
+// Store: { id: X, patient: 1, patient_name: 'Leonard Silva', therapist: 2, therapist_name: 'Ana Lima', ... }
 ```
 
 ### 7.4 Validation in Mock CRUD
@@ -941,7 +941,7 @@ NODE_ENV=development           # Still useful for other things
    {
      id: 6,
      patient: 2,
-     patient_name: 'Sofia Rodrigues',
+     patient_name: 'Sophia Rodrigues',
      therapist: 2,
      therapist_name: 'Ana Lima',
      date_time: '2026-04-28T10:00:00Z',

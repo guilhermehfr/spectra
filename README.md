@@ -112,6 +112,7 @@ Guardian receives access through Family Portal
 - Server-first Next.js App Router architecture
 - Environment-based API switching (`mock` ↔ `real`)
 - Centralized in-memory mock state with MSW
+- Internationalization (PT-BR / EN) with next-intl
 - Role-aware middleware authentication
 - Lazy-loaded API implementations
 - Shared domain-driven component structure
@@ -143,6 +144,7 @@ The mock infrastructure allows frontend development to proceed independently fro
 | [TypeScript](https://www.typescriptlang.org/) | Static typing |
 | [Tailwind CSS v4](https://tailwindcss.com/) | Styling |
 | [MSW](https://mswjs.io/) | Mock API infrastructure |
+| [next-intl](https://next-intl.dev/) | Internationalization (PT-BR / EN) |
 
 ### Infrastructure
 
@@ -164,13 +166,15 @@ spectra/
 │   │   ├── config/
 │   │   └── manage.py
 │   │
-│   └── web/                  # Next.js frontend
-│       ├── src/
-│       │   ├── app/
-│       │   ├── components/
-│       │   ├── lib/
-│       │   └── mocks/
-│       └── package.json
+    │   └── web/                  # Next.js frontend
+    │       ├── messages/          # Translation files (en.json, pt-BR.json)
+    │       ├── src/
+    │       │   ├── app/
+    │       │   ├── components/
+    │       │   ├── i18n/
+    │       │   ├── lib/
+    │       │   └── mocks/
+    │       └── package.json
 │
 ├── pnpm-workspace.yaml
 └── README.md

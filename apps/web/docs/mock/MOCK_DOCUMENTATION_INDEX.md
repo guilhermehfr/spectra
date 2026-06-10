@@ -241,23 +241,23 @@ Evolution (session=1, released_to_family=true)
 | admin@spectra.com  | admin     | any      | Clinic access                            |
 | ana@spectra.com    | therapist | any      | Clinic access                            |
 | carlos@spectra.com | therapist | any      | Clinic access                            |
-| maria@gmail.com    | family    | any      | Family portal, Leonardo Silva's guardian |
+| maria@gmail.com    | family    | any      | Family portal, Leonard Silva's guardian |
 
 ### Patients (14 total)
 
-- Leonardo Silva (id=1) - Guardian: Maria Silva (maria@gmail.com)
-- Sofia Rodrigues (id=2) - Guardian: João Rodrigues
-- Pedro Alves (id=3) - Guardian: Fernanda Alves
-- Clara Mendes (id=4) - Guardian: Roberto Mendes
+- Leonard Silva (id=1) - Guardian: Maria Silva (maria@gmail.com)
+- Sophia Rodrigues (id=2) - Guardian: João Rodrigues
+- Peter Alves (id=3) - Guardian: Fernanda Alves
+- Claire Mendes (id=4) - Guardian: Roberto Mendes
 - Patients 5-14: Additional test patients with various guardians
 
 ### Sessions (13 total)
 
-- Session 1: Leonardo Silva + Ana Lima, 2026-04-29, **completed**
-- Session 2: Sofia Rodrigues + Ana Lima, 2026-04-29, scheduled
-- Session 3: Pedro Alves + Carlos Souza, 2026-04-29, scheduled
-- Session 4: Clara Mendes + Carlos Souza, 2026-04-29, cancelled
-- Session 5: Leonardo Silva + Ana Lima, 2026-04-30, scheduled
+- Session 1: Leonard Silva + Ana Lima, 2026-04-29, **completed**
+- Session 2: Sophia Rodrigues + Ana Lima, 2026-04-29, scheduled
+- Session 3: Peter Alves + Carlos Souza, 2026-04-29, scheduled
+- Session 4: Claire Mendes + Carlos Souza, 2026-04-29, cancelled
+- Session 5: Leonard Silva + Ana Lima, 2026-04-30, scheduled
 - Sessions 6-13: Additional sessions covering various patients and statuses
 
 ### Evolutions (7 total)

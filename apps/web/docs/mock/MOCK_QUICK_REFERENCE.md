@@ -42,7 +42,7 @@ Page fetches data with authenticated context
 | admin@spectra.com  | admin     | -              | Clinic Portal |
 | ana@spectra.com    | therapist | -              | Clinic Portal |
 | carlos@spectra.com | therapist | -              | Clinic Portal |
-| maria@gmail.com    | family    | Leonardo Silva | Family Portal |
+| maria@gmail.com    | family    | Leonard Silva | Family Portal |
 
 ---
 
@@ -51,7 +51,7 @@ Page fetches data with authenticated context
 ```
 User: Maria Silva (id=4, email=maria@gmail.com)
   ↓ matches guardian_email
-  Patient: Leonardo Silva (id=1, guardian_email=maria@gmail.com)
+  Patient: Leonard Silva (id=1, guardian_email=maria@gmail.com)
     ↓ has sessions
     Session: 1 (id=1, patient=1, status=completed)
       ↓ has evolution
@@ -191,7 +191,7 @@ async function FamilyDashboard() {
 
   // 3. Get patient by email match
   const patient = await getPatientByGuardianEmail('maria@gmail.com')
-  // Result: Leonardo Silva (id=1)
+  // Result: Leonard Silva (id=1)
 
   // 4. Get evolutions (released_to_family=true)
   const evolutions = await getFamilyEvolutions()
@@ -219,7 +219,7 @@ async function FamilyDashboard() {
 {
   id: 6,
   patient: 2,
-  patient_name: 'Sofia Rodrigues',
+  patient_name: 'Sophia Rodrigues',
   therapist: 2,
   therapist_name: 'Ana Lima',
   date_time: '2026-04-28T10:00:00Z',

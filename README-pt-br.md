@@ -112,6 +112,7 @@ O responsável recebe acesso através do Portal da Família
 - Alternância de API baseada no ambiente (`mock` ↔ `real`)
 - Estado de simulação (mock) em memória centralizado com MSW
 - Autenticação em middleware ciente do perfil do usuário
+- Internacionalização (PT-BR / EN) com next-intl
 - Implementações de API com carregamento tardio (lazy-loaded)
 - Estrutura de componentes compartilhados orientada ao domínio (domain-driven)
 - Fluxo de autenticação JWT com cookies seguros
@@ -144,6 +145,7 @@ A infraestrutura de mock permite que o desenvolvimento do frontend avance de for
 | [TypeScript](https://www.typescriptlang.org/) | Tipagem estática |
 | [Tailwind CSS v4](https://tailwindcss.com/) | Estilização |
 | [MSW](https://mswjs.io/) | Infraestrutura de API simulada (mock) |
+| [next-intl](https://next-intl.dev/) | Internacionalização (PT-BR / EN) |
 
 ### Infraestrutura
 
@@ -166,13 +168,15 @@ spectra/
 │   │   ├── config/
 │   │   └── manage.py
 │   │
-│   └── web/                  # Frontend Next.js
-│       ├── src/
-│       │   ├── app/
-│       │   ├── components/
-│       │   ├── lib/
-│       │   └── mocks/
-│       └── package.json
+    │   └── web/                  # Frontend Next.js
+    │       ├── messages/          # Arquivos de tradução (en.json, pt-BR.json)
+    │       ├── src/
+    │       │   ├── app/
+    │       │   ├── components/
+    │       │   ├── i18n/
+    │       │   ├── lib/
+    │       │   └── mocks/
+    │       └── package.json
 │
 ├── pnpm-workspace.yaml
 └── README.md
