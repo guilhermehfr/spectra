@@ -2,6 +2,7 @@
 
 import { useRef } from 'react'
 import { useRouter } from 'next/navigation'
+import { useTranslations } from 'next-intl'
 import { twMerge } from 'tailwind-merge'
 import Link from 'next/link'
 
@@ -29,12 +30,15 @@ export function BaseForm({
   action,
   onCancel,
   cancelHref,
-  cancelLabel = 'Cancelar',
-  submitLabel = 'Salvar',
+  cancelLabel: cancelLabelProp,
+  submitLabel: submitLabelProp,
   isSubmitting = false,
   submitDisabled = false,
   className,
 }: BaseFormProps) {
+  const t = useTranslations('Common')
+  const cancelLabel = cancelLabelProp ?? t('cancel')
+  const submitLabel = submitLabelProp ?? t('save')
   const formRef = useRef<HTMLFormElement>(null)
   const router = useRouter()
 

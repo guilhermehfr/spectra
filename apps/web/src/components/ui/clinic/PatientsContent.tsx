@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { useTranslations } from 'next-intl'
 import { PatientsTable } from './PatientsTable'
 import { PatientsPageHeader } from './PatientsPageHeader'
 import { PaginationNav } from './PaginationNav'
@@ -26,6 +27,8 @@ export function PatientsContent({
   currentUser,
 }: PatientsContentProps) {
   const router = useRouter()
+  const t = useTranslations('Patients')
+  const tc = useTranslations('Common')
   const [currentPage, setCurrentPage] = useState(1)
   const [patientToDelete, setPatientToDelete] = useState<Patient | null>(null)
 
@@ -103,23 +106,22 @@ export function PatientsContent({
       {patientToDelete && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
           <div className="bg-white rounded-lg p-6 max-w-sm mx-4 shadow-xl">
-            <h3 className="text-lg font-semibold text-slate-900 mb-2">Excluir paciente?</h3>
+            <h3 className="text-lg font-semibold text-slate-900 mb-2">{t('deleteConfirmTitle')}</h3>
             <p className="text-sm text-slate-600 mb-6">
-              Tem certeza que deseja excluir {patientToDelete.name}? Esta ação não pode ser
-              desfeita.
+              {t('deleteConfirmMessage', { name: patientToDelete.name })}
             </p>
             <div className="flex gap-3 justify-end">
               <button
                 onClick={cancelDelete}
                 className="px-4 py-2 text-sm font-medium text-slate-600 bg-slate-100 rounded-lg hover:bg-slate-200 transition-colors"
               >
-                Cancelar
+                {tc('cancel')}
               </button>
               <button
                 onClick={confirmDelete}
                 className="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700 transition-colors"
               >
-                Excluir
+                {tc('delete')}
               </button>
             </div>
           </div>

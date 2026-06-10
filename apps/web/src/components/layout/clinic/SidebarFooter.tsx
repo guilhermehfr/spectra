@@ -3,9 +3,12 @@
 import Link from 'next/link'
 import { HelpCircle, LogOut } from 'lucide-react'
 import { twMerge } from 'tailwind-merge'
+import { useTranslations } from 'next-intl'
 import { logoutAction } from '@/app/actions/auth'
 
 export function SidebarFooter() {
+  const t = useTranslations('Common')
+
   const handleLogout = async () => {
     await logoutAction()
   }
@@ -25,12 +28,12 @@ export function SidebarFooter() {
         className={footerItemClass}
       >
         <HelpCircle size={20} strokeWidth={1.5} />
-        <span>Help</span>
+        <span>{t('help')}</span>
       </Link>
 
       <button onClick={handleLogout} className={footerItemClass + ' w-full text-left'}>
         <LogOut size={20} strokeWidth={1.5} />
-        <span>Logout</span>
+        <span>{t('logout')}</span>
       </button>
     </div>
   )

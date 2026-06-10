@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { useTranslations } from 'next-intl'
 import { Plus } from 'lucide-react'
 import type { Session } from '@/lib/types'
 import { deleteSessionAction } from '@/app/actions/session'
@@ -15,6 +16,8 @@ interface SessionsContentProps {
 
 export function SessionsContent({ sessions, totalCount, isLoading = false }: SessionsContentProps) {
   const router = useRouter()
+  const t = useTranslations('Sessions')
+  const tc = useTranslations('Common')
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
   const [sessionToDelete, setSessionToDelete] = useState<Session | null>(null)
 
@@ -53,9 +56,11 @@ export function SessionsContent({ sessions, totalCount, isLoading = false }: Ses
     <div className="w-full space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="font-manrope text-2xl md:text-3xl font-bold text-slate-900">Sessões</h1>
+          <h1 className="font-manrope text-2xl md:text-3xl font-bold text-slate-900">
+            {t('title')}
+          </h1>
           <p className="mt-1 font-manrope text-sm text-slate-500">
-            {totalCount} {totalCount === 1 ? 'sessão encontrada' : 'sessões encontradas'}
+            {t('found', { count: totalCount })}
           </p>
         </div>
         <button
@@ -63,7 +68,7 @@ export function SessionsContent({ sessions, totalCount, isLoading = false }: Ses
           className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-[linear-gradient(90deg,#2563EB,#4648D4)] rounded-lg hover:opacity-90 transition-opacity"
         >
           <Plus size={18} />
-          Nova Sessão
+          {t('newSession')}
         </button>
       </div>
 
@@ -78,10 +83,8 @@ export function SessionsContent({ sessions, totalCount, isLoading = false }: Ses
       {showDeleteConfirm && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
           <div className="bg-white rounded-lg p-6 max-w-sm mx-4 shadow-xl">
-            <h3 className="text-lg font-semibold text-slate-900 mb-2">Deletar sessão?</h3>
-            <p className="text-sm text-slate-600 mb-6">
-              Esta ação não pode ser desfeita. A sessão será removida.
-            </p>
+            <h3 className="text-lg font-semibold text-slate-900 mb-2">{t('deleteTitle')}</h3>
+            <p className="text-sm text-slate-600 mb-6">{t('deleteDescription')}</p>
             <div className="flex gap-3 justify-end">
               <button
                 onClick={() => {
@@ -90,13 +93,13 @@ export function SessionsContent({ sessions, totalCount, isLoading = false }: Ses
                 }}
                 className="px-4 py-2 text-sm font-medium text-slate-600 bg-slate-100 rounded-lg hover:bg-slate-200 transition-colors"
               >
-                Cancelar
+                {tc('cancel')}
               </button>
               <button
                 onClick={handleConfirmDelete}
                 className="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700 transition-colors"
               >
-                Deletar
+                {t('deleteConfirm')}
               </button>
             </div>
           </div>

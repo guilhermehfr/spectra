@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { useLocale, useTranslations } from 'next-intl'
 import { toast } from 'react-toastify'
 import type { Patient, Session, Evolution, User } from '@/lib/types'
 import { deleteSessionAction } from '@/app/actions/session'
@@ -27,6 +28,9 @@ export function PatientDetailContent({
   currentUser,
 }: PatientDetailContentProps) {
   const router = useRouter()
+  const t = useTranslations('PatientDetail')
+  const commonT = useTranslations('Common')
+  const locale = useLocale()
   const [showDeleteConfirmPatient, setShowDeleteConfirmPatient] = useState(false)
   const [showDeleteConfirmSession, setShowDeleteConfirmSession] = useState(false)
   const [sessionToDelete, setSessionToDelete] = useState<Session | null>(null)
@@ -82,9 +86,9 @@ export function PatientDetailContent({
 
     if (availableSessions.length === 0) {
       if (completedSessions.length === 0) {
-        toast.error('É necessário ter uma sessão concluída para criar uma evolução.')
+        toast.error(t('needCompletedSession'))
       } else {
-        toast.error('Todas as sessões concluídas já possuem evolução.')
+        toast.error(t('allSessionsHaveEvolution'))
       }
       return
     }
@@ -112,10 +116,10 @@ export function PatientDetailContent({
     setIsReleasing(false)
 
     if (result.success) {
-      toast.success('Evolução liberada para a família com sucesso!')
+      toast.success(t('evolutionReleased'))
       router.refresh()
     } else {
-      toast.error(result.error || 'Falha ao liberar evolução')
+      toast.error(result.error || t('releaseEvolutionFailed'))
     }
   }
 
@@ -151,23 +155,20 @@ export function PatientDetailContent({
       {showDeleteConfirmPatient && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
           <div className="bg-white rounded-lg p-6 max-w-sm mx-4 shadow-xl">
-            <h3 className="text-lg font-semibold text-slate-900 mb-2">Deletar paciente?</h3>
-            <p className="text-sm text-slate-600 mb-6">
-              Esta ação não pode ser desfeita. Todas as sessões e evoluções associadas serão
-              removidas.
-            </p>
+            <h3 className="text-lg font-semibold text-slate-900 mb-2">{t('deletePatientTitle')}</h3>
+            <p className="text-sm text-slate-600 mb-6">{t('deletePatientDescription')}</p>
             <div className="flex gap-3 justify-end">
               <button
                 onClick={() => setShowDeleteConfirmPatient(false)}
                 className="px-4 py-2 text-sm font-medium text-slate-600 bg-slate-100 rounded-lg hover:bg-slate-200 transition-colors"
               >
-                Cancelar
+                {commonT('cancel')}
               </button>
               <button
                 onClick={() => handleConfirmDelete('patient')}
                 className="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700 transition-colors"
               >
-                Deletar
+                {commonT('deleteConfirm')}
               </button>
             </div>
           </div>
@@ -177,16 +178,14 @@ export function PatientDetailContent({
       {showDeleteConfirmSession && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
           <div className="bg-white rounded-lg p-6 max-w-sm mx-4 shadow-xl">
-            <h3 className="text-lg font-semibold text-slate-900 mb-2">Deletar sessão?</h3>
-            <p className="text-sm text-slate-600 mb-6">
-              Esta ação não pode ser desfeita. A sessão será removida.
-            </p>
+            <h3 className="text-lg font-semibold text-slate-900 mb-2">{t('deleteSessionTitle')}</h3>
+            <p className="text-sm text-slate-600 mb-6">{t('deleteSessionDescription')}</p>
             <div className="flex gap-3 justify-end">
               <button
                 onClick={() => setShowDeleteConfirmSession(false)}
                 className="px-4 py-2 text-sm font-medium text-slate-600 bg-slate-100 rounded-lg hover:bg-slate-200 transition-colors"
               >
-                Cancelar
+                {commonT('cancel')}
               </button>
               <button
                 onClick={() => {
@@ -198,7 +197,7 @@ export function PatientDetailContent({
                 }}
                 className="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700 transition-colors"
               >
-                Deletar
+                {commonT('deleteConfirm')}
               </button>
             </div>
           </div>
@@ -208,10 +207,8 @@ export function PatientDetailContent({
       {showSessionSelect && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
           <div className="bg-white rounded-lg p-6 max-w-sm mx-4 shadow-xl">
-            <h3 className="text-lg font-semibold text-slate-900 mb-2">Selecione uma sessão</h3>
-            <p className="text-sm text-slate-600 mb-4">
-              Escolha uma sessão concluída para criar a evolução:
-            </p>
+            <h3 className="text-lg font-semibold text-slate-900 mb-2">{t('selectSessionTitle')}</h3>
+            <p className="text-sm text-slate-600 mb-4">{t('selectSessionDescription')}</p>
             <div className="space-y-2 max-h-60 overflow-y-auto mb-4">
               {availableSessions.map((session) => (
                 <button
@@ -220,13 +217,15 @@ export function PatientDetailContent({
                   className="w-full text-left p-3 rounded-lg border border-slate-200 hover:border-blue-500 hover:bg-blue-50 transition-colors"
                 >
                   <p className="text-sm font-medium text-slate-900">
-                    {new Date(session.date_time).toLocaleDateString('pt-BR', {
+                    {new Date(session.date_time).toLocaleDateString(locale, {
                       day: '2-digit',
                       month: 'short',
                       year: 'numeric',
                     })}
                   </p>
-                  <p className="text-xs text-slate-500">Terapeuta: {session.therapist_name}</p>
+                  <p className="text-xs text-slate-500">
+                    {t('therapistLabel', { name: session.therapist_name })}
+                  </p>
                 </button>
               ))}
             </div>
@@ -235,7 +234,7 @@ export function PatientDetailContent({
                 onClick={() => setShowSessionSelect(false)}
                 className="px-4 py-2 text-sm font-medium text-slate-600 bg-slate-100 rounded-lg hover:bg-slate-200 transition-colors"
               >
-                Cancelar
+                {commonT('cancel')}
               </button>
             </div>
           </div>

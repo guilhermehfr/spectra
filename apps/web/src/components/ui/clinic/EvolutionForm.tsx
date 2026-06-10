@@ -2,6 +2,7 @@
 
 import { useActionState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
+import { useTranslations } from 'next-intl'
 import { toast } from 'react-toastify'
 
 import { BaseForm, TextareaField } from '@/components/ui/shared'
@@ -28,6 +29,8 @@ export function EvolutionForm({
   cancelHref,
 }: EvolutionFormProps) {
   const router = useRouter()
+  const t = useTranslations('EvolutionForm')
+  const tc = useTranslations('Common')
   const [state, action, isPending] = useActionState(formAction, initialState)
 
   useEffect(() => {
@@ -45,16 +48,12 @@ export function EvolutionForm({
 
   return (
     <BaseForm
-      title={isEdit ? 'Editar Evolução' : 'Nova Evolução'}
-      description={
-        isEdit
-          ? 'Atualize as observações da sessão terapêutica.'
-          : 'Registre as observações da sessão terapêutica.'
-      }
+      title={isEdit ? t('editTitle') : t('newTitle')}
+      description={isEdit ? t('editDescription') : t('newDescription')}
       action={action}
       cancelHref={cancelHref}
-      cancelLabel="Cancelar"
-      submitLabel={isEdit ? 'Salvar' : 'Cadastrar'}
+      cancelLabel={tc('cancel')}
+      submitLabel={isEdit ? tc('save') : t('submitCreate')}
       isSubmitting={isPending}
     >
       {isEdit && <input type="hidden" name="id" value={evolution.id} />}
@@ -62,9 +61,9 @@ export function EvolutionForm({
 
       <div className="space-y-6">
         <TextareaField
-          label="Objetivo"
+          label={t('objectiveLabel')}
           name="objective"
-          placeholder="Descreva o objetivo da sessão..."
+          placeholder={t('objectivePlaceholder')}
           rows={3}
           required
           defaultValue={evolution?.objective}
@@ -72,9 +71,9 @@ export function EvolutionForm({
         />
 
         <TextareaField
-          label="Atividades"
+          label={t('activitiesLabel')}
           name="activities"
-          placeholder="Liste as atividades realizadas..."
+          placeholder={t('activitiesPlaceholder')}
           rows={3}
           required
           defaultValue={evolution?.activities}
@@ -82,9 +81,9 @@ export function EvolutionForm({
         />
 
         <TextareaField
-          label="Comportamento"
+          label={t('behaviorLabel')}
           name="behavior"
-          placeholder="Descreva o comportamento observado..."
+          placeholder={t('behaviorPlaceholder')}
           rows={3}
           required
           defaultValue={evolution?.behavior}
@@ -92,9 +91,9 @@ export function EvolutionForm({
         />
 
         <TextareaField
-          label="Progresso"
+          label={t('progressLabel')}
           name="progress"
-          placeholder="Descreva o progresso do paciente..."
+          placeholder={t('progressPlaceholder')}
           rows={3}
           required
           defaultValue={evolution?.progress}
@@ -102,9 +101,9 @@ export function EvolutionForm({
         />
 
         <TextareaField
-          label="Próximos Passos"
+          label={t('nextStepsLabel')}
           name="next_steps"
-          placeholder="Planeje os próximos passos..."
+          placeholder={t('nextStepsPlaceholder')}
           rows={3}
           required
           defaultValue={evolution?.next_steps}
@@ -120,7 +119,7 @@ export function EvolutionForm({
             className="h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-600"
           />
           <label htmlFor="released_to_family" className="font-manrope text-sm text-slate-700">
-            Liberar evolução para a família
+            {t('releaseToFamilyLabel')}
           </label>
         </div>
       </div>

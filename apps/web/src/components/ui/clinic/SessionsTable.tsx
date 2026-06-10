@@ -1,5 +1,6 @@
 'use client'
 
+import { useLocale, useTranslations } from 'next-intl'
 import { Pencil, Trash2, Eye } from 'lucide-react'
 import { twMerge } from 'tailwind-merge'
 import type { Session } from '@/lib/types'
@@ -18,17 +19,20 @@ interface SessionCardProps {
   onView: (session: Session) => void
   onEdit: (session: Session) => void
   onDelete: (session: Session) => void
+  t: (key: string) => string
 }
 
-function SessionCard({ session, onView, onEdit, onDelete }: SessionCardProps) {
-  const status = getSessionStatusDisplay(session.status)
+function SessionCard({ session, onView, onEdit, onDelete, t }: SessionCardProps) {
+  const tss = useTranslations('SessionStatus')
+  const locale = useLocale()
+  const status = getSessionStatusDisplay(session.status, tss)
 
   return (
     <div className="bg-white rounded-lg border border-slate-200 p-4 flex flex-col gap-3">
       <div className="flex items-start justify-between">
         <div>
           <p className="text-sm font-medium text-slate-900">
-            {formatDateTimeISO(session.date_time)}
+            {formatDateTimeISO(session.date_time, locale)}
           </p>
           <p className="text-sm text-slate-600">{session.patient_name}</p>
           <p className="text-xs text-slate-500">{session.therapist_name}</p>
@@ -46,21 +50,21 @@ function SessionCard({ session, onView, onEdit, onDelete }: SessionCardProps) {
           className="flex items-center gap-1 px-3 py-1.5 text-xs font-medium text-slate-600 hover:text-slate-700 hover:bg-slate-50 rounded-md transition-colors cursor-pointer"
         >
           <Eye className="w-3.5 h-3.5" />
-          Ver
+          {t('view')}
         </button>
         <button
           onClick={() => onEdit(session)}
           className="flex items-center gap-1 px-3 py-1.5 text-xs font-medium text-slate-600 hover:text-slate-700 hover:bg-slate-50 rounded-md transition-colors cursor-pointer"
         >
           <Pencil className="w-3.5 h-3.5" />
-          Editar
+          {t('edit')}
         </button>
         <button
           onClick={() => onDelete(session)}
           className="flex items-center gap-1 px-3 py-1.5 text-xs font-medium text-red-600 hover:text-red-700 hover:bg-red-50 rounded-md transition-colors cursor-pointer"
         >
           <Trash2 className="w-3.5 h-3.5" />
-          Excluir
+          {t('delete')}
         </button>
       </div>
     </div>
@@ -72,14 +76,19 @@ interface SessionRowProps {
   onView: (session: Session) => void
   onEdit: (session: Session) => void
   onDelete: (session: Session) => void
+  t: (key: string) => string
 }
 
-function SessionRow({ session, onView, onEdit, onDelete }: SessionRowProps) {
-  const status = getSessionStatusDisplay(session.status)
+function SessionRow({ session, onView, onEdit, onDelete, t }: SessionRowProps) {
+  const tss = useTranslations('SessionStatus')
+  const locale = useLocale()
+  const status = getSessionStatusDisplay(session.status, tss)
 
   return (
     <tr className="border-b border-slate-100 hover:bg-slate-50/50 transition-colors">
-      <td className="py-3 px-4 text-sm text-slate-700">{formatDateTimeISO(session.date_time)}</td>
+      <td className="py-3 px-4 text-sm text-slate-700">
+        {formatDateTimeISO(session.date_time, locale)}
+      </td>
       <td className="py-3 px-4 text-sm text-slate-700">{session.patient_name}</td>
       <td className="py-3 px-4 text-sm text-slate-700">{session.therapist_name}</td>
       <td className="py-3 px-4">
@@ -95,21 +104,21 @@ function SessionRow({ session, onView, onEdit, onDelete }: SessionRowProps) {
           <button
             onClick={() => onView(session)}
             className="p-1.5 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-md transition-colors cursor-pointer"
-            title="Ver"
+            title={t('view')}
           >
             <Eye className="w-4 h-4" />
           </button>
           <button
             onClick={() => onEdit(session)}
             className="p-1.5 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-md transition-colors cursor-pointer"
-            title="Editar"
+            title={t('edit')}
           >
             <Pencil className="w-4 h-4" />
           </button>
           <button
             onClick={() => onDelete(session)}
             className="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-md transition-colors cursor-pointer"
-            title="Excluir"
+            title={t('delete')}
           >
             <Trash2 className="w-4 h-4" />
           </button>
@@ -126,10 +135,12 @@ export function SessionsTable({
   onEdit,
   onDelete,
 }: SessionsTableProps) {
+  const t = useTranslations('SessionsTable')
+
   if (isLoading) {
     return (
       <div className="bg-white rounded-lg border border-slate-200 p-12 text-center">
-        <p className="text-sm text-slate-500">Carregando sessões...</p>
+        <p className="text-sm text-slate-500">{t('loading')}</p>
       </div>
     )
   }
@@ -138,7 +149,7 @@ export function SessionsTable({
     <div className="bg-white rounded-lg border border-slate-200 overflow-hidden">
       {sessions.length === 0 ? (
         <div className="px-4 md:px-6 py-12 text-center">
-          <p className="text-sm text-slate-500">Nenhuma sessão encontrada.</p>
+          <p className="text-sm text-slate-500">{t('empty')}</p>
         </div>
       ) : (
         <>
@@ -150,6 +161,7 @@ export function SessionsTable({
                 onView={onView!}
                 onEdit={onEdit!}
                 onDelete={onDelete!}
+                t={t}
               />
             ))}
           </div>
@@ -159,22 +171,22 @@ export function SessionsTable({
               <thead className="bg-slate-50">
                 <tr>
                   <th className="py-3 px-4 text-left text-xs font-semibold uppercase text-slate-500">
-                    Data / Horário
+                    {t('dateTime')}
                   </th>
                   <th className="py-3 px-4 text-left text-xs font-semibold uppercase text-slate-500">
-                    Paciente
+                    {t('patient')}
                   </th>
                   <th className="py-3 px-4 text-left text-xs font-semibold uppercase text-slate-500">
-                    Terapeuta
+                    {t('therapist')}
                   </th>
                   <th className="py-3 px-4 text-left text-xs font-semibold uppercase text-slate-500">
-                    Status
+                    {t('status')}
                   </th>
                   <th className="py-3 px-4 text-left text-xs font-semibold uppercase text-slate-500">
-                    Observações
+                    {t('notes')}
                   </th>
                   <th className="py-3 px-4 text-left text-xs font-semibold uppercase text-slate-500">
-                    Ações
+                    {t('actions')}
                   </th>
                 </tr>
               </thead>
@@ -186,6 +198,7 @@ export function SessionsTable({
                     onView={onView!}
                     onEdit={onEdit!}
                     onDelete={onDelete!}
+                    t={t}
                   />
                 ))}
               </tbody>

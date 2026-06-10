@@ -1,6 +1,7 @@
 'use client'
 
 import { Pencil, Plus, Trash2 } from 'lucide-react'
+import { useLocale, useTranslations } from 'next-intl'
 import { twMerge } from 'tailwind-merge'
 import type { Session, User } from '@/lib/types'
 import {
@@ -18,7 +19,11 @@ interface SessionCardProps {
 }
 
 function SessionCard({ session, currentUser, onEdit, onDelete }: SessionCardProps) {
-  const status = getSessionStatusDisplay(session.status)
+  const t = useTranslations('PatientDetail')
+  const commonT = useTranslations('Common')
+  const tss = useTranslations('SessionStatus')
+  const locale = useLocale()
+  const status = getSessionStatusDisplay(session.status, tss)
   const canEdit = canEditSession(session, currentUser)
   const canDelete = canDeleteSession(session, currentUser)
 
@@ -27,7 +32,7 @@ function SessionCard({ session, currentUser, onEdit, onDelete }: SessionCardProp
       <div className="flex items-start justify-between">
         <div>
           <p className="text-sm font-medium text-slate-900">
-            {formatDateTimeISO(session.date_time)}
+            {formatDateTimeISO(session.date_time, locale)}
           </p>
           <p className="text-sm text-slate-600">{session.therapist_name}</p>
         </div>
@@ -42,7 +47,7 @@ function SessionCard({ session, currentUser, onEdit, onDelete }: SessionCardProp
         <button
           onClick={() => onEdit(session)}
           disabled={!canEdit}
-          title={!canEdit ? 'Você não tem permissão para editar esta sessão' : undefined}
+          title={!canEdit ? t('sessionEditNotPermitted') : undefined}
           className={twMerge(
             'flex items-center gap-1 px-3 py-1.5 text-xs font-medium rounded-md transition-colors',
             canEdit
@@ -51,12 +56,12 @@ function SessionCard({ session, currentUser, onEdit, onDelete }: SessionCardProp
           )}
         >
           <Pencil className="w-3.5 h-3.5" />
-          Editar
+          {commonT('edit')}
         </button>
         <button
           onClick={() => onDelete(session)}
           disabled={!canDelete}
-          title={!canDelete ? 'Você não tem permissão para excluir esta sessão' : undefined}
+          title={!canDelete ? t('sessionDeleteNotPermitted') : undefined}
           className={twMerge(
             'flex items-center gap-1 px-3 py-1.5 text-xs font-medium rounded-md transition-colors',
             canDelete
@@ -65,7 +70,7 @@ function SessionCard({ session, currentUser, onEdit, onDelete }: SessionCardProp
           )}
         >
           <Trash2 className="w-3.5 h-3.5" />
-          Excluir
+          {commonT('delete')}
         </button>
       </div>
     </div>
@@ -80,13 +85,19 @@ interface SessionRowProps {
 }
 
 function SessionRow({ session, currentUser, onEdit, onDelete }: SessionRowProps) {
-  const status = getSessionStatusDisplay(session.status)
+  const t = useTranslations('PatientDetail')
+  const commonT = useTranslations('Common')
+  const tss = useTranslations('SessionStatus')
+  const locale = useLocale()
+  const status = getSessionStatusDisplay(session.status, tss)
   const canEdit = canEditSession(session, currentUser)
   const canDelete = canDeleteSession(session, currentUser)
 
   return (
     <tr className="border-b border-slate-100 hover:bg-slate-50/50 transition-colors">
-      <td className="py-3 px-4 text-sm text-slate-700">{formatDateTimeISO(session.date_time)}</td>
+      <td className="py-3 px-4 text-sm text-slate-700">
+        {formatDateTimeISO(session.date_time, locale)}
+      </td>
       <td className="py-3 px-4 text-sm text-slate-700">{session.therapist_name}</td>
       <td className="py-3 px-4">
         <span
@@ -101,7 +112,7 @@ function SessionRow({ session, currentUser, onEdit, onDelete }: SessionRowProps)
           <button
             onClick={() => onEdit(session)}
             disabled={!canEdit}
-            title={!canEdit ? 'Você não tem permissão para editar esta sessão' : 'Editar'}
+            title={!canEdit ? t('sessionEditNotPermitted') : commonT('edit')}
             className={twMerge(
               'p-1.5 rounded-md transition-colors',
               canEdit
@@ -114,7 +125,7 @@ function SessionRow({ session, currentUser, onEdit, onDelete }: SessionRowProps)
           <button
             onClick={() => onDelete(session)}
             disabled={!canDelete}
-            title={!canDelete ? 'Você não tem permissão para excluir esta sessão' : 'Excluir'}
+            title={!canDelete ? t('sessionDeleteNotPermitted') : commonT('delete')}
             className={twMerge(
               'p-1.5 rounded-md transition-colors',
               canDelete
@@ -145,6 +156,8 @@ export function PatientSessionsSection({
   onDelete,
   onAdd,
 }: PatientSessionsSectionProps) {
+  const t = useTranslations('PatientDetail')
+
   const sortedSessions = [...sessions].sort(
     (a, b) => new Date(b.date_time).getTime() - new Date(a.date_time).getTime()
   )
@@ -152,19 +165,19 @@ export function PatientSessionsSection({
   return (
     <div className="bg-white rounded-lg border border-slate-200 overflow-hidden">
       <div className="flex items-center justify-between px-4 md:px-6 py-4 border-b border-slate-200">
-        <h2 className="text-lg md:text-xl font-semibold text-slate-900">Sessões</h2>
+        <h2 className="text-lg md:text-xl font-semibold text-slate-900">{t('sessionsTitle')}</h2>
         <button
           onClick={onAdd}
           className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-white bg-[linear-gradient(90deg,#2563EB,#4648D4)] rounded-lg hover:opacity-90 transition-opacity cursor-pointer"
         >
           <Plus className="w-4 h-4" />
-          Nova Sessão
+          {t('newSession')}
         </button>
       </div>
 
       {sessions.length === 0 ? (
         <div className="px-4 md:px-6 py-12 text-center">
-          <p className="text-sm text-slate-500">Nenhuma sessão registrada para este paciente.</p>
+          <p className="text-sm text-slate-500">{t('noSessions')}</p>
         </div>
       ) : (
         <>
@@ -185,19 +198,19 @@ export function PatientSessionsSection({
               <thead className="bg-slate-50">
                 <tr>
                   <th className="py-3 px-4 text-left text-xs font-semibold uppercase text-slate-500">
-                    Data / Horário
+                    {t('dateTimeHeader')}
                   </th>
                   <th className="py-3 px-4 text-left text-xs font-semibold uppercase text-slate-500">
-                    Terapeuta
+                    {t('therapistHeader')}
                   </th>
                   <th className="py-3 px-4 text-left text-xs font-semibold uppercase text-slate-500">
-                    Status
+                    {t('statusHeader')}
                   </th>
                   <th className="py-3 px-4 text-left text-xs font-semibold uppercase text-slate-500">
-                    Observações
+                    {t('notesHeader')}
                   </th>
                   <th className="py-3 px-4 text-left text-xs font-semibold uppercase text-slate-500">
-                    Ações
+                    {t('actionsHeader')}
                   </th>
                 </tr>
               </thead>

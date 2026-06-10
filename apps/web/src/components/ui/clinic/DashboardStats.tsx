@@ -1,3 +1,6 @@
+'use client'
+
+import { useTranslations } from 'next-intl'
 import { Container } from '@/components/ui/shared'
 import { Users, Calendar, FileText } from 'lucide-react'
 
@@ -12,21 +15,23 @@ export function DashboardStats({
   todaySessions,
   pendingEvolutions,
 }: DashboardStatsProps) {
+  const t = useTranslations('Dashboard')
+
   const stats = [
     {
-      label: 'Pacientes Ativos',
+      label: t('activePatients'),
       value: activePatients,
       icon: Users,
       iconBg: 'bg-blue-50',
     },
     {
-      label: 'Sessões de hoje',
+      label: t('todaySessions'),
       value: todaySessions,
       icon: Calendar,
       iconBg: 'bg-blue-50',
     },
     {
-      label: 'Evoluções pendentes',
+      label: t('pendingEvolutions'),
       value: pendingEvolutions,
       icon: FileText,
       iconBg: 'bg-orange-50',

@@ -2,6 +2,7 @@
 
 import { useActionState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
+import { useTranslations } from 'next-intl'
 import { toast } from 'react-toastify'
 
 import { BaseForm, InputField, TextareaField } from '@/components/ui/shared'
@@ -22,6 +23,8 @@ const initialState: PatientFormState = {
 
 export function PatientForm({ patient, formAction, cancelHref }: PatientFormProps) {
   const router = useRouter()
+  const t = useTranslations('Patients')
+  const tc = useTranslations('Common')
   const [state, action, isPending] = useActionState(formAction, initialState)
 
   useEffect(() => {
@@ -39,32 +42,28 @@ export function PatientForm({ patient, formAction, cancelHref }: PatientFormProp
 
   return (
     <BaseForm
-      title={isEdit ? 'Editar Paciente' : 'Novo Paciente'}
-      description={
-        isEdit
-          ? 'Atualize as informações do paciente.'
-          : 'Preencha as informações do novo paciente.'
-      }
+      title={isEdit ? t('editTitle') : t('newPatient')}
+      description={isEdit ? t('editDescription') : t('newDescription')}
       action={action}
       cancelHref={cancelHref}
-      cancelLabel="Cancelar"
-      submitLabel={isEdit ? 'Salvar' : 'Cadastrar'}
+      cancelLabel={tc('cancel')}
+      submitLabel={isEdit ? tc('save') : t('register')}
       isSubmitting={isPending}
     >
       {isEdit && <input type="hidden" name="id" value={patient.id} />}
 
       <div className="grid gap-6 md:grid-cols-2">
         <InputField
-          label="Nome"
+          label={t('formName')}
           name="name"
-          placeholder="Nome completo do paciente"
+          placeholder={t('formNamePlaceholder')}
           required
           defaultValue={patient?.name}
           error={state.errors?.name}
         />
 
         <InputField
-          label="Data de Nascimento"
+          label={t('formBirthDate')}
           name="birth_date"
           type="date"
           required
@@ -75,19 +74,19 @@ export function PatientForm({ patient, formAction, cancelHref }: PatientFormProp
 
       <div className="grid gap-6 md:grid-cols-2">
         <InputField
-          label="Responsável"
+          label={t('formGuardian')}
           name="guardian_name"
-          placeholder="Nome do responsável"
+          placeholder={t('formGuardianPlaceholder')}
           required
           defaultValue={patient?.guardian_name}
           error={state.errors?.guardian_name}
         />
 
         <InputField
-          label="Email do Responsável"
+          label={t('formGuardianEmail')}
           name="guardian_email"
           type="email"
-          placeholder="email@exemplo.com"
+          placeholder={t('formGuardianEmailPlaceholder')}
           required
           defaultValue={patient?.guardian_email}
           error={state.errors?.guardian_email}
@@ -95,9 +94,9 @@ export function PatientForm({ patient, formAction, cancelHref }: PatientFormProp
       </div>
 
       <TextareaField
-        label="Observações"
+        label={t('formNotes')}
         name="notes"
-        placeholder="Informações adicionais sobre o paciente..."
+        placeholder={t('formNotesPlaceholder')}
         rows={4}
         defaultValue={patient?.notes}
       />

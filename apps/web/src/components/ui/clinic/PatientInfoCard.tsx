@@ -1,6 +1,7 @@
 'use client'
 
 import { Mail } from 'lucide-react'
+import { useLocale, useTranslations } from 'next-intl'
 import type { Patient } from '@/lib/types'
 import { formatDate, formatDateTime } from '@/lib/utils/dateUtils'
 
@@ -41,6 +42,8 @@ interface PatientInfoCardProps {
 }
 
 export function PatientInfoCard({ patient }: PatientInfoCardProps) {
+  const t = useTranslations('PatientDetail')
+  const locale = useLocale()
   const initials = getInitials(patient.name)
   const age = calculateAge(patient.birth_date)
   const avatarColor = getAvatarColor(patient.id)
@@ -59,25 +62,25 @@ export function PatientInfoCard({ patient }: PatientInfoCardProps) {
         <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
             <label className="block text-xs font-semibold uppercase text-slate-500 mb-1">
-              Data de Nascimento
+              {t('birthDate')}
             </label>
             <p className="text-sm md:text-base text-slate-700 font-medium">
-              {formatDate(patient.birth_date)}
+              {formatDate(patient.birth_date, locale)}
             </p>
           </div>
 
           <div>
             <label className="block text-xs font-semibold uppercase text-slate-500 mb-1">
-              Idade
+              {t('age')}
             </label>
             <span className="inline-flex items-center px-2.5 py-1 rounded-md text-sm font-medium bg-slate-100 text-slate-700">
-              {age} {age === 1 ? 'ano' : 'anos'}
+              {t('ageFormat', { age })}
             </span>
           </div>
 
           <div className="sm:col-span-2">
             <label className="block text-xs font-semibold uppercase text-slate-500 mb-1">
-              Responsável
+              {t('guardian')}
             </label>
             <p className="text-sm md:text-base text-slate-700 font-medium mb-1">
               {patient.guardian_name}
@@ -94,7 +97,7 @@ export function PatientInfoCard({ patient }: PatientInfoCardProps) {
           {patient.notes && (
             <div className="sm:col-span-2">
               <label className="block text-xs font-semibold uppercase text-slate-500 mb-1">
-                Observações
+                {t('notes')}
               </label>
               <p className="text-sm md:text-base text-slate-600">{patient.notes}</p>
             </div>
@@ -102,9 +105,9 @@ export function PatientInfoCard({ patient }: PatientInfoCardProps) {
 
           <div className="sm:col-span-2 pt-2 border-t border-slate-100">
             <p className="text-xs text-slate-500">
-              Cadastrado em {formatDateTime(patient.created_at)}
+              {t('createdAt', { date: formatDateTime(patient.created_at, locale) })}
               {patient.updated_at !== patient.created_at && (
-                <> · Última atualização em {formatDateTime(patient.updated_at)}</>
+                <> · {t('updatedAt', { date: formatDateTime(patient.updated_at, locale) })}</>
               )}
             </p>
           </div>

@@ -2,32 +2,34 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { useTranslations } from 'next-intl'
 import { Home, Scroll } from 'lucide-react'
 import { twMerge } from 'tailwind-merge'
 
 import type { NavItem } from './types'
 
-const navItems: NavItem[] = [
-  {
-    label: 'Home',
-    href: '/family/dashboard',
-    icon: Home,
-  },
-  {
-    label: 'Evolutions',
-    href: '/family/evolutions',
-    icon: Scroll,
-  },
-]
-
 export function Navbar() {
   const pathname = usePathname()
+  const t = useTranslations('Layout')
+
+  const navItems: NavItem[] = [
+    {
+      label: t('navHome'),
+      href: '/family/dashboard',
+      icon: Home,
+    },
+    {
+      label: t('navEvolutions'),
+      href: '/family/evolutions',
+      icon: Scroll,
+    },
+  ]
 
   const isActive = (href: string): boolean => {
     return pathname === href || pathname.startsWith(href + '/')
   }
 
-  const NavItem = ({ item }: { item: NavItem }) => {
+  const NavItemComp = ({ item }: { item: NavItem }) => {
     const active = isActive(item.href)
     const Icon = item.icon
 
@@ -67,7 +69,7 @@ export function Navbar() {
       )}
     >
       {navItems.map((item) => (
-        <NavItem key={item.href} item={item} />
+        <NavItemComp key={item.href} item={item} />
       ))}
     </nav>
   )

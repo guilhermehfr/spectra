@@ -4,6 +4,7 @@ import { getFamilyEvolutions } from '@/lib/api/family'
 import { logoutAction } from '@/app/actions/auth'
 import { LogOut } from 'lucide-react'
 import type { FamilyEvolution } from '@/lib/types'
+import { getTranslations } from 'next-intl/server'
 
 import { DashboardStats } from '@/components/ui/family/DashboardStats'
 import { LatestEvolutionCard } from '@/components/ui/family/LatestEvolutionCard'
@@ -16,6 +17,9 @@ export const revalidate = false
 
 export default async function FamilyDashboard() {
   const user = await authService.me()
+  const t = await getTranslations('Family')
+  const td = await getTranslations('DateUtils')
+  const tc = await getTranslations('Common')
 
   let patient = null
   try {
@@ -28,10 +32,10 @@ export default async function FamilyDashboard() {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center bg-[#EEF3FB] px-4">
         <h1 className="font-manrope text-2xl md:text-3xl font-bold text-slate-900">
-          Paciente Não Encontrado
+          {t('patientNotFound')}
         </h1>
         <p className="mt-2 font-manrope text-xs md:text-sm text-slate-600">
-          Não foi possível encontrar informações do paciente associadas à sua conta.
+          {t('patientNotFoundDesc')}
         </p>
       </div>
     )
@@ -54,7 +58,9 @@ export default async function FamilyDashboard() {
   const totalSessions = evolutions.length
   const patientInitials = extractInitials(patient.name)
   const lastSessionDate = latestEvolution?.session_date || null
-  const lastSessionRelative = lastSessionDate ? getRelativeDate(lastSessionDate) : 'Sem sessões'
+  const lastSessionRelative = lastSessionDate
+    ? getRelativeDate(lastSessionDate, td)
+    : t('noSessions')
 
   return (
     <div className="min-h-screen bg-[#EEF3FB] pb-32 md:pb-0">
@@ -63,10 +69,10 @@ export default async function FamilyDashboard() {
           <form action={logoutAction}>
             <button
               type="submit"
-              className="absolute top-0 right-0 z-[999] -mt-2 flex items-center gap-2 px-3 py-2 rounded-lg font-manrope text-sm text-slate-500 hover:bg-slate-200 hover:text-red-600 transition-colors cursor-pointer"
+              className="absolute top-0 left-0 z-[999] -mt-2 flex items-center gap-2 px-3 py-2 rounded-lg font-manrope text-sm text-slate-500 hover:bg-slate-200 hover:text-red-600 transition-colors cursor-pointer"
             >
               <LogOut size={18} strokeWidth={1.5} />
-              Logout
+              {tc('logout')}
             </button>
           </form>
         </div>
@@ -86,10 +92,13 @@ export default async function FamilyDashboard() {
 
           <div className="flex flex-col gap-1">
             <p className="font-manrope text-xs md:text-sm font-normal text-slate-500">
-              Olá, {patient.guardian_name}
+              {t('greeting', { name: patient.guardian_name })}
             </p>
             <h1 className="font-manrope text-2xl md:text-3xl font-medium tracking-tight text-slate-900">
-              Histórico de <span className="text-blue-600">{patient.name}</span>
+              {t.rich('historyTitle', {
+                name: patient.name,
+                highlight: (chunks) => <span className="text-blue-600">{chunks}</span>,
+              })}
             </h1>
           </div>
         </div>
@@ -99,10 +108,10 @@ export default async function FamilyDashboard() {
         <div className="mb-8">
           <div className="mb-4 flex items-center justify-between">
             <h2 className="font-manrope text-base md:text-lg font-semibold text-slate-900">
-              Última Evolução
+              {t('lastEvolution')}
             </h2>
             <span className="font-manrope text-xs md:text-sm font-semibold tracking-wide text-cyan-600">
-              NOTAS DOS TERAPEUTAS
+              {t('therapistNotes')}
             </span>
           </div>
           {latestEvolution ? (
@@ -110,7 +119,7 @@ export default async function FamilyDashboard() {
           ) : (
             <div className="rounded-lg border border-slate-200 bg-white p-8 text-center">
               <p className="font-manrope text-sm md:text-base text-slate-500">
-                Nenhum registro de evolução ainda. Volte em breve!
+                {t('noEvolutions')}
               </p>
             </div>
           )}

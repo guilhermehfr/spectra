@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
+import { getLocale, getTranslations } from 'next-intl/server'
 import { ArrowLeft, Target, Activity, Brain, TrendingUp, Compass } from 'lucide-react'
 
 import { authService } from '@/lib/authService'
@@ -22,6 +23,12 @@ export default async function FamilyEvolutionPage({ params }: PageProps) {
     notFound()
   }
 
+  const t = await getTranslations('FamilyEvolutions')
+  const tf = await getTranslations('Family')
+  const tc = await getTranslations('Common')
+  const tl = await getTranslations('LatestEvolutionCard')
+  const locale = await getLocale()
+
   const user = await authService.me()
 
   let patient = null
@@ -35,10 +42,10 @@ export default async function FamilyEvolutionPage({ params }: PageProps) {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center bg-[#EEF3FB] px-4">
         <h1 className="font-manrope text-2xl md:text-3xl font-bold text-slate-900">
-          Paciente Não Encontrado
+          {tf('patientNotFound')}
         </h1>
         <p className="mt-2 font-manrope text-xs md:text-sm text-slate-600">
-          Não foi possível encontrar informações do paciente associadas à sua conta.
+          {tf('patientNotFoundDesc')}
         </p>
       </div>
     )
@@ -64,25 +71,33 @@ export default async function FamilyEvolutionPage({ params }: PageProps) {
             className="inline-flex items-center gap-2 text-blue-600 hover:text-blue-700"
           >
             <ArrowLeft size={18} strokeWidth={2} />
-            <span className="font-manrope text-sm font-medium">Voltar</span>
+            <span className="font-manrope text-sm font-medium">{tc('back')}</span>
           </Link>
         </div>
 
         <div className="mb-6">
-          <h1 className="font-manrope text-2xl md:text-3xl font-bold text-slate-900">Evolução</h1>
+          <h1 className="font-manrope text-2xl md:text-3xl font-bold text-slate-900">
+            {t('title')}
+          </h1>
         </div>
 
         <div className="space-y-6">
           <TherapistCard
             therapistName={evolution.therapist_name}
             sessionDate={evolution.session_date}
+            therapistPrefix={tl('therapistPrefix')}
+            locale={locale}
           />
 
           <div className="flex flex-col gap-6 rounded-xl border border-slate-200 bg-white p-5">
-            <Section icon={<Target size={16} />} title="Objetivo" content={evolution.objective} />
+            <Section
+              icon={<Target size={16} />}
+              title={t('objective')}
+              content={evolution.objective}
+            />
             <Section
               icon={<Activity size={16} />}
-              title="Atividades"
+              title={t('activities')}
               content={evolution.activities}
             />
           </div>
@@ -90,12 +105,12 @@ export default async function FamilyEvolutionPage({ params }: PageProps) {
           <div className="flex flex-col gap-6 rounded-xl border border-slate-200 bg-white p-5">
             <Section
               icon={<Brain size={16} />}
-              title="Comportamento"
+              title={t('behavior')}
               content={evolution.behavior}
             />
             <Section
               icon={<TrendingUp size={16} />}
-              title="Progresso"
+              title={t('progress')}
               content={evolution.progress}
             />
           </div>
@@ -103,7 +118,7 @@ export default async function FamilyEvolutionPage({ params }: PageProps) {
           <div className="rounded-xl border border-cyan-200 bg-cyan-50 p-5">
             <Section
               icon={<Compass size={16} />}
-              title="Próximos Passos"
+              title={t('nextSteps')}
               content={evolution.next_steps}
               variant="highlight"
             />

@@ -2,6 +2,7 @@
 
 import { ChevronLeft, Pencil, Trash2 } from 'lucide-react'
 import Link from 'next/link'
+import { useTranslations } from 'next-intl'
 
 interface PatientDetailHeaderProps {
   patientName: string
@@ -16,6 +17,8 @@ export function PatientDetailHeader({
   onDelete,
   canDelete = true,
 }: PatientDetailHeaderProps) {
+  const t = useTranslations('Common')
+
   return (
     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
       <div className="flex items-center gap-3">
@@ -33,7 +36,7 @@ export function PatientDetailHeader({
           className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-slate-600 bg-white border border-slate-100 rounded-lg hover:border-black hover:bg-slate-200 hover:text-slate-700 transition-colors cursor-pointer"
         >
           <Pencil className="w-4 h-4" />
-          Editar
+          {t('edit')}
         </button>
         <button
           onClick={onDelete}
@@ -57,7 +60,7 @@ export function PatientDetailHeader({
           }}
         >
           <Trash2 className="w-4 h-4" />
-          Excluir
+          {t('delete')}
         </button>
       </div>
     </div>

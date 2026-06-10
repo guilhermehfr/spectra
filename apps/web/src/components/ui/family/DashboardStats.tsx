@@ -1,5 +1,6 @@
 'use client'
 
+import { useTranslations } from 'next-intl'
 import { Calendar } from 'lucide-react'
 import { twMerge } from 'tailwind-merge'
 
@@ -37,17 +38,19 @@ function StatCard({ label, value, icon: Icon, iconBgColor }: StatCardProps) {
 }
 
 export function DashboardStats({ totalSessions, lastSession }: DashboardStatsProps) {
+  const t = useTranslations('FamilyDashboardStats')
+
   return (
     <div className="grid grid-cols-2 gap-4 w-full">
       <StatCard
-        label="Total de Evoluções"
+        label={t('totalEvolutions')}
         value={totalSessions}
         icon={Calendar}
         iconBgColor="bg-blue-100"
       />
 
       <StatCard
-        label="Última Evolução"
+        label={t('lastEvolution')}
         value={lastSession}
         icon={Calendar}
         iconBgColor="bg-purple-100"

@@ -1,5 +1,6 @@
 'use client'
 
+import { useTranslations } from 'next-intl'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { twMerge } from 'tailwind-merge'
 
@@ -18,6 +19,7 @@ export function PaginationNav({
   itemsPerPage,
   onPageChange,
 }: PaginationNavProps) {
+  const t = useTranslations('Common')
   const startItem = (currentPage - 1) * itemsPerPage + 1
   const endItem = Math.min(currentPage * itemsPerPage, totalItems)
 
@@ -26,7 +28,7 @@ export function PaginationNav({
   return (
     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mt-4 px-4 py-3 bg-white border-t border-slate-100">
       <span className="text-sm text-slate-500">
-        Mostrando {startItem} a {endItem} de {totalItems} resultados
+        {t('paginationShowing', { startItem, endItem, totalItems })}
       </span>
 
       {showPagination && (

@@ -1,6 +1,7 @@
 'use client'
 
 import { useRouter } from 'next/navigation'
+import { useLocale, useTranslations } from 'next-intl'
 import { ArrowRight } from 'lucide-react'
 import { twMerge } from 'tailwind-merge'
 
@@ -16,6 +17,8 @@ interface LatestEvolutionCardProps {
 
 export function LatestEvolutionCard({ evolution, onViewFullEvolution }: LatestEvolutionCardProps) {
   const router = useRouter()
+  const t = useTranslations('LatestEvolutionCard')
+  const locale = useLocale()
   const therapistName =
     evolution.therapist_name ||
     (evolution as unknown as { session_details?: { therapist_name?: string } }).session_details
@@ -50,13 +53,14 @@ export function LatestEvolutionCard({ evolution, onViewFullEvolution }: LatestEv
 
           {/* Therapist Name */}
           <h3 className="font-manrope text-sm md:text-base font-semibold text-[var(--color-slate-900)]">
-            Terapeuta. {evolution.therapist_name}
+            {t('therapistPrefix')}
+            {evolution.therapist_name}
           </h3>
         </div>
 
         {/* Right side - Date */}
         <span className="font-manrope text-xs md:text-sm text-slate-500">
-          {formatDateShort(evolution.session_date)}
+          {formatDateShort(evolution.session_date, locale)}
         </span>
       </div>
 
@@ -87,7 +91,7 @@ export function LatestEvolutionCard({ evolution, onViewFullEvolution }: LatestEv
           endIcon={<ArrowRight size={16} strokeWidth={2} />}
           onClick={handleViewFullEvolution}
         >
-          Ver evolução completa
+          {t('viewFullEvolution')}
         </Button>
       </div>
     </Container>

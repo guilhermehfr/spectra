@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { useActionState, useEffect, useState } from 'react'
 import { Lock, Eye, EyeOff, ArrowRight } from 'lucide-react'
+import { useTranslations } from 'next-intl'
 import { toast } from 'react-toastify'
 
 import { Input, Button, Container, IconButton } from '@/components/ui/shared'
@@ -21,6 +22,7 @@ const initialState = {
 }
 
 export function BaseLoginForm({ subtitle, startIcon }: BaseLoginFormProps) {
+  const t = useTranslations('Login')
   const [state, action, isPending] = useActionState(loginAction, initialState)
 
   useEffect(() => {
@@ -58,7 +60,7 @@ export function BaseLoginForm({ subtitle, startIcon }: BaseLoginFormProps) {
         <form action={action}>
           <div className="space-y-4 pb-8">
             <Input
-              label="Email"
+              label={t('email')}
               name="email"
               placeholder="email@email.com"
               type="text"
@@ -67,7 +69,7 @@ export function BaseLoginForm({ subtitle, startIcon }: BaseLoginFormProps) {
             />
 
             <Input
-              label="Senha"
+              label={t('password')}
               name="password"
               startIcon={<Lock size={18} strokeWidth={1.5} />}
               endIcon={
@@ -80,7 +82,7 @@ export function BaseLoginForm({ subtitle, startIcon }: BaseLoginFormProps) {
                     )
                   }
                   onClick={togglePasswordVisibility}
-                  aria-label={showPassword ? 'Hide password' : 'Show password'}
+                  aria-label={showPassword ? t('hidePassword') : t('showPassword')}
                   className="text-slate-500"
                 />
               }
@@ -96,7 +98,7 @@ export function BaseLoginForm({ subtitle, startIcon }: BaseLoginFormProps) {
                 rel="noopener noreferrer"
                 className="text-xs text-blue-600 hover:underline"
               >
-                Esqueci minha senha
+                {t('forgotPassword')}
               </Link>
             </div>
           </div>
@@ -107,20 +109,20 @@ export function BaseLoginForm({ subtitle, startIcon }: BaseLoginFormProps) {
             fullWidth={true}
             loading={isPending}
           >
-            Entrar
+            {t('submit')}
           </Button>
         </form>
 
         <div className="pt-4 border-t border-slate-200 text-center">
           <p className="text-xs text-slate-500">
-            Ainda não possui uma conta?
+            {t('noAccount')}
             <Link
               href="https://forms.gle/3iQoz6KmgkfuERKj9"
               target="_blank"
               rel="noopener noreferrer"
               className="text-blue-600 hover:underline ml-1"
             >
-              Contate um administrador
+              {t('contactAdmin')}
             </Link>
           </p>
         </div>

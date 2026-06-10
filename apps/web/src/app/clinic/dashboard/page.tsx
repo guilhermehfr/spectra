@@ -1,3 +1,4 @@
+import { getLocale, getTranslations } from 'next-intl/server'
 import { DashboardContent } from '@/components/ui/clinic'
 import { getPatients, getSessions, getEvolutions } from '@/lib/api/clinic'
 import { resolveUser } from '@/lib/utils/userUtils'
@@ -9,6 +10,9 @@ export const revalidate = false
 
 export default async function ClinicDashboard() {
   const user = await resolveUser()
+  const td = await getTranslations('Dashboard')
+  const tg = await getTranslations('Greeting')
+  const locale = await getLocale()
 
   const [allPatients, allSessions, allEvolutions] = await Promise.all([
     getPatients(),
@@ -18,13 +22,13 @@ export default async function ClinicDashboard() {
 
   const stats = calculateClinicStats(allPatients, allSessions, allEvolutions)
   const recentSessions = filterRecentSessions(allSessions, 7)
-  const weeklyData = aggregateByDayOfWeek(recentSessions)
+  const weeklyData = aggregateByDayOfWeek(recentSessions, locale)
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-8 md:px-6 md:pt-24">
       <DashboardContent
-        greeting={getGreeting(user.first_name)}
-        subtitle="Aqui está sua visão geral da clínica para hoje"
+        greeting={getGreeting(user.first_name, tg)}
+        subtitle={td('subtitle')}
         activePatients={stats.activePatients}
         todaySessions={stats.todaySessions}
         pendingEvolutions={stats.pendingEvolutions}

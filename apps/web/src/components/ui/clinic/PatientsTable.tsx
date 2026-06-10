@@ -1,5 +1,6 @@
 'use client'
 
+import { useLocale, useTranslations } from 'next-intl'
 import { Container } from '@/components/ui/shared'
 import { Pencil, Trash2 } from 'lucide-react'
 import { twMerge } from 'tailwind-merge'
@@ -63,22 +64,26 @@ export function PatientsTable({
   onDelete,
   canDelete = true,
 }: PatientsTableProps) {
+  const t = useTranslations('Patients')
+  const tc = useTranslations('Common')
+  const locale = useLocale()
+
   return (
     <Container className="overflow-x-auto p-0">
       <table className="w-full min-w-[600px]">
         <thead>
           <tr className="bg-slate-50">
             <th className="text-left py-4 px-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">
-              PACIENTE
+              {t('tableHeaderPatient')}
             </th>
             <th className="text-left py-4 px-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">
-              RESPONSAVEL
+              {t('tableHeaderGuardian')}
             </th>
             <th className="text-left py-4 px-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">
-              DATA DE NASCIMENTO
+              {t('tableHeaderBirthDate')}
             </th>
             <th className="text-right py-4 px-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">
-              AÇÕES
+              {t('tableHeaderActions')}
             </th>
           </tr>
         </thead>
@@ -93,7 +98,7 @@ export function PatientsTable({
           ) : patients.length === 0 ? (
             <tr>
               <td colSpan={4} className="py-12 px-4 text-center text-slate-500">
-                Nenhum paciente encontrado
+                {t('noPatientsFound')}
               </td>
             </tr>
           ) : (
@@ -122,14 +127,16 @@ export function PatientsTable({
                   <span className="text-sm text-slate-600">{patient.guardian_name}</span>
                 </td>
                 <td className="py-4 px-4">
-                  <span className="text-sm text-slate-600">{formatDate(patient.birth_date)}</span>
+                  <span className="text-sm text-slate-600">
+                    {formatDate(patient.birth_date, locale)}
+                  </span>
                 </td>
                 <td className="py-4 px-4">
                   <div className="flex items-center justify-end gap-2">
                     <button
                       onClick={() => onEdit?.(patient)}
                       className="p-2 rounded-lg cursor-pointer hover:bg-slate-200 text-slate-500 hover:text-slate-700 transition-colors"
-                      title="Editar"
+                      title={tc('edit')}
                     >
                       <Pencil className="w-4 h-4" />
                     </button>
@@ -137,7 +144,7 @@ export function PatientsTable({
                       onClick={() => onDelete?.(patient)}
                       disabled={!canDelete}
                       className="p-2 rounded-lg transition-colors cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed hover:bg-red-50 text-slate-500 hover:text-red-600"
-                      title={canDelete ? 'Excluir' : 'Apenas administradores podem excluir'}
+                      title={canDelete ? tc('delete') : t('deleteRestricted')}
                     >
                       <Trash2 className="w-4 h-4" />
                     </button>

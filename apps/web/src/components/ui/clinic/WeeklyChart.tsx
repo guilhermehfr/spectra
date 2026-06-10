@@ -1,5 +1,6 @@
 'use client'
 
+import { useTranslations } from 'next-intl'
 import {
   LineChart,
   Line,
@@ -20,6 +21,8 @@ interface WeeklyChartProps {
 }
 
 export function WeeklyChart({ data }: WeeklyChartProps) {
+  const t = useTranslations('WeeklyChart')
+
   return (
     <div className="w-full">
       <ResponsiveContainer width="100%" height={220}>
@@ -72,7 +75,10 @@ export function WeeklyChart({ data }: WeeklyChartProps) {
             itemStyle={{
               color: '#2563eb',
             }}
-            formatter={(value) => [`${value} sessões`, 'Total']}
+            formatter={(value) => [
+              t('tooltipLabel', { value: (value ?? 0) as number }),
+              t('tooltipName'),
+            ]}
           />
           <Line
             type="monotone"

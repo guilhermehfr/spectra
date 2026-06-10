@@ -1,3 +1,4 @@
+import { getTranslations } from 'next-intl/server'
 import { authService } from '@/lib/authService'
 import { getPatientByGuardianEmail } from '@/lib/api/clinic'
 import { getFamilyEvolutions } from '@/lib/api/family'
@@ -9,6 +10,8 @@ import { Navbar } from '@/components/layout/family'
 export const revalidate = false
 
 export default async function FamilyEvolutionsPage() {
+  const t = await getTranslations('FamilyEvolutions')
+  const tf = await getTranslations('Family')
   const user = await authService.me()
 
   let patient = null
@@ -22,10 +25,10 @@ export default async function FamilyEvolutionsPage() {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center bg-[#EEF3FB] px-4">
         <h1 className="font-manrope text-2xl md:text-3xl font-bold text-slate-900">
-          Paciente Não Encontrado
+          {tf('patientNotFound')}
         </h1>
         <p className="mt-2 font-manrope text-xs md:text-sm text-slate-600">
-          Não foi possível encontrar informações do paciente associadas à sua conta.
+          {tf('patientNotFoundDesc')}
         </p>
       </div>
     )
@@ -46,9 +49,11 @@ export default async function FamilyEvolutionsPage() {
     <div className="min-h-screen bg-[#EEF3FB] pb-32 md:pb-0">
       <div className="mx-auto max-w-2xl px-4 py-8 md:px-6 md:pt-24">
         <div className="mb-8">
-          <h1 className="font-manrope text-2xl md:text-3xl font-bold text-slate-900">Evoluções</h1>
+          <h1 className="font-manrope text-2xl md:text-3xl font-bold text-slate-900">
+            {t('title')}
+          </h1>
           <p className="mt-1 font-manrope text-sm text-slate-500">
-            Atualizações recentes da equipe de terapia do {patient.name}.
+            {t('subtitle', { patientName: patient.name })}
           </p>
         </div>
 
@@ -59,16 +64,14 @@ export default async function FamilyEvolutionsPage() {
             ))
           ) : (
             <div className="rounded-xl border border-slate-200 bg-white p-8 text-center">
-              <p className="font-manrope text-sm text-slate-500">Nenhuma evolução disponível.</p>
+              <p className="font-manrope text-sm text-slate-500">{t('empty')}</p>
             </div>
           )}
         </div>
 
         {sortedEvolutions.length > 0 && (
           <div className="mt-8 text-center">
-            <p className="font-manrope text-xs text-slate-400">
-              Não há mais evoluções para carregar
-            </p>
+            <p className="font-manrope text-xs text-slate-400">{t('noMore')}</p>
           </div>
         )}
       </div>

@@ -4,9 +4,16 @@ import { formatDateTime } from '@/lib/utils/dateUtils'
 interface TherapistCardProps {
   therapistName: string
   sessionDate: string
+  therapistPrefix?: string
+  locale?: string
 }
 
-export function TherapistCard({ therapistName, sessionDate }: TherapistCardProps) {
+export function TherapistCard({
+  therapistName,
+  sessionDate,
+  therapistPrefix = 'Terapeuta. ',
+  locale = 'pt-BR',
+}: TherapistCardProps) {
   const initials = extractInitials(therapistName)
 
   return (
@@ -14,7 +21,7 @@ export function TherapistCard({ therapistName, sessionDate }: TherapistCardProps
       <div className="flex flex-col gap-3">
         <div className="flex items-center justify-between">
           <span className="font-manrope text-xs text-slate-500 md:hidden">
-            {formatDateTime(sessionDate)}
+            {formatDateTime(sessionDate, locale)}
           </span>
         </div>
         <div className="flex items-center justify-between">
@@ -23,11 +30,12 @@ export function TherapistCard({ therapistName, sessionDate }: TherapistCardProps
               {initials}
             </div>
             <p className="font-manrope text-sm font-semibold text-slate-900">
-              Terapeuta. {therapistName}
+              {therapistPrefix}
+              {therapistName}
             </p>
           </div>
           <span className="hidden md:block font-manrope text-xs text-slate-500">
-            {formatDateTime(sessionDate)}
+            {formatDateTime(sessionDate, locale)}
           </span>
         </div>
       </div>

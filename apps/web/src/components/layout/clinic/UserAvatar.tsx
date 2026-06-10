@@ -20,8 +20,8 @@ export function UserAvatar({ user }: UserAvatarProps) {
 
   return (
     <div className="flex items-center gap-3">
-      <div className="flex items-center justify-center w-10 h-10 rounded-full bg-blue-100 border border-blue-200">
-        <span className="text-sm font-medium text-blue-600">{initials}</span>
+      <div className="flex items-center justify-center w-8 h-8 rounded-full bg-blue-100 border border-blue-200">
+        <span className="text-xs font-medium text-blue-600">{initials}</span>
       </div>
     </div>
   )

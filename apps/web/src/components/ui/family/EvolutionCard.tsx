@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
+import { useLocale, useTranslations } from 'next-intl'
 import { twMerge } from 'tailwind-merge'
 
 import type { FamilyEvolution } from '@/lib/types'
@@ -13,6 +14,8 @@ interface EvolutionCardProps {
 }
 
 export function EvolutionCard({ evolution }: EvolutionCardProps) {
+  const t = useTranslations('FamilyEvolutions')
+  const locale = useLocale()
   const initials = extractInitials(evolution.therapist_name || '')
 
   return (
@@ -36,7 +39,7 @@ export function EvolutionCard({ evolution }: EvolutionCardProps) {
             </div>
           </div>
           <span className="font-manrope text-xs text-slate-500">
-            {formatDate(evolution.session_date)}
+            {formatDate(evolution.session_date, locale)}
           </span>
         </div>
 
@@ -48,7 +51,7 @@ export function EvolutionCard({ evolution }: EvolutionCardProps) {
           href={`/family/evolutions/${evolution.id}`}
           className="flex items-center justify-center gap-2 text-blue-600 hover:text-blue-700"
         >
-          <span className="font-manrope text-sm font-medium">Ver evolução completa</span>
+          <span className="font-manrope text-sm font-medium">{t('viewFullEvolution')}</span>
           <ArrowRight size={16} strokeWidth={2} />
         </Link>
       </div>

@@ -2,6 +2,7 @@
 
 import { useActionState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
+import { useTranslations } from 'next-intl'
 import { toast } from 'react-toastify'
 
 import { BaseForm, InputField, TextareaField, SelectField } from '@/components/ui/shared'
@@ -41,6 +42,8 @@ export function SessionForm({
   cancelHref,
 }: SessionFormProps) {
   const router = useRouter()
+  const t = useTranslations('SessionForm')
+  const tc = useTranslations('Common')
   const [state, action, isPending] = useActionState(formAction, initialState)
 
   useEffect(() => {
@@ -62,28 +65,26 @@ export function SessionForm({
 
   return (
     <BaseForm
-      title={isEdit ? 'Editar Sessão' : 'Nova Sessão'}
-      description={
-        isEdit ? 'Atualize as informações da sessão.' : 'Agende uma nova sessão terapêutica.'
-      }
+      title={isEdit ? t('editTitle') : t('newTitle')}
+      description={isEdit ? t('editDescription') : t('newDescription')}
       action={action}
       cancelHref={cancelHref}
-      cancelLabel="Cancelar"
-      submitLabel={isEdit ? 'Salvar' : 'Agendar'}
+      cancelLabel={tc('cancel')}
+      submitLabel={isEdit ? tc('save') : t('submitCreate')}
       isSubmitting={isPending}
     >
       {isEdit && <input type="hidden" name="id" value={session.id} />}
 
       <div className="space-y-6">
         <SelectField
-          label="Paciente"
+          label={t('patientLabel')}
           name="patient"
           required
           defaultValue={session?.patient?.toString() || selectedPatientId?.toString() || ''}
           error={state.errors?.patient}
         >
           <option value="" disabled>
-            Selecione um paciente
+            {t('patientPlaceholder')}
           </option>
           {patients.map((patient) => (
             <option key={patient.id} value={patient.id}>
@@ -96,14 +97,14 @@ export function SessionForm({
           <input type="hidden" name="therapist" value={session.therapist} />
         ) : showTherapistSelect ? (
           <SelectField
-            label="Terapeuta"
+            label={t('therapistLabel')}
             name="therapist"
             required
             defaultValue=""
             error={state.errors?.therapist}
           >
             <option value="" disabled>
-              Selecione um terapeuta
+              {t('therapistPlaceholder')}
             </option>
             {therapists!.map((therapist) => (
               <option key={therapist.id} value={therapist.id}>
@@ -116,7 +117,7 @@ export function SessionForm({
         )}
 
         <InputField
-          label="Data e Horário"
+          label={t('dateTimeLabel')}
           name="date_time"
           type="datetime-local"
           required
@@ -127,24 +128,24 @@ export function SessionForm({
         />
 
         <TextareaField
-          label="Observações"
+          label={t('notesLabel')}
           name="notes"
-          placeholder="Informações adicionais sobre a sessão..."
+          placeholder={t('notesPlaceholder')}
           rows={3}
           defaultValue={session?.notes || ''}
         />
 
         {isEdit && (
           <SelectField
-            label="Status"
+            label={t('statusLabel')}
             name="status"
             required
             defaultValue={session?.status || 'scheduled'}
             error={state.errors?.status}
           >
-            <option value="scheduled">Agendada</option>
-            <option value="completed">Concluída</option>
-            <option value="canceled">Cancelada</option>
+            <option value="scheduled">{t('statusScheduled')}</option>
+            <option value="completed">{t('statusCompleted')}</option>
+            <option value="canceled">{t('statusCanceled')}</option>
           </SelectField>
         )}
       </div>

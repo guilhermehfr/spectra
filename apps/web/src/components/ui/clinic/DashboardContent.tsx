@@ -1,6 +1,7 @@
 'use client'
 
 import { useRouter } from 'next/navigation'
+import { useTranslations } from 'next-intl'
 import { Container, Button } from '@/components/ui/shared'
 import { WeeklyChart } from './WeeklyChart'
 import { DashboardStats } from './DashboardStats'
@@ -33,6 +34,7 @@ export function DashboardContent({
   onScheduleSession,
 }: DashboardContentProps) {
   const router = useRouter()
+  const t = useTranslations('DashboardContent')
 
   const handleAddPatient = () => {
     if (onAddPatient) {
@@ -71,21 +73,21 @@ export function DashboardContent({
         {/* Weekly Chart */}
         <Container className="flex flex-col gap-4">
           <div className="flex items-center justify-between">
-            <h2 className="text-lg font-semibold text-slate-900 font-manrope">Visão semanal</h2>
+            <h2 className="text-lg font-semibold text-slate-900 font-manrope">{t('weeklyView')}</h2>
           </div>
           <WeeklyChart data={weeklyData} />
         </Container>
 
         {/* Quick Actions */}
         <Container className="flex flex-col gap-4">
-          <h2 className="text-lg font-semibold text-slate-900 font-manrope">Ações rápidas</h2>
+          <h2 className="text-lg font-semibold text-slate-900 font-manrope">{t('quickActions')}</h2>
           <div className="flex flex-col gap-3">
             <Button
               onClick={handleAddPatient}
               startIcon={<UserPlus className="w-5 h-5" />}
               className="justify-start px-4 py-3"
             >
-              Adicionar Paciente
+              {t('addPatient')}
             </Button>
             <Button
               variant="secondary"
@@ -93,7 +95,7 @@ export function DashboardContent({
               startIcon={<Calendar className="w-5 h-5" />}
               className="justify-start px-4 py-3"
             >
-              Agendar sessão
+              {t('scheduleSession')}
             </Button>
           </div>
         </Container>
