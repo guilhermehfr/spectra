@@ -2,7 +2,7 @@ import { login as loginReal, me as meReal, logout as logoutReal } from './auth'
 import { loginMock, meMock, logoutMock } from './auth-mock'
 import type { LoginCredentials, AuthResponse, User } from './types'
 
-import { getUseMock } from '@/lib/envUtils'
+import { getUseMock } from '@/lib/utils/envUtils'
 
 export const useMock = getUseMock()
 

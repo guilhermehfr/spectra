@@ -186,12 +186,12 @@ export function createEvolution(
   // Validate session exists and is completed
   const session = sessions.find((s) => s.id === data.session)
   if (!session || session.status !== 'completed') {
-    throw new Error('A sessão precisa estar com status completed.')
+    throw new Error('Session must be completed.')
   }
 
   // Prevent duplicate evolution for same session
   if (evolutions.find((e) => e.session === data.session)) {
-    throw new Error('Já existe uma evolução para esta sessão.')
+    throw new Error('Evolution already exists for this session.')
   }
 
   const newEvolution: Evolution = {

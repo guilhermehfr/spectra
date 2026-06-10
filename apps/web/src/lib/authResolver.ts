@@ -5,7 +5,7 @@ import type { User, UserRole } from './types'
 
 const COOKIE_NAME = 'access_token'
 
-import { getUseMock } from '@/lib/envUtils'
+import { getUseMock } from '@/lib/utils/envUtils'
 
 function getMockUser(userId: number): User | null {
   const user = mockUsers.find((u) => u.id === userId)

@@ -14,7 +14,7 @@
  */
 
 import { cache } from 'react'
-import { getUseMock } from '@/lib/envUtils'
+import { getUseMock } from '@/lib/utils/envUtils'
 
 const getImpl = cache(async () => {
   const useMock = getUseMock()

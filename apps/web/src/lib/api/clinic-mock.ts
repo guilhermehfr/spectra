@@ -138,7 +138,7 @@ export function createEvolution(data: CreateEvolutionInput): Promise<Evolution> 
   try {
     const session = state.getSessionById(data.session)
     if (!session || session.status !== 'completed') {
-      throw new Error('A sessão precisa estar com status completed.')
+      throw new Error('Session must be completed.')
     }
 
     const currentUser = state.getCurrentUser()

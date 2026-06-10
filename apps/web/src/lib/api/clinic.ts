@@ -23,7 +23,7 @@ import type {
   UpdateSessionInput,
 } from '@/lib/types'
 
-import { getUseMock } from '@/lib/envUtils'
+import { getUseMock } from '@/lib/utils/envUtils'
 
 const getImpl = cache(async () => {
   const useMock = getUseMock()

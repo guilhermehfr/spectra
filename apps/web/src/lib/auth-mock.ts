@@ -19,7 +19,7 @@ export async function loginMock(
   const user = mockUsers.find((u) => u.email === email) as MockUser | undefined
 
   if (!user) {
-    throw new Error('Email não encontrado.')
+    throw new Error('Email not found.')
   }
 
   mockState.setCurrentUser(user as unknown as User)

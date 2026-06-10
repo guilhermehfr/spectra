@@ -23,7 +23,7 @@ export const handlers = [
     const user = users.find((u) => u.email === body.email)
 
     if (!user) {
-      return HttpResponse.json({ detail: 'Email não encontrado.' }, { status: 400 })
+      return HttpResponse.json({ detail: 'Email not found.' }, { status: 400 })
     }
 
     return HttpResponse.json({
@@ -75,7 +75,7 @@ export const handlers = [
   http.get(`${BASE_URL}/api/patients/:id/`, ({ params }) => {
     const patient = state.getPatientById(Number(params.id))
     if (!patient) {
-      return HttpResponse.json({ detail: 'Não encontrado.' }, { status: 404 })
+      return HttpResponse.json({ detail: 'Not found.' }, { status: 404 })
     }
     return HttpResponse.json(patient)
   }),
@@ -92,7 +92,7 @@ export const handlers = [
     )
 
     if (!updated) {
-      return HttpResponse.json({ detail: 'Não encontrado.' }, { status: 404 })
+      return HttpResponse.json({ detail: 'Not found.' }, { status: 404 })
     }
 
     return HttpResponse.json(updated)
@@ -105,7 +105,7 @@ export const handlers = [
   http.delete(`${BASE_URL}/api/patients/:id/`, ({ params }) => {
     const deleted = state.deletePatient(Number(params.id))
     if (!deleted) {
-      return HttpResponse.json({ detail: 'Não encontrado.' }, { status: 404 })
+      return HttpResponse.json({ detail: 'Not found.' }, { status: 404 })
     }
     return new HttpResponse(null, { status: 204 })
   }),
@@ -144,7 +144,7 @@ export const handlers = [
   http.get(`${BASE_URL}/api/sessions/:id/`, ({ params }) => {
     const session = state.getSessionById(Number(params.id))
     if (!session) {
-      return HttpResponse.json({ detail: 'Não encontrado.' }, { status: 404 })
+      return HttpResponse.json({ detail: 'Not found.' }, { status: 404 })
     }
     return HttpResponse.json(session)
   }),
@@ -161,7 +161,7 @@ export const handlers = [
     )
 
     if (!updated) {
-      return HttpResponse.json({ detail: 'Não encontrado.' }, { status: 404 })
+      return HttpResponse.json({ detail: 'Not found.' }, { status: 404 })
     }
 
     return HttpResponse.json(updated)
@@ -174,7 +174,7 @@ export const handlers = [
   http.delete(`${BASE_URL}/api/sessions/:id/`, ({ params }) => {
     const deleted = state.deleteSession(Number(params.id))
     if (!deleted) {
-      return HttpResponse.json({ detail: 'Não encontrado.' }, { status: 404 })
+      return HttpResponse.json({ detail: 'Not found.' }, { status: 404 })
     }
     return new HttpResponse(null, { status: 204 })
   }),
@@ -210,7 +210,7 @@ export const handlers = [
   http.get(`${BASE_URL}/api/evolutions/:id/`, ({ params }) => {
     const evolution = state.getEvolutionById(Number(params.id))
     if (!evolution) {
-      return HttpResponse.json({ detail: 'Não encontrado.' }, { status: 404 })
+      return HttpResponse.json({ detail: 'Not found.' }, { status: 404 })
     }
     return HttpResponse.json(evolution)
   }),
@@ -227,7 +227,7 @@ export const handlers = [
     )
 
     if (!updated) {
-      return HttpResponse.json({ detail: 'Não encontrado.' }, { status: 404 })
+      return HttpResponse.json({ detail: 'Not found.' }, { status: 404 })
     }
 
     return HttpResponse.json(updated)
