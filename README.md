@@ -134,6 +134,7 @@ The mock infrastructure allows frontend development to proceed independently fro
 | [Neon](https://neon.tech/) | Serverless PostgreSQL |
 | [SimpleJWT](https://django-rest-framework-simplejwt.readthedocs.io/) | JWT authentication |
 | [Gunicorn](https://gunicorn.org/) | Production server |
+| [Ruff](https://docs.astral.sh/ruff/) | Python linter and formatter |
 
 ### Frontend
 
@@ -165,18 +166,18 @@ spectra/
 │   │   ├── core/
 │   │   ├── config/
 │   │   └── manage.py
-│   │
-    │   └── web/                  # Next.js frontend
-    │       ├── messages/          # Translation files (en.json, pt-BR.json)
-    │       ├── src/
-    │       │   ├── app/
-    │       │   ├── components/
-    │       │   ├── i18n/
-    │       │   ├── lib/
-    │       │   └── mocks/
-    │       └── package.json
+│   └── web/                  # Next.js frontend
+│       ├── messages/          # Translation files (en.json, pt-BR.json)
+│       ├── src/
+│       │   ├── app/
+│       │   ├── components/
+│       │   ├── i18n/
+│       │   ├── lib/
+│       │   └── mocks/
+│       └── package.json
 │
 ├── pnpm-workspace.yaml
+├── .github/workflows/       # CI workflows
 └── README.md
 ```
 
@@ -251,6 +252,8 @@ http://localhost:3000
 | `DATABASE_URL` | PostgreSQL connection string |
 | `ALLOWED_HOSTS` | Allowed hosts |
 | `CORS_ALLOWED_ORIGINS` | Frontend origins |
+| `DJANGO_ENV` | Environment (`local` or `production`) |
+| `SEED_SECRET` | Secret for `/api/seed/` endpoint |
 
 ### Frontend (`apps/web/.env.local`)
 
@@ -288,6 +291,8 @@ http://localhost:3000
 ---
 
 ## 📡 API Domains
+
+Full API reference: [`apps/api/API_DOCUMENTATION.md`](apps/api/API_DOCUMENTATION.md)
 
 Main API domains:
 
