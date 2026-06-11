@@ -1,0 +1,20 @@
+name: Lint
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  ruff:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+      - name: Install dependencies
+        run: pip install -r apps/api/requirements.txt
+      - name: Ruff check
+        run: ruff check apps/api
+      - name: Ruff format check
+        run: ruff format --check apps/api

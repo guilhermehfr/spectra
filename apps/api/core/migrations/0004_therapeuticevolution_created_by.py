@@ -6,7 +6,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ('core', '0003_therapeuticevolution_released_to_family'),
     ]
@@ -15,6 +14,13 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='therapeuticevolution',
             name='created_by',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='created_evolutions', to=settings.AUTH_USER_MODEL, verbose_name='Criado por'),
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                related_name='created_evolutions',
+                to=settings.AUTH_USER_MODEL,
+                verbose_name='Criado por',
+            ),
         ),
     ]

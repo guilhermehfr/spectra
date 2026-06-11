@@ -1,89 +1,86 @@
-from django.db import models
 from django.contrib.auth.models import AbstractUser
-from typing import List
+from django.db import models
 
 
 class SoftDeleteManager(models.Manager):
     """Gerenciador customizado para ignorar registros deletados (Soft Delete)."""
-    
+
     def get_queryset(self):
         return super().get_queryset().filter(is_deleted=False)
 
 
-from typing import Any
-
 class SoftDeleteModel(models.Model):
     """Modelo abstrato para herança de Soft Delete em vez de Hard Delete."""
-    
+
     is_deleted = models.BooleanField(default=False)
     deleted_at = models.DateTimeField(null=True, blank=True)
-    
+
     objects = SoftDeleteManager()
     all_objects = models.Manager()  # Acessível para admins caso precisem ver tudo
-    
+
     class Meta:
         abstract = True
-        
+
     def delete(self, *args, **kwargs) -> tuple[int, dict[str, int]]:
         """Em vez de deletar do banco, marca como deletado."""
         from django.utils import timezone
+
         self.is_deleted = True
         self.deleted_at = timezone.now()
         self.save()
         return (1, {self._meta.label: 1})
-        
+
     def hard_delete(self, *args, **kwargs) -> tuple[int, dict[str, int]]:
         """Deleta fisicamente do banco de dados referenciado no ORM."""
         return super().delete(*args, **kwargs)
 
 
-
 class CustomUser(AbstractUser):
     """
     Custom User model com suporte a roles (admin, therapist, family).
-    
+
     Utilizamos AbstractUser para manter todas as funcionalidades padrão do Django
     enquanto adicionamos campos customizados.
     """
-    
+
     ROLE_CHOICES = [
         ('admin', 'Administrador'),
         ('therapist', 'Terapeuta'),
         ('family', 'Família'),
     ]
-    
+
     role = models.CharField(
-        max_length=20, 
-        choices=ROLE_CHOICES, 
+        max_length=20,
+        choices=ROLE_CHOICES,
         default='family',
-        help_text='Função do usuário no sistema'
+        help_text='Função do usuário no sistema',
     )
     phone = models.CharField(max_length=20, blank=True)
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    
+
     class Meta:
         ordering = ['-created_at']
         verbose_name = 'Usuário'
         verbose_name_plural = 'Usuários'
-    
+
     def __str__(self):
         return f'{self.get_full_name() or self.username} ({self.get_role_display()})'
-    
+
     def is_admin(self) -> bool:
         return self.role == 'admin'
-    
+
     def is_therapist(self) -> bool:
         return self.role == 'therapist'
-    
+
     def is_family(self) -> bool:
         return self.role == 'family'
 
 
 class Patient(SoftDeleteModel):
     """Modelo de Paciente com histórico de atendimento."""
-    
+
     name = models.CharField(max_length=255)
     birth_date = models.DateField(null=True, blank=True)
     guardian_name = models.CharField(max_length=255)
@@ -99,44 +96,54 @@ class Patient(SoftDeleteModel):
 
     def __str__(self) -> str:
         return self.name
-    
+
     def delete(self, *args, **kwargs) -> tuple[int, dict[str, int]]:
         """Soft delete patient AND all related sessions and evolutions."""
         from django.utils import timezone
-        
+
         # 1. Soft delete all related sessions
         for session in self.sessions.all():
             session.is_deleted = True
             session.deleted_at = timezone.now()
             session.save()
-            
+
             # 2. Soft delete evolution if exists
             if hasattr(session, 'evolution'):
                 session.evolution.is_deleted = True
                 session.evolution.deleted_at = timezone.now()
                 session.evolution.save()
-        
+
         # 3. Soft delete the patient
         self.is_deleted = True
         self.deleted_at = timezone.now()
         self.save()
-        
+
         return (1, {self._meta.label: 1})
 
 
 class Session(SoftDeleteModel):
     """Modelo de Sessão Terapêutica (Agenda)."""
-    
+
     STATUS_CHOICES = [
         ('scheduled', 'Agendada'),
         ('completed', 'Realizada'),
         ('canceled', 'Cancelada'),
     ]
-    
-    patient = models.ForeignKey(Patient, on_delete=models.CASCADE, related_name='sessions', verbose_name='Paciente')
-    therapist = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='sessions', limit_choices_to={'role': 'therapist'}, verbose_name='Terapeuta')
+
+    patient = models.ForeignKey(
+        Patient, on_delete=models.CASCADE, related_name='sessions', verbose_name='Paciente'
+    )
+    therapist = models.ForeignKey(
+        CustomUser,
+        on_delete=models.CASCADE,
+        related_name='sessions',
+        limit_choices_to={'role': 'therapist'},
+        verbose_name='Terapeuta',
+    )
     date_time = models.DateTimeField(verbose_name='Data e Hora')
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='scheduled', verbose_name='Status')
+    status = models.CharField(
+        max_length=20, choices=STATUS_CHOICES, default='scheduled', verbose_name='Status'
+    )
     notes = models.TextField(blank=True, verbose_name='Anotações')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -152,9 +159,18 @@ class Session(SoftDeleteModel):
 
 class TherapeuticEvolution(SoftDeleteModel):
     """Evolução Terapêutica registrada após uma sessão."""
-    
-    session = models.OneToOneField(Session, on_delete=models.CASCADE, related_name='evolution', verbose_name='Sessão')
-    created_by = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True, blank=True, related_name='created_evolutions', verbose_name='Criado por')
+
+    session = models.OneToOneField(
+        Session, on_delete=models.CASCADE, related_name='evolution', verbose_name='Sessão'
+    )
+    created_by = models.ForeignKey(
+        CustomUser,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='created_evolutions',
+        verbose_name='Criado por',
+    )
     objective = models.TextField(verbose_name='Objetivo')
     activities = models.TextField(verbose_name='Atividades Realizadas')
     behavior = models.TextField(verbose_name='Comportamento Observado')

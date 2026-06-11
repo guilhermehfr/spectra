@@ -13,3 +13,4 @@ typing_extensions==4.15.0
 tzdata==2026.2
 gunicorn==23.0.0
 whitenoise==6.10.0
+ruff==0.11.5

@@ -1,9 +1,9 @@
 from datetime import date, timedelta
 
-from django.test import TestCase
 from django.contrib.auth import get_user_model
-from django.utils import timezone
+from django.test import TestCase
 from django.urls import reverse
+from django.utils import timezone
 from rest_framework import status
 from rest_framework.test import APIClient
 
@@ -16,58 +16,50 @@ class SpectraTests(TestCase):
     def setUp(self):
         self.client = APIClient()
         self.admin = User.objects.create_user(
-            username='admin1',
-            email='admin@example.com',
-            password='password123',
-            role='admin'
+            username='admin1', email='admin@example.com', password='password123', role='admin'
         )
         self.therapist = User.objects.create_user(
             username='therapist1',
             email='therapist1@example.com',
             password='password123',
-            role='therapist'
+            role='therapist',
         )
         self.therapist2 = User.objects.create_user(
             username='therapist2',
             email='therapist2@example.com',
             password='password123',
-            role='therapist'
+            role='therapist',
         )
         self.family = User.objects.create_user(
-            username='family1',
-            email='family1@example.com',
-            password='password123',
-            role='family'
+            username='family1', email='family1@example.com', password='password123', role='family'
         )
 
         self.patient = Patient.objects.create(
-            name='Patient One',
-            guardian_name='Guardian One',
-            guardian_email='guardian1@example.com'
+            name='Patient One', guardian_name='Guardian One', guardian_email='guardian1@example.com'
         )
         self.patient2 = Patient.objects.create(
             name='Patient Two',
             guardian_name='Guardian Two',
             guardian_email='guardian2@example.com',
-            birth_date=date(2001, 1, 1)
+            birth_date=date(2001, 1, 1),
         )
         self.session = Session.objects.create(
             patient=self.patient,
             therapist=self.therapist,
             date_time=timezone.now() + timedelta(days=1),
-            status='scheduled'
+            status='scheduled',
         )
         self.session_completed = Session.objects.create(
             patient=self.patient2,
             therapist=self.therapist,
             date_time=timezone.now() + timedelta(days=2),
-            status='completed'
+            status='completed',
         )
         self.session_other_therapist = Session.objects.create(
             patient=self.patient,
             therapist=self.therapist2,
             date_time=timezone.now() + timedelta(days=3),
-            status='scheduled'
+            status='scheduled',
         )
 
     def test_soft_delete_patient(self):
@@ -86,7 +78,7 @@ class SpectraTests(TestCase):
             Patient.objects.create(
                 name=f'Paged Patient {i}',
                 guardian_name=f'Guardian {i}',
-                guardian_email=f'guardian{i}@example.com'
+                guardian_email=f'guardian{i}@example.com',
             )
 
         self.client.force_authenticate(user=self.therapist)
@@ -166,12 +158,9 @@ class SpectraTests(TestCase):
     def test_login_returns_tokens(self):
         url = reverse('core:login')
         response = self.client.post(
-            url,
-            {'email': 'therapist1@example.com', 'password': 'password123'},
-            format='json'
+            url, {'email': 'therapist1@example.com', 'password': 'password123'}, format='json'
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertIn('access', response.data)
         self.assertIn('refresh', response.data)
         self.assertIn('user', response.data)
-

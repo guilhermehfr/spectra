@@ -9,7 +9,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
     dependencies = [
@@ -20,7 +19,12 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Patient',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                (
+                    'id',
+                    models.BigAutoField(
+                        auto_created=True, primary_key=True, serialize=False, verbose_name='ID'
+                    ),
+                ),
                 ('name', models.CharField(max_length=255)),
                 ('birth_date', models.DateField(blank=True, null=True)),
                 ('guardian_name', models.CharField(max_length=255)),
@@ -38,23 +42,101 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='CustomUser',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                (
+                    'id',
+                    models.BigAutoField(
+                        auto_created=True, primary_key=True, serialize=False, verbose_name='ID'
+                    ),
+                ),
                 ('password', models.CharField(max_length=128, verbose_name='password')),
-                ('last_login', models.DateTimeField(blank=True, null=True, verbose_name='last login')),
-                ('is_superuser', models.BooleanField(default=False, help_text='Designates that this user has all permissions without explicitly assigning them.', verbose_name='superuser status')),
-                ('username', models.CharField(error_messages={'unique': 'A user with that username already exists.'}, help_text='Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.', max_length=150, unique=True, validators=[django.contrib.auth.validators.UnicodeUsernameValidator()], verbose_name='username')),
-                ('first_name', models.CharField(blank=True, max_length=150, verbose_name='first name')),
-                ('last_name', models.CharField(blank=True, max_length=150, verbose_name='last name')),
-                ('email', models.EmailField(blank=True, max_length=254, verbose_name='email address')),
-                ('is_staff', models.BooleanField(default=False, help_text='Designates whether the user can log into this admin site.', verbose_name='staff status')),
-                ('date_joined', models.DateTimeField(default=django.utils.timezone.now, verbose_name='date joined')),
-                ('role', models.CharField(choices=[('admin', 'Administrador'), ('therapist', 'Terapeuta'), ('family', 'Família')], default='family', help_text='Função do usuário no sistema', max_length=20)),
+                (
+                    'last_login',
+                    models.DateTimeField(blank=True, null=True, verbose_name='last login'),
+                ),
+                (
+                    'is_superuser',
+                    models.BooleanField(
+                        default=False,
+                        help_text='Designates that this user has all permissions without explicitly assigning them.',
+                        verbose_name='superuser status',
+                    ),
+                ),
+                (
+                    'username',
+                    models.CharField(
+                        error_messages={'unique': 'A user with that username already exists.'},
+                        help_text='Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.',
+                        max_length=150,
+                        unique=True,
+                        validators=[django.contrib.auth.validators.UnicodeUsernameValidator()],
+                        verbose_name='username',
+                    ),
+                ),
+                (
+                    'first_name',
+                    models.CharField(blank=True, max_length=150, verbose_name='first name'),
+                ),
+                (
+                    'last_name',
+                    models.CharField(blank=True, max_length=150, verbose_name='last name'),
+                ),
+                (
+                    'email',
+                    models.EmailField(blank=True, max_length=254, verbose_name='email address'),
+                ),
+                (
+                    'is_staff',
+                    models.BooleanField(
+                        default=False,
+                        help_text='Designates whether the user can log into this admin site.',
+                        verbose_name='staff status',
+                    ),
+                ),
+                (
+                    'date_joined',
+                    models.DateTimeField(
+                        default=django.utils.timezone.now, verbose_name='date joined'
+                    ),
+                ),
+                (
+                    'role',
+                    models.CharField(
+                        choices=[
+                            ('admin', 'Administrador'),
+                            ('therapist', 'Terapeuta'),
+                            ('family', 'Família'),
+                        ],
+                        default='family',
+                        help_text='Função do usuário no sistema',
+                        max_length=20,
+                    ),
+                ),
                 ('phone', models.CharField(blank=True, max_length=20)),
                 ('is_active', models.BooleanField(default=True)),
                 ('created_at', models.DateTimeField(auto_now_add=True)),
                 ('updated_at', models.DateTimeField(auto_now=True)),
-                ('groups', models.ManyToManyField(blank=True, help_text='The groups this user belongs to. A user will get all permissions granted to each of their groups.', related_name='user_set', related_query_name='user', to='auth.group', verbose_name='groups')),
-                ('user_permissions', models.ManyToManyField(blank=True, help_text='Specific permissions for this user.', related_name='user_set', related_query_name='user', to='auth.permission', verbose_name='user permissions')),
+                (
+                    'groups',
+                    models.ManyToManyField(
+                        blank=True,
+                        help_text='The groups this user belongs to. A user will get all permissions granted to each of their groups.',
+                        related_name='user_set',
+                        related_query_name='user',
+                        to='auth.group',
+                        verbose_name='groups',
+                    ),
+                ),
+                (
+                    'user_permissions',
+                    models.ManyToManyField(
+                        blank=True,
+                        help_text='Specific permissions for this user.',
+                        related_name='user_set',
+                        related_query_name='user',
+                        to='auth.permission',
+                        verbose_name='user permissions',
+                    ),
+                ),
             ],
             options={
                 'verbose_name': 'Usuário',
@@ -68,14 +150,48 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Session',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                (
+                    'id',
+                    models.BigAutoField(
+                        auto_created=True, primary_key=True, serialize=False, verbose_name='ID'
+                    ),
+                ),
                 ('date_time', models.DateTimeField(verbose_name='Data e Hora')),
-                ('status', models.CharField(choices=[('scheduled', 'Agendada'), ('completed', 'Realizada'), ('canceled', 'Cancelada')], default='scheduled', max_length=20, verbose_name='Status')),
+                (
+                    'status',
+                    models.CharField(
+                        choices=[
+                            ('scheduled', 'Agendada'),
+                            ('completed', 'Realizada'),
+                            ('canceled', 'Cancelada'),
+                        ],
+                        default='scheduled',
+                        max_length=20,
+                        verbose_name='Status',
+                    ),
+                ),
                 ('notes', models.TextField(blank=True, verbose_name='Anotações')),
                 ('created_at', models.DateTimeField(auto_now_add=True)),
                 ('updated_at', models.DateTimeField(auto_now=True)),
-                ('patient', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='sessions', to='core.patient', verbose_name='Paciente')),
-                ('therapist', models.ForeignKey(limit_choices_to={'role': 'therapist'}, on_delete=django.db.models.deletion.CASCADE, related_name='sessions', to=settings.AUTH_USER_MODEL, verbose_name='Terapeuta')),
+                (
+                    'patient',
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name='sessions',
+                        to='core.patient',
+                        verbose_name='Paciente',
+                    ),
+                ),
+                (
+                    'therapist',
+                    models.ForeignKey(
+                        limit_choices_to={'role': 'therapist'},
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name='sessions',
+                        to=settings.AUTH_USER_MODEL,
+                        verbose_name='Terapeuta',
+                    ),
+                ),
             ],
             options={
                 'verbose_name': 'Sessão',
@@ -86,7 +202,12 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='TherapeuticEvolution',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                (
+                    'id',
+                    models.BigAutoField(
+                        auto_created=True, primary_key=True, serialize=False, verbose_name='ID'
+                    ),
+                ),
                 ('objective', models.TextField(verbose_name='Objetivo')),
                 ('activities', models.TextField(verbose_name='Atividades Realizadas')),
                 ('behavior', models.TextField(verbose_name='Comportamento Observado')),
@@ -94,7 +215,15 @@ class Migration(migrations.Migration):
                 ('next_steps', models.TextField(verbose_name='Próximos Passos')),
                 ('created_at', models.DateTimeField(auto_now_add=True)),
                 ('updated_at', models.DateTimeField(auto_now=True)),
-                ('session', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, related_name='evolution', to='core.session', verbose_name='Sessão')),
+                (
+                    'session',
+                    models.OneToOneField(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name='evolution',
+                        to='core.session',
+                        verbose_name='Sessão',
+                    ),
+                ),
             ],
             options={
                 'verbose_name': 'Evolução Terapêutica',
