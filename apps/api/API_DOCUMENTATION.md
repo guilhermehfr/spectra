@@ -1,6 +1,6 @@
 # API Documentation - Spectra Backend
 
-## 🔐 Authentication
+## Authentication
 
 ### Login
 Login with email and password to obtain JWT tokens.
@@ -13,8 +13,8 @@ POST /api/auth/login/
 **Request:**
 ```json
 {
-  "email": "usuario@example.com",
-  "password": "sua_senha_aqui"
+  "email": "user@example.com",
+  "password": "your_password"
 }
 ```
 
@@ -25,10 +25,10 @@ POST /api/auth/login/
   "refresh": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
   "user": {
     "id": 1,
-    "username": "usuario",
-    "email": "usuario@example.com",
-    "first_name": "Primeiro",
-    "last_name": "Sobrenome",
+    "username": "user",
+    "email": "user@example.com",
+    "first_name": "John",
+    "last_name": "Doe",
     "role": "therapist",
     "phone": "+5511987654321",
     "is_active": true
@@ -59,10 +59,10 @@ Authorization: Bearer {access_token}
 ```json
 {
   "id": 1,
-  "username": "usuario",
-  "email": "usuario@example.com",
-  "first_name": "Primeiro",
-  "last_name": "Sobrenome",
+  "username": "user",
+  "email": "user@example.com",
+  "first_name": "John",
+  "last_name": "Doe",
   "role": "therapist",
   "phone": "+5511987654321",
   "is_active": true
@@ -96,7 +96,7 @@ Authorization: Bearer {access_token}
 **Response (200):**
 ```json
 {
-  "detail": "Logout realizado com sucesso"
+  "detail": "Logout successful"
 }
 ```
 
@@ -133,7 +133,7 @@ Authorization: Bearer {access_token}
 
 ---
 
-## 👥 Therapists
+## Therapists
 
 ### List Therapists
 Returns a list of active therapists. Useful for admins when creating/editing sessions.
@@ -168,7 +168,7 @@ Authorization: Bearer {access_token}
 
 ---
 
-## 👥 Patients
+## Patients
 
 ### List Patients
 List all patients in the system.
@@ -183,6 +183,10 @@ GET /api/patients/
 Authorization: Bearer {access_token}
 ```
 
+**Notes:**
+- Admin: sees all non-deleted patients
+- Therapist: sees all non-deleted patients
+
 **Response (200) - Paginated:**
 ```json
 {
@@ -192,11 +196,11 @@ Authorization: Bearer {access_token}
   "results": [
     {
       "id": 1,
-      "name": "João Silva",
+      "name": "John Silva",
       "birth_date": "2015-03-10",
       "guardian_name": "Maria Silva",
       "guardian_email": "maria@example.com",
-      "notes": "Notas sobre o paciente",
+      "notes": "Patient notes",
       "created_at": "2026-04-29T10:30:00Z",
       "updated_at": "2026-04-29T10:30:00Z"
     }
@@ -209,6 +213,8 @@ Authorization: Bearer {access_token}
 - `results`: Array with current page data
 - `next`/`previous`: Links to next/previous page (null if none)
 - `PAGE_SIZE`: 20 records per page (default)
+
+**Filters:** Supports `birth_date`, search by `name`/`guardian_name`/`guardian_email`, ordering by `name`/`created_at`.
 
 **Permissions:** Therapists and Admins only
 
@@ -235,7 +241,7 @@ Authorization: Bearer {access_token}
   "birth_date": "2017-03-10",
   "guardian_name": "Maria Silva",
   "guardian_email": "maria@spectra.com",
-  "notes": "Paciente com TEA nível 2",
+  "notes": "Patient with ASD level 2",
   "created_at": "2026-05-05T22:24:49Z",
   "updated_at": "2026-05-05T22:24:49Z"
 }
@@ -244,7 +250,7 @@ Authorization: Bearer {access_token}
 **Response (404):**
 ```json
 {
-  "detail": "Nenhum paciente encontrado para este responsável."
+  "detail": "No patient found for this guardian."
 }
 ```
 
@@ -269,11 +275,11 @@ Content-Type: application/json
 **Request:**
 ```json
 {
-  "name": "João Silva",
+  "name": "John Silva",
   "birth_date": "2015-03-10",
   "guardian_name": "Maria Silva",
   "guardian_email": "maria@example.com",
-  "notes": "Paciente com diagnóstico de autismo"
+  "notes": "Patient with autism diagnosis"
 }
 ```
 
@@ -281,11 +287,11 @@ Content-Type: application/json
 ```json
 {
   "id": 1,
-  "name": "João Silva",
+  "name": "John Silva",
   "birth_date": "2015-03-10",
   "guardian_name": "Maria Silva",
   "guardian_email": "maria@example.com",
-  "notes": "Paciente com diagnóstico de autismo",
+  "notes": "Patient with autism diagnosis",
   "created_at": "2026-04-29T10:30:00Z",
   "updated_at": "2026-04-29T10:30:00Z"
 }
@@ -316,11 +322,11 @@ Authorization: Bearer {access_token}
 ```json
 {
   "id": 1,
-  "name": "João Silva",
+  "name": "John Silva",
   "birth_date": "2015-03-10",
   "guardian_name": "Maria Silva",
   "guardian_email": "maria@example.com",
-  "notes": "Paciente com diagnóstico de autismo",
+  "notes": "Patient with autism diagnosis",
   "created_at": "2026-04-29T10:30:00Z",
   "updated_at": "2026-04-29T10:30:00Z"
 }
@@ -347,11 +353,11 @@ Content-Type: application/json
 **Request:**
 ```json
 {
-  "name": "João Silva",
+  "name": "John Silva",
   "birth_date": "2015-03-10",
   "guardian_name": "Maria Silva",
   "guardian_email": "maria.silva@example.com",
-  "notes": "Notas atualizadas"
+  "notes": "Updated notes"
 }
 ```
 
@@ -359,11 +365,11 @@ Content-Type: application/json
 ```json
 {
   "id": 1,
-  "name": "João Silva",
+  "name": "John Silva",
   "birth_date": "2015-03-10",
   "guardian_name": "Maria Silva",
   "guardian_email": "maria.silva@example.com",
-  "notes": "Notas atualizadas",
+  "notes": "Updated notes",
   "created_at": "2026-04-29T10:30:00Z",
   "updated_at": "2026-04-29T10:31:00Z"
 }
@@ -374,7 +380,7 @@ Content-Type: application/json
 ---
 
 ### Delete Patient
-Remove a patient from the system.
+Soft delete a patient from the system. Also soft deletes all related sessions and evolutions.
 
 **Endpoint:**
 ```
@@ -388,14 +394,14 @@ Authorization: Bearer {access_token}
 
 **Response:** `204 No Content`
 
-**Permissions:** Therapists and Admins only
+**Permissions:** Admins only
 
 ---
 
-## 📅 Sessions (Schedule)
+## Sessions (Schedule)
 
 ### List Sessions
-List sessions (Therapists see their own; Admin sees all).
+List sessions (Therapists and Admins see all sessions).
 
 **Endpoint:**
 ```
@@ -407,10 +413,19 @@ GET /api/sessions/
 Authorization: Bearer {access_token}
 ```
 
+**Filters:** Supports `status`, `patient`, `therapist`, search by `patient__name`/`therapist__username`, ordering by `date_time`.
+
 ### Create Session
+
 **Endpoint:**
 ```
 POST /api/sessions/
+```
+
+**Headers:**
+```
+Authorization: Bearer {access_token}
+Content-Type: application/json
 ```
 
 **Request:**
@@ -419,39 +434,48 @@ POST /api/sessions/
   "patient": 1,
   "date_time": "2026-05-10T14:00:00Z",
   "status": "scheduled",
-  "notes": "Sessão de fonoaudiologia"
-  // "therapist": 2 -> Optional field if the sender is admin; Logged-in therapists assign to themselves.
+  "notes": "Speech therapy session"
 }
 ```
 
-**Validations:**
-- Does not allow past dates.
+**Notes:**
+- `therapist`: Auto-assigned to the logged-in therapist. Admin can set it explicitly.
+- Past dates are not allowed.
 
 ### Manage Session
 `GET/PUT/DELETE /api/sessions/{id}/`
-Update to set as `"completed"` after it is done.
+
+Update status to `"completed"` after session is done.
+
+**Permissions:** Therapists and Admins only (therapists can only edit their own sessions)
 
 ---
 
-## 📈 Therapeutic Evolution
+## Therapeutic Evolution
 
 ### Create Evolution
-Records an evolution only if the Session is complete (`"status": "completed"`). Another rule: Only 1 evolution per session is allowed.
+Records an evolution only if the session is complete (`"status": "completed"`). Only 1 evolution per session is allowed.
 
 **Endpoint:**
 ```
 POST /api/evolutions/
 ```
 
+**Headers:**
+```
+Authorization: Bearer {access_token}
+Content-Type: application/json
+```
+
 **Request:**
 ```json
 {
   "session": 1,
-  "objective": "Aumentar vocabulário.",
-  "activities": "Brincadeiras conjuntas.",
-  "behavior": "Tranquilo e focado.",
-  "progress": "Muito bom.",
-  "next_steps": "Continuar com fichas.",
+  "objective": "Increase vocabulary.",
+  "activities": "Joint play activities.",
+  "behavior": "Calm and focused.",
+  "progress": "Very good.",
+  "next_steps": "Continue with flashcards.",
   "released_to_family": false
 }
 ```
@@ -469,8 +493,12 @@ POST /api/evolutions/
 - Session must have `status: "completed"`
 - Each session can have only 1 evolution
 
-### List Evolutions (Clinical)
-List all evolutions created by the clinic.
+**Permissions:** Therapists and Admins only
+
+---
+
+### List Evolutions
+List all evolutions (Therapists and Admins see all).
 
 **Endpoint:**
 ```
@@ -496,11 +524,11 @@ Authorization: Bearer {access_token}
       "session_date": "2026-04-21T22:24:49Z",
       "therapist_name": "Ana Costa",
       "author_name": "Ana Costa",
-      "objective": "Aumentar vocabulário.",
-      "activities": "Brincadeiras conjuntas.",
-      "behavior": "Tranquilo e focado.",
-      "progress": "Muito bom.",
-      "next_steps": "Continuar com fichas.",
+      "objective": "Increase vocabulary.",
+      "activities": "Joint play activities.",
+      "behavior": "Calm and focused.",
+      "progress": "Very good.",
+      "next_steps": "Continue with flashcards.",
       "released_to_family": false,
       "created_at": "2026-05-01T15:00:00Z",
       "updated_at": "2026-05-01T15:00:00Z"
@@ -540,11 +568,11 @@ Authorization: Bearer {access_token}
       "session_date": "2026-04-21",
       "therapist_name": "Ana Costa",
       "author_name": "Ana Costa",
-      "objective": "Aumentar vocabulário.",
-      "activities": "Brincadeiras conjuntas.",
-      "behavior": "Tranquilo e focado.",
-      "progress": "Muito bom.",
-      "next_steps": "Continuar com fichas.",
+      "objective": "Increase vocabulary.",
+      "activities": "Joint play activities.",
+      "behavior": "Calm and focused.",
+      "progress": "Very good.",
+      "next_steps": "Continue with flashcards.",
       "released_to_family": true,
       "created_at": "2026-05-01T15:00:00Z",
       "updated_at": "2026-05-01T15:00:00Z"
@@ -588,11 +616,11 @@ Authorization: Bearer {access_token}
   "session_date": "2026-04-21",
   "therapist_name": "Ana Costa",
   "author_name": "Ana Costa",
-  "objective": "Aumentar vocabulário.",
-  "activities": "Brincadeiras conjuntas.",
-  "behavior": "Tranquilo e focado.",
-  "progress": "Muito bom.",
-  "next_steps": "Continuar com fichas.",
+  "objective": "Increase vocabulary.",
+  "activities": "Joint play activities.",
+  "behavior": "Calm and focused.",
+  "progress": "Very good.",
+  "next_steps": "Continue with flashcards.",
   "released_to_family": true,
   "created_at": "2026-05-01T15:00:00Z",
   "updated_at": "2026-05-01T15:00:00Z"
@@ -602,32 +630,35 @@ Authorization: Bearer {access_token}
 **Response (404):**
 ```json
 {
-  "detail": "Evolução não encontrada ou não autorizada."
+  "detail": "Evolution not found or not authorized."
 }
 ```
 
 **Validations:**
 - The evolution must have `released_to_family: true`
-- The patient's guardian email (guardian_email) must match the logged-in user's email
+- The patient's guardian email (`guardian_email`) must match the logged-in user's email
 
 **Permissions:** Family members only
 
 ---
 
-### Details and Editing
+### Evolution Details and Editing
+
 `GET/PUT/DELETE /api/evolutions/{id}/`
+
+**Permissions:** Therapists and Admins only (therapists can only edit their own evolutions)
 
 **PUT Request (update evolution):**
 ```json
 {
-  "objective": "Novo objetivo...",
+  "objective": "New objective...",
   "released_to_family": true
 }
 ```
 
 ---
 
-## 🔐 Roles and Permissions
+## Roles and Permissions
 
 ### Available Roles
 
@@ -646,21 +677,22 @@ Authorization: Bearer {access_token}
 | GET `/auth/me/` | ✅ | ✅ | ✅ |
 | POST `/auth/logout/` | ✅ | ✅ | ✅ |
 | GET `/therapists/` | ✅ | ✅ | ❌ |
-| GET `/dashboard/` | ✅ | ✅ (Their data) | ❌ |
+| GET `/dashboard/` | ✅ | ✅ (their data) | ❌ |
 | GET `/patients/` | ✅ | ✅ | ❌ |
 | GET `/patients/family/` | ❌ | ❌ | ✅ |
 | POST `/patients/` | ✅ | ✅ | ❌ |
 | GET `/patients/{id}/` | ✅ | ✅ | ❌ |
 | PUT `/patients/{id}/` | ✅ | ✅ | ❌ |
-| DELETE `/patients/{id}/` | ✅ | ✅ | ❌ |
-| ALL `/sessions/` | ✅ | ✅ (Only theirs) | ❌ |
-| ALL `/evolutions/` | ✅ | ✅ (Only theirs) | ❌ |
+| DELETE `/patients/{id}/` | ✅ (only admin) | ❌ | ❌ |
+| ALL `/sessions/` | ✅ | ✅ | ❌ |
+| ALL `/evolutions/` | ✅ | ✅ | ❌ |
 | GET `/evolutions/family/` | ✅ | ✅ | ✅ |
 | GET `/evolutions/family/{id}/` | ❌ | ❌ | ✅ |
+| POST `/seed/` | ❌ | ❌ | ❌ |
 
 ---
 
-## 🛠️ Local Development
+## Local Development
 
 ### Environment Setup
 
@@ -693,7 +725,7 @@ python manage.py runserver
 
 ---
 
-## 📊 Dashboard
+## Dashboard
 
 ### Get Dashboard Metrics
 Returns aggregated dashboard metrics for the authenticated user.
@@ -716,7 +748,7 @@ Authorization: Bearer {access_token}
       "id": 1,
       "patient": {
         "id": 1,
-        "name": "João Silva"
+        "name": "John Silva"
       },
       "therapist": {
         "id": 2,
@@ -724,7 +756,7 @@ Authorization: Bearer {access_token}
       },
       "date_time": "2026-05-04T14:00:00Z",
       "status": "completed",
-      "notes": "Sessão realizada com sucesso"
+      "notes": "Session completed successfully"
     },
     {
       "id": 2,
@@ -761,40 +793,46 @@ Authorization: Bearer {access_token}
 
 ---
 
----
-
-## 🌱 Seed (Demo Data)
+## Seed (Demo Data)
 
 Endpoint to populate the database with demo data (users, patients, sessions, evolutions). Useful for development and preview environments.
 
 **Endpoint:**
 ```
-GET /api/seed/
+POST /api/seed/
 ```
 
-**Headers:**
-```
-Authorization: Bearer {access_token}
+**Request:**
+```json
+{
+  "secret": "your_seed_secret"
+}
 ```
 
 **Response (200):**
 ```json
 {
-  "success": true,
-  "message": "Seed data inserted successfully."
+  "detail": "Seed executed successfully"
 }
 ```
 
-**Permissions:** Admins only
+**Response (401):**
+```json
+{
+  "detail": "Unauthorized"
+}
+```
+
+**Authentication:** Secret-based (no JWT required). Uses `SEED_SECRET` environment variable.
 
 ---
 
-**Status:** 🟢 Phases 1, 2, 3, and 4 Complete (Backend MVP Delivered)  
-**Last updated:** 06/05/2026
+**Status:** Backend MVP (Phases 1-4 Complete)  
+**Last updated:** 2026-06-11
 
 ---
 
-## 🏥 Health Check
+## Health Check
 
 Endpoint for monitoring and health checks (load balancers, Render, etc).
 
@@ -814,7 +852,7 @@ GET /api/health/
 
 ---
 
-## 🚀 Deploy (Render)
+## Deploy (Render)
 
 ### Required Environment Variables
 
@@ -826,6 +864,7 @@ GET /api/health/
 | `DATABASE_URL` | PostgreSQL connection URL |
 | `DJANGO_ENV` | Environment (`local` or `production`) |
 | `DEBUG` | Debug mode (`True` only in local) |
+| `SEED_SECRET` | Secret for `/api/seed/` endpoint |
 
 ### Build
 ```bash
