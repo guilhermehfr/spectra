@@ -1,6 +1,8 @@
+from datetime import timedelta
+
 from django.core.management.base import BaseCommand
 from django.utils import timezone
-from datetime import timedelta
+
 from core.models import CustomUser, Patient, Session, TherapeuticEvolution
 
 
@@ -111,7 +113,7 @@ class Command(BaseCommand):
                     'interfere with his routine. Hyperactivity makes it difficult to maintain attention for more than '
                     '5 minutes in non-preferred tasks; first-then and token economy strategies have been effective '
                     'for increasing time-on-task. Does not exhibit self-injurious behaviors. The family is highly '
-                    'engaged and performs generalization of skills in the home environment with the therapist\'s guidance.'
+                    "engaged and performs generalization of skills in the home environment with the therapist's guidance."
                 ),
             },
             {
@@ -190,7 +192,7 @@ class Command(BaseCommand):
                     'that he considers not very stimulating. Shows special interest in dinosaurs and astronomy, '
                     'which is widely used as a motivator in sessions. Possesses a rich vocabulary and '
                     'logical reasoning above average for his age group, but has difficulty calibrating communication '
-                    'to the interlocutor (talks a lot about his interests without noticing the other person\'s disinterest). '
+                    "to the interlocutor (talks a lot about his interests without noticing the other person's disinterest). "
                     'The therapeutic plan focuses on: pragmatic communication skills, '
                     'organization and attention self-regulation strategies, and explicit social skills teaching.'
                 ),
@@ -251,7 +253,7 @@ class Command(BaseCommand):
                     'memory and construction with blocks (LEGO). The therapeutic work integrates: (1) social '
                     'skills and emotional regulation, focusing on school frustration tolerance; (2) visual '
                     'compensation strategies to support reading; (3) interface with the school for curricular '
-                    'adaptations. Her mother is a teacher and demonstrates high understanding of her daughter\'s profile, '
+                    "adaptations. Her mother is a teacher and demonstrates high understanding of her daughter's profile, "
                     'being an active partner in the therapeutic process.'
                 ),
             },
@@ -414,7 +416,7 @@ class Command(BaseCommand):
                     '50-minute session on joint attention via cause-and-effect play. '
                     'Activity: ball that rolls and falls into a bucket, with turn-taking. '
                     'Leonard requested continuation of the game on 4 occasions (vocalization + gesture). '
-                    'Emergent joint attention indicator: followed therapist\'s gaze to object 3x.'
+                    "Emergent joint attention indicator: followed therapist's gaze to object 3x."
                 ),
             },
             # More recent sessions (keep existing)
@@ -560,7 +562,7 @@ class Command(BaseCommand):
                 'date_time': now - timedelta(days=1),
                 'status': 'completed',
                 'notes': (
-                    '45-minute session (reduced from the standard 50 due to Claire\'s '
+                    "45-minute session (reduced from the standard 50 due to Claire's "
                     'state at the start — she showed irritability and low frustration tolerance). '
                     'The session was restructured to prioritize sensory regulation activities and '
                     'basic communication via AAC, suspending the planned functional academic '
@@ -609,7 +611,7 @@ class Command(BaseCommand):
                     'protocol (week 6). The mother remained in the room for the first 10 minutes, '
                     'waited outside with the door ajar for 15 minutes, and then '
                     'withdrew to the waiting room for the remainder of the session. Isabella cried for '
-                    'approximately 8 minutes after the mother\'s definitive departure (reduction compared '
+                    "approximately 8 minutes after the mother's definitive departure (reduction compared "
                     'to 18 minutes the previous week). Music was used as a regulator, '
                     'and Isabella\'s favorite song ("Aquarela" by Toquinho) served as an anchor '
                     'for emotional regulation. Finished the session engaged and smiling.'
@@ -763,11 +765,11 @@ class Command(BaseCommand):
                     'of therapeutic bond. Enzo was accompanied by his mother throughout the session '
                     '(full parental inclusion protocol for the first 4 weeks). Gross motor imitation '
                     'skills were present (clapping, hitting table), fine motor imitation absent, '
-                    'emergent joint attention (follows therapist\'s pointing '
+                    "emergent joint attention (follows therapist's pointing "
                     'in 3 out of 8 trials), and intentional eye contact present in '
                     'requesting contexts. The mother was guided on NDBI strategies '
-                    'to implement at home: follow the child\'s lead, comment without demanding, '
-                    'position at Enzo\'s eye level and create communication opportunities.'
+                    "to implement at home: follow the child's lead, comment without demanding, "
+                    "position at Enzo's eye level and create communication opportunities."
                 ),
             },
             {
@@ -795,7 +797,7 @@ class Command(BaseCommand):
                 status=session_data['status'],
                 notes=session_data['notes'],
             )
-            key = f"{session.patient.name.split()[0]}_{session_data['status']}"
+            key = f'{session.patient.name.split()[0]}_{session_data["status"]}'
             if key not in sessions:
                 sessions[key] = []
             sessions[key].append(session)
@@ -824,18 +826,14 @@ class Command(BaseCommand):
                     'Baseline: 0% persistence. Result: 60% — significant progress. '
                     'Criterion: 80% to advance to next phase.'
                 ),
-                'next_steps': (
-                    'Increase wait time to 15 seconds. Introduce 2 communicators.'
-                ),
+                'next_steps': ('Increase wait time to 15 seconds. Introduce 2 communicators.'),
                 'released_to_family': True,
             },
             # ── Leonard - session 2 (75 days ago / Verbal imitation) ────────
             {
                 'session_key': 'Leonard_completed',
                 'session_index': 1,
-                'objective': (
-                    'Establish verbal imitation of vowels in a playful context.'
-                ),
+                'objective': ('Establish verbal imitation of vowels in a playful context.'),
                 'activities': (
                     'Sound games: whistle, tambourine, soap bubbles. '
                     '15 imitation opportunities after modeling.'
@@ -857,9 +855,7 @@ class Command(BaseCommand):
             {
                 'session_key': 'Leonard_completed',
                 'session_index': 2,
-                'objective': (
-                    'Increase functional eye contact to 80% of requests.'
-                ),
+                'objective': ('Increase functional eye contact to 80% of requests.'),
                 'activities': (
                     'Protocol "look-take": item given only after eye contact >1s. '
                     '10 trials with storybook preference as motivator.'
@@ -868,21 +864,15 @@ class Command(BaseCommand):
                     'Leonard achieved 70% spontaneous eye contact (7/10). '
                     'In the other 3, needed visual prompt (signal to "look").'
                 ),
-                'progress': (
-                    'Baseline: 30%. Session: 70%. Very good progress.'
-                ),
-                'next_steps': (
-                    'Reduce visual prompt. Reach 80% without help.'
-                ),
+                'progress': ('Baseline: 30%. Session: 70%. Very good progress.'),
+                'next_steps': ('Reduce visual prompt. Reach 80% without help.'),
                 'released_to_family': True,
             },
             # ── Leonard - session 4 (47 days ago / Emotional regulation) ─────
             {
                 'session_key': 'Leonard_completed',
                 'session_index': 3,
-                'objective': (
-                    'Teach "stop-breathe-continue" strategy with visual support.'
-                ),
+                'objective': ('Teach "stop-breathe-continue" strategy with visual support.'),
                 'activities': (
                     'Visual breathing card. 3 tantrum episodes during transitions. '
                     'Strategy practice in each episode.'
@@ -891,21 +881,15 @@ class Command(BaseCommand):
                     '3 brief tantrums (30-60 sec). Used breathing card in 2/3 opportunities. '
                     'Self-regulation improving.'
                 ),
-                'progress': (
-                    'Before: 0 use of strategy. Now: 2/3 opportunities (67%).'
-                ),
-                'next_steps': (
-                    'Practice strategy in natural environment (home, school).'
-                ),
+                'progress': ('Before: 0 use of strategy. Now: 2/3 opportunities (67%).'),
+                'next_steps': ('Practice strategy in natural environment (home, school).'),
                 'released_to_family': False,
             },
             # ── Leonard - session 5 (33 days ago / Social skills) ─────
             {
                 'session_key': 'Leonard_completed',
                 'session_index': 4,
-                'objective': (
-                    'Transition from parallel play to shared interaction.'
-                ),
+                'objective': ('Transition from parallel play to shared interaction.'),
                 'activities': (
                     'Joint construction with blocks. Visual negotiation of space. '
                     'Alternating turns for 12 minutes.'
@@ -914,32 +898,24 @@ class Command(BaseCommand):
                     'Leonard agreed to share space. Maintained interaction for 12 continuous minutes. '
                     'Initiated spontaneous eye contact to check therapist 4x.'
                 ),
-                'progress': (
-                    'First session of shared interaction. Goal achieved!'
-                ),
-                'next_steps': (
-                    'Introduce second patient in structured activity (dual session).'
-                ),
+                'progress': ('First session of shared interaction. Goal achieved!'),
+                'next_steps': ('Introduce second patient in structured activity (dual session).'),
                 'released_to_family': True,
             },
             # ── Leonard - session 6 (19 days ago / Joint attention) ───
             {
                 'session_key': 'Leonard_completed',
                 'session_index': 5,
-                'objective': (
-                    'Develop joint attention via cause-and-effect play.'
-                ),
+                'objective': ('Develop joint attention via cause-and-effect play.'),
                 'activities': (
                     'Ball that rolls and falls into a bucket. Turn-taking. '
                     '4 opportunities to request continuation.'
                 ),
                 'behavior': (
                     'Leonard requested continuation 4x (vocalization + gesture). '
-                    'Followed therapist\'s gaze to object 3x — emergent joint attention!'
+                    "Followed therapist's gaze to object 3x — emergent joint attention!"
                 ),
-                'progress': (
-                    'First clear evidence of joint attention. Important milestone!'
-                ),
+                'progress': ('First clear evidence of joint attention. Important milestone!'),
                 'next_steps': (
                     'Generalize joint attention with other games and communication partners.'
                 ),
@@ -1088,7 +1064,7 @@ class Command(BaseCommand):
                 'session_key': 'Peter_completed',
                 'session_index': 0,
                 'objective': (
-                    'Conduct initial functional assessment of Peter\'s behavioral, communicative, '
+                    "Conduct initial functional assessment of Peter's behavioral, communicative, "
                     'and sensory repertoire, and establish therapeutic alliance with the child and family.'
                 ),
                 'activities': (
@@ -1098,7 +1074,7 @@ class Command(BaseCommand):
                     'The therapist observed and recorded: (1) motor imitation repertoire; '
                     '(2) responses to different textures; (3) vocalizations and communicative '
                     'attempts; (4) restricted or repetitive interest behaviors; '
-                    '(5) tolerance to the unknown adult\'s presence. '
+                    "(5) tolerance to the unknown adult's presence. "
                     'The mother was interviewed using the VINELAND-3 (adaptive skills) script '
                     'during the first 20 minutes while Peter explored the environment.'
                 ),
@@ -1109,8 +1085,8 @@ class Command(BaseCommand):
                     'Tolerated interlocking blocks, cars, and kinetic sand well for more '
                     'than 3 minutes. Imitated 2 gestures from the therapist (clapping and hitting table) '
                     'spontaneously. Did not use words, communicated through pointing, '
-                    'touching the therapist\'s arm, and affirmative (/uh/) and negative '
-                    '(/eh/ with head shake) vocalizations. Tolerated the therapist\'s presence at 50 cm '
+                    "touching the therapist's arm, and affirmative (/uh/) and negative "
+                    "(/eh/ with head shake) vocalizations. Tolerated the therapist's presence at 50 cm "
                     'without signs of discomfort after the first 10 minutes.'
                 ),
                 'progress': (
@@ -1127,7 +1103,7 @@ class Command(BaseCommand):
                     'Priorities: (1) sensory diet for tactile hypersensitivity; '
                     '(2) introduction of visual schedule to structure session routine; '
                     '(3) PECS Phase 1 with preferred items identified today. '
-                    'Refer for sensory integration assessment by the clinic\'s partner OT.'
+                    "Refer for sensory integration assessment by the clinic's partner OT."
                 ),
                 'released_to_family': True,
             },
@@ -1165,7 +1141,7 @@ class Command(BaseCommand):
                 'progress': (
                     'Sensory regulation: reached regulation state in 23 minutes (average of the '
                     'last 4 sessions without intercurrence: 15 minutes — expected increase given '
-                    'the week\'s context with epileptic seizure). '
+                    "the week's context with epileptic seizure). "
                     'AAC: 4 selections with minimal prompting + 1 spontaneous (icon "water") — '
                     'best spontaneous communicative performance recorded to date. '
                     'SIB: 0 episodes in this session (average of 2-3 in previous sessions), '
@@ -1187,7 +1163,7 @@ class Command(BaseCommand):
                 'session_index': 0,
                 'objective': (
                     'Develop conversational turn regulation skill: ask '
-                    'questions to the interlocutor, check the other\'s interest, and modulate '
+                    "questions to the interlocutor, check the other's interest, and modulate "
                     'speaking time about topics of own interest.'
                 ),
                 'activities': (
@@ -1197,7 +1173,7 @@ class Command(BaseCommand):
                     'Block 2 (25 min): Explicit teaching of the "conversational turn" concept '
                     'with the visual support of the "speech bubble" (card with a 30-second hourglass '
                     'that passes from hand to hand). Role-play of conversation about dinosaurs and '
-                    'about the therapist\'s preferred topic (cooking), with role reversal. '
+                    "about the therapist's preferred topic (cooking), with role reversal. "
                     'Block 3 (15 min): Naturalistic practice — free conversation with the '
                     'speech bubble support, with Gabriel being responsible for passing the bubble.'
                 ),
@@ -1240,7 +1216,7 @@ class Command(BaseCommand):
                 'activities': (
                     'Transition step (25 min): according to the desensitization protocol, '
                     'with gradually reduced mother presence. During the period without the mother, '
-                    'the therapist immediately used Isabella\'s preferred playlist '
+                    "the therapist immediately used Isabella's preferred playlist "
                     '(songs by Toquinho and Palavra Cantada) as a regulation anchor. '
                     'Activities during the session: fitting geometric shapes with background '
                     'music, gesture imitation game with song ("If This Street Were Mine") '
@@ -1251,17 +1227,17 @@ class Command(BaseCommand):
                 'behavior': (
                     'Isabella showed anticipatory anxiety before the session, reported by the '
                     'mother in the waiting room ("she asked 5 times if I was going to stay"). '
-                    'At the moment of the mother\'s definitive departure, she cried for 8 minutes (previous: '
+                    "At the moment of the mother's definitive departure, she cried for 8 minutes (previous: "
                     '18 min), being comforted by music and gradual engagement '
                     'of the therapist with the instruments. The crying ceased autonomously, '
-                    'without need for the mother\'s return — important milestone in the protocol. '
+                    "without need for the mother's return — important milestone in the protocol. "
                     'After regulation, she participated in the musical activities with high engagement '
                     'and spontaneously started vocalizing song lyrics.'
                 ),
                 'progress': (
                     'Desensitization protocol: post-separation crying time reduced from '
                     '18 to 8 minutes (56% reduction compared to previous week). '
-                    'Autonomous regulation achieved without mother\'s return for the first time in the protocol. '
+                    "Autonomous regulation achieved without mother's return for the first time in the protocol. "
                     'Functional communication: 3 spontaneous requests during the session '
                     '("more music", "this" pointing to instrument, "no" when ending activity).'
                 ),
@@ -1286,11 +1262,11 @@ class Command(BaseCommand):
                 'activities': (
                     'Block 1 (20 min): Collaborative functional analysis — the therapist and Matthew '
                     'filled out together an "ABC diagram" (Antecedent-Behavior-Consequence) '
-                    'describing the week\'s episode at school. Matthew identified the antecedent '
+                    "describing the week's episode at school. Matthew identified the antecedent "
                     '("I don\'t know if I brought the planner") and the consequence ("I feel less nervous for '
                     'a while"). The therapist introduced the concept of the "anxiety cycle" '
                     'with a video game analogy (the compulsion is a "fake power-up" '
-                    'that doesn\'t solve the final boss). '
+                    "that doesn't solve the final boss). "
                     'Block 2 (20 min): Introduction of the delay technique + ERP training. '
                     'Matthew practiced delaying the checking by 2 minutes in 3 simulated trials '
                     '(the therapist hid an item from the table and Matthew recorded the doubt on the '
@@ -1441,7 +1417,7 @@ class Command(BaseCommand):
                     'Block 1 – Regulation and AAC (20 min): Large piece fitting activity '
                     'with structured opportunities for AAC use. The therapist created '
                     '10 requesting opportunities: 5 for "more pieces" and 5 for "help". '
-                    'The tablet with Tobii Snap Core First was positioned 30 cm from Valentina\'s '
+                    "The tablet with Tobii Snap Core First was positioned 30 cm from Valentina's "
                     'dominant hand. '
                     'Block 2 – Transitions with PBS (15 min): 3 planned transitions between '
                     'activities, each anticipated with a 3-minute visual timer, '
@@ -1507,10 +1483,10 @@ class Command(BaseCommand):
                     'Gross motor imitation: 6/10 actions imitated spontaneously '
                     '(clapping, hitting table, raising arms — the most dynamic and visually '
                     'salient). Fine motor imitation: 0/5 — absent in this assessment. '
-                    'Following therapist\'s pointing: 3/8 trials with gaze toward the indicated '
+                    "Following therapist's pointing: 3/8 trials with gaze toward the indicated "
                     'object (emergent responsive joint attention). '
                     'Communicative intent: pointing to desired toy on 4 '
-                    'spontaneous occasions, touching the therapist\'s arm on 2 occasions '
+                    "spontaneous occasions, touching the therapist's arm on 2 occasions "
                     '(intentional pre-verbal communication confirmed). '
                     'The mother practiced the NDBI strategies with engagement and asked '
                     'pertinent questions about how to apply them during diaper changes '
@@ -1567,10 +1543,12 @@ class Command(BaseCommand):
         session_count = Session.objects.count()
         evolution_count = TherapeuticEvolution.objects.count()
 
-        self.stdout.write(self.style.SUCCESS(
-            f'\nData verification:\n'
-            f'  Users: {user_count}\n'
-            f'  Patients: {patient_count}\n'
-            f'  Sessions: {session_count}\n'
-            f'  Evolutions: {evolution_count}\n'
-        ))
+        self.stdout.write(
+            self.style.SUCCESS(
+                f'\nData verification:\n'
+                f'  Users: {user_count}\n'
+                f'  Patients: {patient_count}\n'
+                f'  Sessions: {session_count}\n'
+                f'  Evolutions: {evolution_count}\n'
+            )
+        )

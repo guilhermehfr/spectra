@@ -5,7 +5,7 @@ Built with Django and Django REST Framework.
 
 ## Objective
 
-Provide an API for patient management, allowing creation, reading, and maintenance of basic records.
+Provide an API for patient management, allowing creation, reading, and maintenance of clinical records.
 
 This backend is part of a fullstack system with a Next.js frontend.
 
@@ -77,15 +77,15 @@ Access admin panel:
 
 ### Patients
 
-- `GET /api/patients/` → List all patients
+- `GET /api/patients/` → List all patients (paginated)
 - `POST /api/patients/` → Create a patient
 - `GET /api/patients/{id}/` → Patient details
 - `PUT /api/patients/{id}/` → Update a patient
-- `DELETE /api/patients/{id}/` → Delete a patient (soft delete)
+- `DELETE /api/patients/{id}/` → Delete a patient (soft delete, admin only)
 
 ### Sessions
 
-- `GET /api/sessions/` → List sessions (therapist sees their own)
+- `GET /api/sessions/` → List sessions
 - `POST /api/sessions/` → Create session
 - `GET /api/sessions/{id}/` → Session details
 - `PUT /api/sessions/{id}/` → Update session
@@ -93,10 +93,11 @@ Access admin panel:
 
 ### Evolutions
 
-- `GET /api/evolutions/` → List evolutions
+- `GET /api/evolutions/` → List evolutions (paginated)
 - `POST /api/evolutions/` → Create evolution (after completed session)
 - `GET /api/evolutions/{id}/` → Evolution details
 - `PUT /api/evolutions/{id}/` → Update evolution
+- `DELETE /api/evolutions/{id}/` → Delete evolution
 
 ### Dashboard
 
@@ -104,14 +105,14 @@ Access admin panel:
 
 ### Family (guardian portal)
 
-- `GET /api/patients/family/` → Patient linked to email
+- `GET /api/patients/family/` → Patient linked to guardian email
 - `GET /api/evolutions/family/` → Evolutions released to family
 - `GET /api/evolutions/family/{id}/` → Released evolution detail
 
 ### System
 
-- `GET /api/seed/` → Seed demo data (admin only)
-- `GET /api/health/` → Health check (for load balancers)
+- `POST /api/seed/` → Seed demo data (secret-based auth, not JWT)
+- `GET /api/health/` → Health check (public)
 
 ## Patient Model Structure
 
@@ -122,6 +123,9 @@ Access admin panel:
 - `guardian_email`
 - `notes`
 - `created_at`
+- `updated_at`
+- `is_deleted` (soft delete flag)
+- `deleted_at` (soft delete timestamp)
 
 ## Database Configuration
 
@@ -137,6 +141,7 @@ The project uses `django-environ` and `dj-database-url` for database configurati
 | `CORS_ALLOWED_ORIGINS` | Allowed CORS origins | `http://localhost:3000` |
 | `DATABASE_URL` | Full connection string (format: `postgresql://user:password@host:port/dbname`) | `postgresql://user:pass@localhost:5432/mydb` |
 | `DJANGO_ENV` | Execution environment (`local` or `production`) | `local` |
+| `SEED_SECRET` | Secret key for `/api/seed/` endpoint | - |
 
 ### Local Development (SQLite)
 
@@ -165,3 +170,4 @@ cp .env.production.example .env.production
 - Project in MVP phase
 - SQLite used only for local development
 - Production uses PostgreSQL with DATABASE_URL
+- Patients, sessions, and evolutions use soft delete (records are marked as deleted, not removed)

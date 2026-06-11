@@ -1,0 +1,14 @@
+[tool.ruff]
+target-version = "py312"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "N", "W", "UP", "B", "SIM"]
+ignore = ["B904"]
+
+[tool.ruff.lint.per-file-ignores]
+"seed.py" = ["E501"]
+"core/migrations/*" = ["E501"]
+
+[tool.ruff.format]
+quote-style = "single"

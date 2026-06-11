@@ -50,6 +50,7 @@ logs/
 .cache/
 .pytest_cache/
 .mypy_cache/
+.ruff_cache/
 
 # Misc
 tmp/

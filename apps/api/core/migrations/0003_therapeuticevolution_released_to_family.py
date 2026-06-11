@@ -4,7 +4,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ('core', '0002_patient_deleted_at_patient_is_deleted_and_more'),
     ]
