@@ -28,8 +28,8 @@ src/
 ├── app/
 │   ├── layout.tsx              # Root layout with metadata + NextIntlClientProvider + LanguageToggle
 │   ├── page.tsx                # Home page
-  │   ├── globals.css             # Tailwind imports + CSS variables
-  │   ├── actions/                # Server Actions (all use getServerT())
+│   ├── globals.css             # Tailwind imports + CSS variables
+│   ├── actions/                # Server Actions (all use getServerT())
 │   │   ├── auth.ts             # Authentication actions
 │   │   ├── patient.ts          # Patient CRUD actions
 │   │   ├── session.ts          # Session CRUD actions
@@ -39,43 +39,58 @@ src/
 │   │   └── family/page.tsx     # Family login
 │   ├── clinic/                 # Clinic portal routes
 │   │   ├── layout.tsx          # Clinic portal layout
-│   │   ├── loading.tsx          # Clinic loading state
+│   │   ├── loading.tsx          # Clinic loading (top progress bar, fallback for all routes)
 │   │   ├── dashboard/
+│   │   │   ├── loading.tsx     # Dashboard skeleton
 │   │   │   └── page.tsx        # Clinic dashboard
 │   │   ├── patients/
+│   │   │   ├── loading.tsx     # Patients list skeleton
 │   │   │   ├── page.tsx        # Patients list
 │   │   │   ├── new/
-│   │   │   │   └── page.tsx     # Add new patient
+│   │   │   │   ├── loading.tsx # New patient form skeleton
+│   │   │   │   └── page.tsx    # Add new patient
 │   │   │   └── [id]/
-│   │   │       ├── page.tsx        # Patient detail
+│   │   │       ├── loading.tsx # Patient detail skeleton
+│   │   │       ├── page.tsx    # Patient detail
 │   │   │       └── edit/
-│   │   │           └── page.tsx     # Edit patient
+│   │   │           ├── loading.tsx # Edit patient form skeleton
+│   │   │           └── page.tsx    # Edit patient
 │   │   ├── sessions/
-│   │   │   ├── page.tsx          # Sessions list
+│   │   │   ├── loading.tsx     # Sessions list skeleton
+│   │   │   ├── page.tsx        # Sessions list
 │   │   │   ├── new/
-│   │   │   │   └── page.tsx      # Schedule new session
+│   │   │   │   ├── loading.tsx # New session form skeleton
+│   │   │   │   └── page.tsx    # Schedule new session
 │   │   │   └── [id]/
-│   │   │       ├── page.tsx        # Session detail
+│   │   │       ├── loading.tsx # Session detail skeleton
+│   │   │       ├── page.tsx    # Session detail
 │   │   │       ├── edit/
+│   │   │       │   ├── loading.tsx # Edit session form skeleton
 │   │   │       │   └── page.tsx    # Edit session
-  │   │   │       └── evolution/
-  │   │   │           └── new/
-  │   │   │               └── page.tsx    # Create/view evolution for session
+│   │   │       └── evolution/
+│   │   │           └── new/
+│   │   │               ├── loading.tsx # New evolution form skeleton
+│   │   │               └── page.tsx    # Create/view evolution for session
 │   │   └── evolutions/
 │   │       ├── new/
-│   │       │   └── page.tsx      # New evolution
+│   │       │   ├── loading.tsx # New evolution skeleton
+│   │       │   └── page.tsx    # New evolution
 │   │       └── [id]/
 │   │           └── edit/
-│   │               └── page.tsx  # Edit evolution
+│   │               ├── loading.tsx # Edit evolution form skeleton
+│   │               └── page.tsx    # Edit evolution
 │   └── family/                 # Family portal routes
 │       ├── layout.tsx          # Family portal layout
 │       ├── loading.tsx          # Family loading state
 │       ├── dashboard/
+│       │   ├── loading.tsx     # Dashboard skeleton
 │       │   └── page.tsx        # Family dashboard
 │       └── evolutions/
+│           ├── loading.tsx     # Evolutions list skeleton
 │           ├── page.tsx        # List all evolutions
 │           └── [id]/
-│               └── page.tsx      # View evolution
+│               ├── loading.tsx # Evolution detail skeleton
+│               └── page.tsx    # View evolution
 ├── components/
 │   ├── auth/                   # Login form components
 │   │   ├── index.ts             # Barrel export
@@ -139,7 +154,8 @@ src/
 │           ├── BaseForm.tsx       # Base form wrapper
 │           ├── Container.tsx
 │           ├── IconButton.tsx
-│           └── LoadingSpinner.tsx # Shared loading indicator
+│           ├── LoadingSpinner.tsx # Shared loading indicator
+│           └── Skeleton.tsx       # Skeleton primitives (Skeleton, SkeletonText, SkeletonAvatar, SkeletonCard, SkeletonButton, SkeletonTitle)
 ├── i18n/
 │   └── request.ts            # next-intl locale resolution (cookie → locale)
 ├── lib/
@@ -155,20 +171,21 @@ src/
 │   ├── auth.ts                 # Real auth implementation (HTTP)
 │   ├── auth-mock.ts            # Mock auth implementation
 │   ├── authService.ts          # Unified auth service (switches by env)
-  │   ├── authResolver.ts         # Resolves user identity from request
-  │   ├── utils/                  # Utility functions
-│       │   ├── index.ts        # Barrel export for all utilities
-│       │   ├── dateUtils.ts    # getRelativeDate() - relative date formatting
-│       │   ├── stringUtils.ts  # extractInitials() - name to initials conversion
-│       │   ├── userUtils.ts    # resolveUser(), resolveUserWithRole()
-│       │   ├── greetingUtils.ts# getGreeting()
-│       │   ├── envUtils.ts     # getUseMock() - environment check
-│       │   ├── dateRangeUtils.ts# getTodayRange(), getDaysAgo(), aggregateByDayOfWeek()
-  │   │   ├── statsUtils.ts   # calculateClinicStats(), filterRecentSessions()
-  │   │   ├── redirectUtils.ts# getDashboardUrl(), getLoginUrl()
-  │   │   ├── permissionUtils.ts # canEditSession(), canDeleteSession(), canEditEvolution(), canDeleteEvolution(), canReleaseEvolution()
-  │   │   ├── sessionStatusUtils.ts # normalizeSessionStatus(), getSessionStatusDisplay(), getStatusLabel(), getStatusClassName()
-  │   │   └── translationUtils.ts # getServerT() - server-side translation helper
+│   ├── authResolver.ts         # Resolves user identity from request
+│   ├── utils/                  # Utility functions
+│   │   ├── index.ts            # Barrel export for all utilities
+│   │   ├── classUtils.ts       # cn() — clsx + twMerge helper
+│   │   ├── dateUtils.ts        # getRelativeDate() - relative date formatting
+│   │   ├── stringUtils.ts      # extractInitials() - name to initials conversion
+│   │   ├── userUtils.ts        # resolveUser(), resolveUserWithRole()
+│   │   ├── greetingUtils.ts    # getGreeting()
+│   │   ├── envUtils.ts         # getUseMock() - environment check
+│   │   ├── dateRangeUtils.ts   # getTodayRange(), getDaysAgo(), aggregateByDayOfWeek()
+│   │   ├── statsUtils.ts       # calculateClinicStats(), filterRecentSessions()
+│   │   ├── redirectUtils.ts    # getDashboardUrl(), getLoginUrl()
+│   │   ├── permissionUtils.ts  # canEditSession(), canDeleteSession(), canEditEvolution(), canDeleteEvolution(), canReleaseEvolution()
+│   │   ├── sessionStatusUtils.ts # normalizeSessionStatus(), getSessionStatusDisplay(), getStatusLabel(), getStatusClassName()
+│   │   └── translationUtils.ts # getServerT() - server-side translation helper
 └── mocks/
     ├── browser.ts              # MSW browser worker setup
     ├── state.ts                # Centralized in-memory mock state
@@ -251,6 +268,18 @@ src/
   ```
 
 - Barrel exports exist in: `auth/`, `layout/clinic/`, `layout/family/`, `ui/clinic/`, `ui/shared/`
+
+**Route Loading UI (`loading.tsx`)**:
+
+- Every route under `/clinic/` and `/family/` has its own `loading.tsx` to avoid visual flash from ancestor loading boundaries
+- `clinic/loading.tsx` (top progress bar) is the root fallback — overridden by every child route
+- Compose skeleton inline in `loading.tsx` using shared primitives — no page-specific skeleton components
+
+**Skeleton Primitives**:
+
+- All built on a single `<Skeleton>` base (`animate-pulse rounded-md bg-slate-200`)
+- Exported from `@/components/ui/shared`: `Skeleton`, `SkeletonText`, `SkeletonAvatar`, `SkeletonCard`, `SkeletonButton`, `SkeletonTitle`
+- Use `cn()` from `@/lib/utils/classUtils` for class composition (`clsx` + `twMerge`, shadcn pattern)
 
 **Creating New Utilities**:
 
