@@ -140,8 +140,8 @@ Spectra uses **physical database isolation** per tenant:
 - `notes`
 - `created_at`
 - `updated_at`
-- `is_deleted` (soft delete, mock-only — not exposed in API responses)
-- `deleted_at` (soft delete timestamp, mock-only)
+- `is_deleted` (soft delete — not exposed in API responses)
+- `deleted_at` (soft delete timestamp)
 
 ## Database Configuration
 

@@ -19,7 +19,7 @@ Spectra centralizes patient management, therapy scheduling, clinical progress tr
 
 <img width="700" height="400" alt="hero" src="https://github.com/user-attachments/assets/a3a3789b-4e39-427a-8347-6b6524350b97" />
 
-[Live App](https://spectratea.vercel.app) · [Demo App](https://spectraclinic-demo.vercel.app) · [Landing Page](https://spectra-tea.vercel.app) 
+[Live App](https://spectratea.vercel.app) · [Landing Page](https://spectra-tea.vercel.app) 
 
 ---
 
@@ -27,24 +27,29 @@ Spectra centralizes patient management, therapy scheduling, clinical progress tr
 
 ## 🚀 Demo Access (Recommended)
 
-To explore the platform instantly without setup:
+To explore the platform instantly without setup, acess:
 
-Live Demo: https://spectraclinic-demo.vercel.app
+Live App: https://spectratea.vercel.app
 
-### Quick Login
+And use the credentials below to login:
 
-Use the credentials below directly in the application:
+### Clinic 1
 
-| Role | Email | Password |
-| --- | --- | --- |
-| Admin | admin@alpha.com | admin123 |
-| Therapist | ana@alpha.com | therapist123 |
-| Therapist | carlos@alpha.com | therapist123 |
-| Family | maria@alpha.com | family123 |
+| Role      | Email            | Password |
+| --------- | ---------------- | -------- |
+| Admin     | admin@alpha.com  | alpha    |
+| Therapist | ana@alpha.com    | alpha    |
+| Therapist | carlos@alpha.com | alpha    |
+| Family    | maria@alpha.com  | alpha    |
 
-➡️ You can also jump directly to the local developement credentials section: [Mock Accounts](#-mock-accounts)
+### Clinic 2
 
-> The demo runs using the a separate dataset and API seeded service, ensuring identical behavior between environments.
+| Role      | Email              | Password |
+| --------- | ------------------ | -------- |
+| Admin     | admin@beta.com     | beta     |
+| Therapist | beatriz@beta.com   | beta     |
+| Therapist | marcos@beta.com    | beta     |
+| Family    | lucia@beta.com     | beta     |
 
 ---
 
@@ -190,7 +195,7 @@ Mock accounts are available out of the box. See [Mock Accounts](#-mock-accounts)
 ### Prerequisites
 
 - [Node.js](https://nodejs.org/) v18+
-- [Python](https://www.python.org/) 3.11+
+- [Python](https://www.python.org/) 3.10+
 - [pnpm](https://pnpm.io/)
 
 ---
@@ -206,6 +211,7 @@ source .venv/bin/activate
 pip install -r requirements.txt
 
 cp .env.local.example .env.local
+# Ensure ALPHA_DB_URL and BETA_DB_URL are set to valid values (default: sqlite:///alpha.sqlite3 and sqlite:///beta.sqlite3)
 
 python manage.py migrate
 python manage.py seed                  # seed both clinics
@@ -280,8 +286,6 @@ http://localhost:3000
 | Therapist | ana@alpha.com | any |
 | Therapist | carlos@alpha.com | any |
 | Family | maria@alpha.com | any |
-
-> Run `python manage.py seed` to populate accounts in the API database.
 
 ---
 

@@ -17,7 +17,7 @@ O Spectra centraliza o gerenciamento de pacientes, o agendamento de terapias, o 
 
 <img width="700" height="400" alt="hero" src="https://github.com/user-attachments/assets/a3a3789b-4e39-427a-8347-6b6524350b97" />
 
-[Live App](https://spectratea.vercel.app) · [Demo App](https://spectraclinic-demo.vercel.app) · [Landing Page](https://spectra-tea.vercel.app) 
+[Live App](https://spectratea.vercel.app) · [Landing Page](https://spectra-tea.vercel.app)
 
 ---
 
@@ -27,23 +27,27 @@ O Spectra centraliza o gerenciamento de pacientes, o agendamento de terapias, o 
 
 Para explorar a plataforma instantaneamente sem necessidade de configuração:
 
-Demonstração ao Vivo: https://spectraclinic-demo.vercel.app
+Live App: https://spectratea.vercel.app
 
-### Login Rápido
+E utilize as credenciais abaixo para acessar:
 
-Utilize as credenciais abaixo diretamente na aplicação:
+### Clínica 1
 
+| Perfil        | E-mail             | Senha |
+| ------------- | ------------------ | ----- |
+| Administrador | admin@alpha.com    | alpha |
+| Terapeuta     | ana@alpha.com      | alpha |
+| Terapeuta     | carlos@alpha.com   | alpha |
+| Família       | maria@alpha.com    | alpha |
 
-| Perfil | E-mail | Senha |
-| --- | --- | --- |
-| Administrador | admin@alpha.com | admin123 |
-| Terapeuta | ana@alpha.com | therapist123 |
-| Terapeuta | carlos@alpha.com | therapist123 |
-| Família | maria@alpha.com | family123 |
+### Clínica 2
 
-➡️ Você também pode pular diretamente para a seção de credenciais de desenvolvimento local: [Contas de Teste (Mock)](#-contas-de-teste-mock)
-
-> A demonstração roda utilizando um conjunto de dados separado e um serviço de API alimentado por sementes (seeded), garantindo comportamento idêntico entre os ambientes.
+| Perfil        | E-mail               | Senha |
+| ------------- | -------------------- | ----- |
+| Administrador | admin@beta.com       | beta  |
+| Terapeuta     | beatriz@beta.com     | beta  |
+| Terapeuta     | marcos@beta.com      | beta  |
+| Família       | lucia@beta.com       | beta  |
 
 ---
 
@@ -111,8 +115,8 @@ O responsável recebe acesso através do Portal da Família
 - Arquitetura Next.js App Router focada prioritariamente no servidor (server-first)
 - Alternância de API baseada no ambiente (`mock` ↔ `real`)
 - Estado de simulação (mock) em memória centralizado com MSW
-- Autenticação em middleware ciente do perfil do usuário
 - Internacionalização (PT-BR / EN) com next-intl
+- Autenticação em middleware ciente do perfil do usuário
 - Implementações de API com carregamento tardio (lazy-loaded)
 - Estrutura de componentes compartilhados orientada ao domínio (domain-driven)
 - Fluxo de autenticação JWT com cookies seguros
@@ -124,7 +128,6 @@ A infraestrutura de mock permite que o desenvolvimento do frontend avance de for
 ## 🛠 Tecnologias Utilizadas
 
 ### Backend
-
 
 | Tecnologia | Finalidade |
 | --- | --- |
@@ -138,7 +141,6 @@ A infraestrutura de mock permite que o desenvolvimento do frontend avance de for
 
 ### Frontend
 
-
 | Tecnologia | Finalidade |
 | --- | --- |
 | [Next.js 16](https://nextjs.org/) | Framework React |
@@ -149,7 +151,6 @@ A infraestrutura de mock permite que o desenvolvimento do frontend avance de for
 | [next-intl](https://next-intl.dev/) | Internacionalização (PT-BR / EN) |
 
 ### Infraestrutura
-
 
 | Tecnologia | Finalidade |
 | --- | --- |
@@ -192,7 +193,7 @@ As contas de teste (mock) já vêm prontas para uso. Consulte [Contas de Teste (
 ### Pré-requisitos
 
 - [Node.js](https://nodejs.org/) v18+
-- [Python](https://www.python.org/) 3.11+
+- [Python](https://www.python.org/) 3.10+
 - [pnpm](https://pnpm.io/)
 
 ---
@@ -208,6 +209,7 @@ source .venv/bin/activate
 pip install -r requirements.txt
 
 cp .env.local.example .env.local
+# Certifique-se de que ALPHA_DB_URL e BETA_DB_URL estão configurados com valores válidos (padrão: sqlite:///alpha.sqlite3 e sqlite:///beta.sqlite3)
 
 python manage.py migrate
 python manage.py seed                  # semear ambas clínicas
@@ -249,7 +251,6 @@ http://localhost:3000
 
 ### Backend (`apps/api/.env`)
 
-
 | Variável | Descrição |
 | --- | --- |
 | `SECRET_KEY` | Chave secreta do Django |
@@ -265,7 +266,6 @@ http://localhost:3000
 
 ### Frontend (`apps/web/.env.local`)
 
-
 | Variável | Descrição | Padrão |
 | --- | --- | --- |
 | `NEXT_PUBLIC_API_URL` | URL da API do backend | `http://127.0.0.1:8000` |
@@ -278,7 +278,6 @@ http://localhost:3000
 
 ### Modo Simulado / Mock (`NEXT_PUBLIC_DISABLE_MSW=false`)
 
-
 | Perfil | E-mail | Senha |
 | --- | --- | --- |
 | Administrador | admin@alpha.com | qualquer uma |
@@ -286,12 +285,9 @@ http://localhost:3000
 | Terapeuta | carlos@alpha.com | qualquer uma |
 | Família | maria@alpha.com | qualquer uma |
 
-> Execute `python manage.py seed` para preencher as contas no banco de dados da API.
-
 ---
 
 ## 🔐 Modelo de Acesso
-
 
 | Perfil | Permissões |
 | --- | --- |
@@ -318,7 +314,6 @@ Principais domínios da API:
 ---
 
 ## 👋 Equipe
-
 
 | Membros | LinkedIn | GitHub |
 |-|----------|--------|
