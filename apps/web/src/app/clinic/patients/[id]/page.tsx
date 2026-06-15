@@ -25,7 +25,7 @@ export default async function ClinicPatientDetailPage({ params }: PageProps) {
   const user = await resolveUser()
 
   const allSessions = await getSessions()
-  const patientSessions = allSessions.filter((s) => s.patient === patientId && !s.is_deleted)
+  const patientSessions = allSessions.filter((s) => s.patient === patientId)
 
   const allEvolutions = await getEvolutions()
   const sessionIds = new Set(patientSessions.map((s) => s.id))

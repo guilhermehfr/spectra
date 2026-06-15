@@ -30,10 +30,6 @@ export function getPatient(id: number): Promise<Patient | undefined> {
   return Promise.resolve(state.getPatientById(id))
 }
 
-export async function getPatientByGuardianEmail(email: string): Promise<Patient | null> {
-  return Promise.resolve(state.getPatientByGuardianEmail(email))
-}
-
 export function createPatient(data: CreatePatientInput): Promise<Patient> {
   try {
     const result = state.createPatient(data)
@@ -83,7 +79,7 @@ export function createSession(data: CreateSessionInput): Promise<Session> {
   try {
     const sessionData: Omit<
       Session,
-      'id' | 'patient_name' | 'therapist_name' | 'is_deleted' | 'created_at' | 'updated_at'
+      'id' | 'patient_name' | 'therapist_name' | 'created_at' | 'updated_at'
     > = {
       patient: data.patient,
       therapist: data.therapist,

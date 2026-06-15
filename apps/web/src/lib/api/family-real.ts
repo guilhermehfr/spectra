@@ -9,7 +9,11 @@
 
 import { http } from '@/lib/api/http'
 
-import type { FamilyEvolution } from '@/lib/types'
+import type { FamilyEvolution, Patient } from '@/lib/types'
+
+export function getPatientByGuardianEmail() {
+  return http<Patient>('/api/patients/family/')
+}
 
 export async function getFamilyEvolutions() {
   const response = await http<{ results: FamilyEvolution[] }>('/api/evolutions/family/', {

@@ -5,3 +5,6 @@ env/
 
 # Ruff cache
 .ruff_cache/
+
+# Python bytecode
+__pycache__/

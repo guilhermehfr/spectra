@@ -1,5 +1,4 @@
-import { authService } from '@/lib/authService'
-import { getPatientByGuardianEmail } from '@/lib/api/clinic'
+import { getPatientByGuardianEmail } from '@/lib/api/family'
 import { getFamilyEvolutions } from '@/lib/api/family'
 import { logoutAction } from '@/app/actions/auth'
 import { LogOut } from 'lucide-react'
@@ -16,14 +15,13 @@ import { extractInitials } from '@/lib/utils/stringUtils'
 export const revalidate = false
 
 export default async function FamilyDashboard() {
-  const user = await authService.me()
   const t = await getTranslations('Family')
   const td = await getTranslations('DateUtils')
   const tc = await getTranslations('Common')
 
   let patient = null
   try {
-    patient = await getPatientByGuardianEmail(user.email)
+    patient = await getPatientByGuardianEmail()
   } catch {
     patient = null
   }

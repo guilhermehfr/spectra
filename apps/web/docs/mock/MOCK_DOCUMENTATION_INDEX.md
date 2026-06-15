@@ -236,11 +236,11 @@ Evolution (session=1, released_to_family=true)
 
 ### Users (4 total)
 
-| Email              | Role      | Password | Notes                                    |
-| ------------------ | --------- | -------- | ---------------------------------------- |
-| admin@spectra.com  | admin     | any      | Clinic access                            |
-| ana@spectra.com    | therapist | any      | Clinic access                            |
-| carlos@spectra.com | therapist | any      | Clinic access                            |
+| Email              | Role      | Password | Notes                                   |
+| ------------------ | --------- | -------- | --------------------------------------- |
+| admin@spectra.com  | admin     | any      | Clinic access                           |
+| ana@spectra.com    | therapist | any      | Clinic access                           |
+| carlos@spectra.com | therapist | any      | Clinic access                           |
 | maria@gmail.com    | family    | any      | Family portal, Leonard Silva's guardian |
 
 ### Patients (14 total)

@@ -185,6 +185,7 @@ class Migration(migrations.Migration):
                 (
                     'therapist',
                     models.ForeignKey(
+                        db_constraint=False,
                         limit_choices_to={'role': 'therapist'},
                         on_delete=django.db.models.deletion.CASCADE,
                         related_name='sessions',

@@ -25,6 +25,7 @@ from .serializers import (
     SessionSerializer,
     TherapeuticEvolutionSerializer,
 )
+from .utils import prefetch_cross_db_fks
 
 
 class LoginView(TokenObtainPairView):
@@ -162,6 +163,12 @@ class SessionListCreateView(ListCreateAPIView):
         else:
             serializer.save()
 
+    def paginate_queryset(self, queryset):
+        page = super().paginate_queryset(queryset)
+        if page is not None:
+            prefetch_cross_db_fks(page, {Session.therapist.field: CustomUser})
+        return page
+
 
 class SessionDetailView(RetrieveUpdateDestroyAPIView):
     """
@@ -174,10 +181,15 @@ class SessionDetailView(RetrieveUpdateDestroyAPIView):
     def get_queryset(self):
         return Session.objects.all()
 
+    def get_object(self):
+        obj = super().get_object()
+        prefetch_cross_db_fks([obj], {Session.therapist.field: CustomUser})
+        return obj
+
     def perform_update(self, serializer):
         session = self.get_object()
         user = self.request.user
-        if user.role != 'admin' and session.therapist != user:
+        if user.role != 'admin' and session.therapist_id != user.id:
             return Response(
                 {'detail': 'Você não tem permissão para editar esta sessão'},
                 status=HTTP_403_FORBIDDEN,
@@ -194,15 +206,27 @@ class TherapeuticEvolutionListCreateView(ListCreateAPIView):
     permission_classes = [IsTherapistOrAdmin]
 
     def get_queryset(self):
-        return TherapeuticEvolution.objects.all()
+        return TherapeuticEvolution.objects.select_related('session').all()
 
     def perform_create(self, serializer):
         """Define o created_by como o usuário autenticado que está criando a evolução."""
         session = serializer.validated_data['session']
         user = self.request.user
-        if user.role != 'admin' and session.therapist != user:
+        if user.role != 'admin' and session.therapist_id != user.id:
             raise PermissionError('Você não tem permissão para criar evolução para esta sessão')
         serializer.save(created_by=self.request.user)
+
+    def paginate_queryset(self, queryset):
+        page = super().paginate_queryset(queryset)
+        if page is not None:
+            prefetch_cross_db_fks(page, {TherapeuticEvolution.created_by.field: CustomUser})
+            sessions = [
+                ev.session
+                for ev in page
+                if hasattr(ev, 'session') and ev.session and ev.session.therapist_id
+            ]
+            prefetch_cross_db_fks(sessions, {Session.therapist.field: CustomUser})
+        return page
 
 
 class TherapeuticEvolutionDetailView(RetrieveUpdateDestroyAPIView):
@@ -214,12 +238,19 @@ class TherapeuticEvolutionDetailView(RetrieveUpdateDestroyAPIView):
     permission_classes = [IsTherapistOrAdmin]
 
     def get_queryset(self):
-        return TherapeuticEvolution.objects.all()
+        return TherapeuticEvolution.objects.select_related('session').all()
+
+    def get_object(self):
+        obj = super().get_object()
+        prefetch_cross_db_fks([obj], {TherapeuticEvolution.created_by.field: CustomUser})
+        if hasattr(obj, 'session') and obj.session and obj.session.therapist_id:
+            prefetch_cross_db_fks([obj.session], {Session.therapist.field: CustomUser})
+        return obj
 
     def perform_update(self, serializer):
         evolution = self.get_object()
         user = self.request.user
-        if user.role != 'admin' and evolution.session.therapist != user:
+        if user.role != 'admin' and evolution.session.therapist_id != user.id:
             return Response(
                 {'detail': 'Você não tem permissão para editar esta evolução'},
                 status=HTTP_403_FORBIDDEN,
@@ -250,7 +281,7 @@ class DashboardView(APIView):
         # 1. Get today's sessions com select_related para evitar N+1 queries
         today_sessions_qs = (
             Session.objects.filter(date_time__date=today)
-            .select_related('patient', 'therapist')
+            .select_related('patient')
             .order_by('date_time')
         )
 
@@ -272,9 +303,13 @@ class DashboardView(APIView):
 
         pending_evolutions = pending_evolutions_qs.count()
 
+        # Prefetch therapist FK caches for today's sessions (cross-DB)
+        today_sessions = list(today_sessions_qs)
+        prefetch_cross_db_fks(today_sessions, {Session.therapist.field: CustomUser})
+
         # Serialize data
         data = {
-            'today_sessions': today_sessions_qs,
+            'today_sessions': today_sessions,
             'active_patients': active_patients,
             'pending_evolutions': pending_evolutions,
         }
@@ -376,9 +411,23 @@ class FamilyEvolutionsListView(ListCreateAPIView):
 
     def get_queryset(self):
         user = self.request.user
-        return TherapeuticEvolution.objects.filter(
-            released_to_family=True, session__patient__guardian_email=user.email
-        ).order_by('-created_at')
+        return (
+            TherapeuticEvolution.objects.select_related('session')
+            .filter(released_to_family=True, session__patient__guardian_email=user.email)
+            .order_by('-created_at')
+        )
+
+    def paginate_queryset(self, queryset):
+        page = super().paginate_queryset(queryset)
+        if page is not None:
+            prefetch_cross_db_fks(page, {TherapeuticEvolution.created_by.field: CustomUser})
+            sessions = [
+                ev.session
+                for ev in page
+                if hasattr(ev, 'session') and ev.session and ev.session.therapist_id
+            ]
+            prefetch_cross_db_fks(sessions, {Session.therapist.field: CustomUser})
+        return page
 
 
 class FamilyEvolutionDetailView(APIView):
@@ -398,12 +447,18 @@ class FamilyEvolutionDetailView(APIView):
     def get(self, request, pk):
         user = request.user
 
-        evolution = TherapeuticEvolution.objects.filter(
-            id=pk, released_to_family=True, session__patient__guardian_email=user.email
-        ).first()
+        evolution = (
+            TherapeuticEvolution.objects.select_related('session')
+            .filter(id=pk, released_to_family=True, session__patient__guardian_email=user.email)
+            .first()
+        )
 
         if not evolution:
             return Response({'detail': 'Evolução não encontrada ou não autorizada.'}, status=404)
+
+        prefetch_cross_db_fks([evolution], {TherapeuticEvolution.created_by.field: CustomUser})
+        if hasattr(evolution, 'session') and evolution.session and evolution.session.therapist_id:
+            prefetch_cross_db_fks([evolution.session], {Session.therapist.field: CustomUser})
 
         serializer = self.serializer_class(evolution)
         return Response(serializer.data)

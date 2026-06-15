@@ -14,17 +14,16 @@ export function calculateClinicStats(
 ): ClinicStats {
   const { start: startOfToday, end: endOfToday } = getTodayRange()
 
-  const activePatients = patients.filter((p) => !p.is_deleted).length
+  const activePatients = patients.length
 
   const todaySessions = sessions.filter((s) => {
-    if (s.is_deleted) return false
     const sessionDate = new Date(s.date_time)
     return sessionDate >= startOfToday && sessionDate <= endOfToday
   }).length
 
   // Get IDs of completed sessions
   const completedSessionIds = new Set(
-    sessions.filter((s) => s.status === 'completed' && !s.is_deleted).map((s) => s.id)
+    sessions.filter((s) => s.status === 'completed').map((s) => s.id)
   )
 
   // Get IDs of sessions that already have evolutions
@@ -43,7 +42,6 @@ export function filterRecentSessions(sessions: Session[], days: number) {
   const today = new Date()
 
   return sessions.filter((s) => {
-    if (s.is_deleted) return false
     const sessionDate = new Date(s.date_time)
     return sessionDate >= start && sessionDate <= today
   })

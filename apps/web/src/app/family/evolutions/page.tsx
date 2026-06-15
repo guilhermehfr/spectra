@@ -1,6 +1,5 @@
 import { getTranslations } from 'next-intl/server'
-import { authService } from '@/lib/authService'
-import { getPatientByGuardianEmail } from '@/lib/api/clinic'
+import { getPatientByGuardianEmail } from '@/lib/api/family'
 import { getFamilyEvolutions } from '@/lib/api/family'
 import type { FamilyEvolution } from '@/lib/types'
 
@@ -12,11 +11,10 @@ export const revalidate = false
 export default async function FamilyEvolutionsPage() {
   const t = await getTranslations('FamilyEvolutions')
   const tf = await getTranslations('Family')
-  const user = await authService.me()
 
   let patient = null
   try {
-    patient = await getPatientByGuardianEmail(user.email)
+    patient = await getPatientByGuardianEmail()
   } catch {
     patient = null
   }

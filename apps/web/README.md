@@ -32,7 +32,7 @@ O sistema de autenticação usa cookies para manter a sessão do usuário:
 - **Cookie**: `access_token` armazena o token JWT após login
 - **Autorização**: Todas as chamadas de API incluem automaticamente o header `Authorization: Bearer {token}` via `src/lib/api/http.ts`
 - **Logout**: Use `logoutAction` de `src/app/actions/auth.ts` para encerrar a sessão
-- **Middleware**: `src/app/middleware.ts` verifica autenticação em todas as rotas
+- **Proteção de rotas**: `clinic/layout.tsx` e `family/layout.tsx` protegem as rotas usando `resolveUserWithRole()`
 - **Rotas públicas**: `/`, `/login/*` (acesso livre)
 - **Rotas protegidas**: `/clinic/*` e `/family/*` requerem autenticação
 - **Redirect**: Usuários não autenticados são redirecionados para `/` (página inicial)
@@ -53,7 +53,7 @@ O app usa **next-intl** com roteamento de idioma único (sem `[locale]` na URL):
 Novos portais de login devem extender `BaseLoginForm` em `src/components/auth/BaseLoginForm.tsx`:
 
 ````tsx
-import { BaseLoginForm } from '@/components/auth/BaseLoginForm'
+import { BaseLoginForm } from '@/components/auth'
 import { CustomIcon } from 'lucide-react'
 
 export function NewPortalLoginForm() {
@@ -221,21 +221,21 @@ O portal da clínica inclui:
 
 ### Mock (NEXT_PUBLIC_DISABLE_MSW=false)
 
-| Email              | Role      | Senha          |
-| ------------------ | --------- | -------------- |
-| admin@spectra.com  | admin     | qualquer senha |
-| ana@spectra.com    | therapist | qualquer senha |
-| carlos@spectra.com | therapist | qualquer senha |
-| maria@gmail.com    | family    | qualquer senha |
+| Email            | Role      | Senha          |
+| ---------------- | --------- | -------------- |
+| admin@alpha.com  | admin     | qualquer senha |
+| ana@alpha.com    | therapist | qualquer senha |
+| carlos@alpha.com | therapist | qualquer senha |
+| maria@alpha.com  | family    | qualquer senha |
 
 ### Real API (NEXT_PUBLIC_DISABLE_MSW=true)
 
-| Email              | Role      | Senha        |
-| ------------------ | --------- | ------------ |
-| admin@spectra.com  | admin     | admin123     |
-| ana@spectra.com    | therapist | therapist123 |
-| carlos@spectra.com | therapist | therapist123 |
-| maria@spectra.com  | family    | family123    |
+| Email            | Role      | Senha |
+| ---------------- | --------- | ----- |
+| admin@alpha.com  | admin     | alpha |
+| ana@alpha.com    | therapist | alpha |
+| carlos@alpha.com | therapist | alpha |
+| maria@alpha.com  | family    | alpha |
 
 **Nota**: Execute `python manage.py seed` no backend para criar os usuários na API real.
 

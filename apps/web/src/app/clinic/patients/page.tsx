@@ -11,8 +11,7 @@ interface PageProps {
 export default async function ClinicPatientsPage({ searchParams }: PageProps) {
   const { search } = await searchParams
 
-  const patients = await getPatients()
-  const activePatients = patients.filter((p) => !p.is_deleted)
+  const activePatients = await getPatients()
   const currentUser = await resolveUser()
 
   return (

@@ -38,7 +38,9 @@ python manage.py migrate
 ```
 5. Seed demo data (optional)
 ```bash
-python manage.py seed
+python manage.py seed                  # seed both clinics
+python manage.py seed --clinic alpha   # seed only Alpha
+python manage.py seed --clinic beta    # seed only Beta
 ```
 
 6. Run server
@@ -114,6 +116,20 @@ Access admin panel:
 - `POST /api/seed/` → Seed demo data (secret-based auth, not JWT)
 - `GET /api/health/` → Health check (public)
 
+## Multi-Tenant Architecture
+
+Spectra uses **physical database isolation** per tenant:
+
+- **Central database** (`'default'`): stores `Tenant` and `CustomUser` models shared across all tenants.
+- **Per-tenant databases**: each clinic (Alpha, Beta) has its own SQLite database for `Patient`, `Session`, and `TherapeuticEvolution` models.
+- **Tenant context**: `TenantMiddleware` decodes JWT, resolves the `Tenant`, registers the tenant database dynamically, and sets the context via `ContextVar` for the request lifecycle.
+- **Router**: `TenantDatabaseRouter` in `core/router.py` directs central models to `'default'` and tenant models to the per-request tenant DB.
+- **CustomUser scoping**: `CustomUser.objects` auto-filters by `tenant_id` via `TenantScopedManager`. Use `CustomUser.all_objects` to bypass scoping (login, seed).
+
+### Cross-Database FK Fields
+
+`Session.therapist` and `TherapeuticEvolution.created_by` reference `CustomUser` in the central DB. They use `db_constraint=False` and must be traversed via `_id` comparisons or `prefetch_cross_db_fks()`.
+
 ## Patient Model Structure
 
 - `id`
@@ -124,7 +140,7 @@ Access admin panel:
 - `notes`
 - `created_at`
 - `updated_at`
-- `is_deleted` (soft delete flag)
+- `is_deleted` (soft delete — not exposed in API responses)
 - `deleted_at` (soft delete timestamp)
 
 ## Database Configuration
@@ -139,35 +155,41 @@ The project uses `django-environ` and `dj-database-url` for database configurati
 | `DEBUG` | Debug mode (`True` or `False`) | `False` in production |
 | `ALLOWED_HOSTS` | **REQUIRED in production** - Allowed domains | `localhost,127.0.0.1` |
 | `CORS_ALLOWED_ORIGINS` | Allowed CORS origins | `http://localhost:3000` |
-| `DATABASE_URL` | Full connection string (format: `postgresql://user:password@host:port/dbname`) | `postgresql://user:pass@localhost:5432/mydb` |
+| `CENTRAL_DATABASE_URL` | Central DB connection (users, tenants) | `sqlite:///db.sqlite3` |
+| `TENANT_DATABASE_URL` | Fallback tenant DB (placeholder) | - |
+| `ALPHA_DB_URL` | Alpha clinic seed DB | `sqlite:///alpha.sqlite3` |
+| `BETA_DB_URL` | Beta clinic seed DB | `sqlite:///beta.sqlite3` |
 | `DJANGO_ENV` | Execution environment (`local` or `production`) | `local` |
 | `SEED_SECRET` | Secret key for `/api/seed/` endpoint | - |
 
 ### Local Development (SQLite)
 
-By default, without `DATABASE_URL`, the project uses SQLite:
+Three SQLite databases are used in development:
 
-```bash
-# Don't set DATABASE_URL = uses SQLite automatically
-```
+- `db.sqlite3` — central (tenants, users)
+- `alpha.sqlite3` — Alpha clinic (patients, sessions, evolutions)
+- `beta.sqlite3` — Beta clinic (patients, sessions, evolutions)
 
 ### Production (PostgreSQL)
 
-Set the `DATABASE_URL` variable in the `.env.production` file:
+Set the database URL variables in the `.env.production` file:
 
 ```bash
-DATABASE_URL=postgresql://user:password@host:5432/db_name
+CENTRAL_DATABASE_URL=postgresql://user:password@host:5432/central_db
+ALPHA_DB_URL=postgresql://user:password@host:5432/alpha_db
+BETA_DB_URL=postgresql://user:password@host:5432/beta_db
 ```
 
-Or copy the example file:
+### Seeding Data
+
 ```bash
-cp .env.production.example .env.production
-# Edit the file with your PostgreSQL database credentials
+python manage.py seed                  # seed both clinics
+python manage.py seed --clinic alpha   # seed only Alpha
+python manage.py seed --clinic beta    # seed only Beta
 ```
 
 ## Notes
 
 - Project in MVP phase
 - SQLite used only for local development
-- Production uses PostgreSQL with DATABASE_URL
-- Patients, sessions, and evolutions use soft delete (records are marked as deleted, not removed)
+- Production uses PostgreSQL with separate databases per tenant

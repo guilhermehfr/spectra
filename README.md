@@ -19,7 +19,7 @@ Spectra centralizes patient management, therapy scheduling, clinical progress tr
 
 <img width="700" height="400" alt="hero" src="https://github.com/user-attachments/assets/a3a3789b-4e39-427a-8347-6b6524350b97" />
 
-[Live App](https://spectratea.vercel.app) · [Demo App](https://spectraclinic-demo.vercel.app) · [Landing Page](https://spectra-tea.vercel.app) 
+[Live App](https://spectratea.vercel.app) · [Landing Page](https://spectra-tea.vercel.app) 
 
 ---
 
@@ -27,24 +27,29 @@ Spectra centralizes patient management, therapy scheduling, clinical progress tr
 
 ## 🚀 Demo Access (Recommended)
 
-To explore the platform instantly without setup:
+To explore the platform instantly without setup, acess:
 
-Live Demo: https://spectraclinic-demo.vercel.app
+Live App: https://spectratea.vercel.app
 
-### Quick Login
+And use the credentials below to login:
 
-Use the credentials below directly in the application:
+### Clinic 1
 
-| Role | Email | Password |
-| --- | --- | --- |
-| Admin | admin@spectra.com | admin123 |
-| Therapist | ana@spectra.com | therapist123 |
-| Therapist | carlos@spectra.com | therapist123 |
-| Family | maria@gmail.com | family123 |
+| Role      | Email            | Password |
+| --------- | ---------------- | -------- |
+| Admin     | admin@alpha.com  | alpha    |
+| Therapist | ana@alpha.com    | alpha    |
+| Therapist | carlos@alpha.com | alpha    |
+| Family    | maria@alpha.com  | alpha    |
 
-➡️ You can also jump directly to the local developement credentials section: [Mock Accounts](#-mock-accounts)
+### Clinic 2
 
-> The demo runs using the a separate dataset and API seeded service, ensuring identical behavior between environments.
+| Role      | Email              | Password |
+| --------- | ------------------ | -------- |
+| Admin     | admin@beta.com     | beta     |
+| Therapist | beatriz@beta.com   | beta     |
+| Therapist | marcos@beta.com    | beta     |
+| Family    | lucia@beta.com     | beta     |
 
 ---
 
@@ -190,7 +195,7 @@ Mock accounts are available out of the box. See [Mock Accounts](#-mock-accounts)
 ### Prerequisites
 
 - [Node.js](https://nodejs.org/) v18+
-- [Python](https://www.python.org/) 3.11+
+- [Python](https://www.python.org/) 3.10+
 - [pnpm](https://pnpm.io/)
 
 ---
@@ -206,9 +211,12 @@ source .venv/bin/activate
 pip install -r requirements.txt
 
 cp .env.local.example .env.local
+# Ensure ALPHA_DB_URL and BETA_DB_URL are set to valid values (default: sqlite:///alpha.sqlite3 and sqlite:///beta.sqlite3)
 
 python manage.py migrate
-python manage.py seed
+python manage.py seed                  # seed both clinics
+python manage.py seed --clinic alpha   # seed only Alpha
+python manage.py seed --clinic beta    # seed only Beta
 
 python manage.py runserver
 ```
@@ -249,7 +257,10 @@ http://localhost:3000
 | --- | --- |
 | `SECRET_KEY` | Django secret key |
 | `DEBUG` | Debug mode |
-| `DATABASE_URL` | PostgreSQL connection string |
+| `CENTRAL_DATABASE_URL` | Central PostgreSQL connection string (users, tenants) |
+| `TENANT_DATABASE_URL` | Fallback tenant DB (placeholder, ignored if set) |
+| `ALPHA_DB_URL` | Alpha clinic seed DB (SQLite for dev) |
+| `BETA_DB_URL` | Beta clinic seed DB (SQLite for dev) |
 | `ALLOWED_HOSTS` | Allowed hosts |
 | `CORS_ALLOWED_ORIGINS` | Frontend origins |
 | `DJANGO_ENV` | Environment (`local` or `production`) |
@@ -271,12 +282,10 @@ http://localhost:3000
 
 | Role | Email | Password |
 | --- | --- | --- |
-| Admin | admin@spectra.com | any |
-| Therapist | ana@spectra.com | any |
-| Therapist | carlos@spectra.com | any |
-| Family | maria@gmail.com | any |
-
-> Run `python manage.py seed` to populate mock accounts in the selected API DB.
+| Admin | admin@alpha.com | any |
+| Therapist | ana@alpha.com | any |
+| Therapist | carlos@alpha.com | any |
+| Family | maria@alpha.com | any |
 
 ---
 

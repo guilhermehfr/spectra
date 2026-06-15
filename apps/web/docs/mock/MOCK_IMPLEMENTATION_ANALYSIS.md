@@ -636,11 +636,11 @@ Display:
 
 ### 6.3 Test User Credentials
 
-| Email              | Role      | Password | Patient        | Notes                             |
-| ------------------ | --------- | -------- | -------------- | --------------------------------- |
-| admin@spectra.com  | admin     | any      | -              | Clinic portal access              |
-| ana@spectra.com    | therapist | any      | -              | Therapist (created session 1, 2)  |
-| carlos@spectra.com | therapist | any      | -              | Therapist (created sessions 3, 4) |
+| Email              | Role      | Password | Patient       | Notes                             |
+| ------------------ | --------- | -------- | ------------- | --------------------------------- |
+| admin@spectra.com  | admin     | any      | -             | Clinic portal access              |
+| ana@spectra.com    | therapist | any      | -             | Therapist (created session 1, 2)  |
+| carlos@spectra.com | therapist | any      | -             | Therapist (created sessions 3, 4) |
 | maria@gmail.com    | family    | any      | Leonard Silva | Family portal access              |
 
 ---

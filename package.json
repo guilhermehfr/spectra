@@ -1,5 +1,13 @@
 {
   "name": "spectra",
   "version": "0.1.0",
-  "private": true
+  "private": true,
+  "scripts": {
+    "dev": "concurrently -n api,web -c blue,green \"pnpm dev:api\" \"pnpm dev:web\"",
+    "dev:api": "cd apps/api && .venv/bin/python manage.py runserver 0.0.0.0:8000",
+    "dev:web": "pnpm --filter web dev"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.0"
+  }
 }
