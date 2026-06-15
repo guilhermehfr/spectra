@@ -50,7 +50,9 @@ class Command(BaseCommand):
 
     def _clear_tenant_data(self, alias):
         for table in [
-            'core_therapeuticevolution', 'core_session', 'core_patient',
+            'core_therapeuticevolution',
+            'core_session',
+            'core_patient',
         ]:
             with contextlib.suppress(Exception), connections[alias].cursor() as cursor:
                 cursor.execute(f'DROP TABLE IF EXISTS {table} CASCADE')
