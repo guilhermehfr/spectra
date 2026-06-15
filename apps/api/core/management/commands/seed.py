@@ -49,12 +49,13 @@ class Command(BaseCommand):
             connections[alias].close()
 
     def _clear_tenant_data(self, alias):
-        for table in ['core_therapeuticevolution', 'core_session', 'core_patient']:
-            try:
-                with connections[alias].cursor() as cursor:
-                    cursor.execute(f'DELETE FROM {table}')
-            except Exception:
-                pass
+        for table in [
+            'core_therapeuticevolution', 'core_session', 'core_patient',
+        ]:
+            with contextlib.suppress(Exception), connections[alias].cursor() as cursor:
+                cursor.execute(f'DROP TABLE IF EXISTS {table} CASCADE')
+        with contextlib.suppress(Exception), connections[alias].cursor() as cursor:
+            cursor.execute('DELETE FROM django_migrations')
 
     def _clear_central_data(self):
         for table in ['core_customuser', 'core_tenant']:
@@ -80,8 +81,8 @@ class Command(BaseCommand):
             self._register_db(alias, db_url)
 
         for alias, _ in aliases:
-            call_command('migrate', database=alias, verbosity=0)
             self._clear_tenant_data(alias)
+            call_command('migrate', database=alias, verbosity=0)
 
         self._clear_central_data()
 
