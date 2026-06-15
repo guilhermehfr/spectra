@@ -36,10 +36,10 @@ Utilize as credenciais abaixo diretamente na aplicação:
 
 | Perfil | E-mail | Senha |
 | --- | --- | --- |
-| Administrador | admin@spectra.com | admin123 |
-| Terapeuta | ana@spectra.com | therapist123 |
-| Terapeuta | carlos@spectra.com | therapist123 |
-| Família | maria@gmail.com | family123 |
+| Administrador | admin@alpha.com | admin123 |
+| Terapeuta | ana@alpha.com | therapist123 |
+| Terapeuta | carlos@alpha.com | therapist123 |
+| Família | maria@alpha.com | family123 |
 
 ➡️ Você também pode pular diretamente para a seção de credenciais de desenvolvimento local: [Contas de Teste (Mock)](#-contas-de-teste-mock)
 
@@ -210,7 +210,9 @@ pip install -r requirements.txt
 cp .env.local.example .env.local
 
 python manage.py migrate
-python manage.py seed
+python manage.py seed                  # semear ambas clínicas
+python manage.py seed --clinic alpha   # semear apenas Alpha
+python manage.py seed --clinic beta    # semear apenas Beta
 
 python manage.py runserver
 ```
@@ -252,7 +254,10 @@ http://localhost:3000
 | --- | --- |
 | `SECRET_KEY` | Chave secreta do Django |
 | `DEBUG` | Modo de depuração (debug) |
-| `DATABASE_URL` | String de conexão do PostgreSQL |
+| `CENTRAL_DATABASE_URL` | String central de conexão PostgreSQL (usuários, tenants) |
+| `TENANT_DATABASE_URL` | Fallback do banco tenant (placeholder) |
+| `ALPHA_DB_URL` | Banco de seed da clínica Alpha (SQLite para dev) |
+| `BETA_DB_URL` | Banco de seed da clínica Beta (SQLite para dev) |
 | `ALLOWED_HOSTS` | Hosts permitidos |
 | `CORS_ALLOWED_ORIGINS` | Origens permitidas do frontend |
 | `DJANGO_ENV` | Ambiente (`local` ou `production`) |
@@ -276,12 +281,12 @@ http://localhost:3000
 
 | Perfil | E-mail | Senha |
 | --- | --- | --- |
-| Administrador | admin@spectra.com | qualquer uma |
-| Terapeuta | ana@spectra.com | qualquer uma |
-| Terapeuta | carlos@spectra.com | qualquer uma |
-| Família | maria@gmail.com | qualquer uma |
+| Administrador | admin@alpha.com | qualquer uma |
+| Terapeuta | ana@alpha.com | qualquer uma |
+| Terapeuta | carlos@alpha.com | qualquer uma |
+| Família | maria@alpha.com | qualquer uma |
 
-> Execute `python manage.py seed` para preencher as contas de teste no banco de dados da API selecionado.
+> Execute `python manage.py seed` para preencher as contas no banco de dados da API.
 
 ---
 

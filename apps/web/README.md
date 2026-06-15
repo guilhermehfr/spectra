@@ -223,19 +223,19 @@ O portal da clínica inclui:
 
 | Email              | Role      | Senha          |
 | ------------------ | --------- | -------------- |
-| admin@spectra.com  | admin     | qualquer senha |
-| ana@spectra.com    | therapist | qualquer senha |
-| carlos@spectra.com | therapist | qualquer senha |
-| maria@gmail.com    | family    | qualquer senha |
+| admin@alpha.com   | admin     | qualquer senha |
+| ana@alpha.com     | therapist | qualquer senha |
+| carlos@alpha.com  | therapist | qualquer senha |
+| maria@alpha.com   | family    | qualquer senha |
 
 ### Real API (NEXT_PUBLIC_DISABLE_MSW=true)
 
 | Email              | Role      | Senha        |
 | ------------------ | --------- | ------------ |
-| admin@spectra.com  | admin     | admin123     |
-| ana@spectra.com    | therapist | therapist123 |
-| carlos@spectra.com | therapist | therapist123 |
-| maria@spectra.com  | family    | family123    |
+| admin@alpha.com   | admin     | admin123     |
+| ana@alpha.com     | therapist | therapist123 |
+| carlos@alpha.com  | therapist | therapist123 |
+| maria@alpha.com   | family    | family123    |
 
 **Nota**: Execute `python manage.py seed` no backend para criar os usuários na API real.
 

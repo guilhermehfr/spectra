@@ -335,7 +335,7 @@ src/
 
 **Data Conventions**:
 
-- Soft deletes via `is_deleted` flag
+- Soft deletes via `is_deleted` flag (mock-only, not present in real API types)
 - Brazilian Portuguese in UI/mock data
 - ISO 8601 date strings
 - In-memory mock state with incremental IDs

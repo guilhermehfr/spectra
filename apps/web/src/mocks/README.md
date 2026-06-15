@@ -28,10 +28,10 @@ instrumentation-client.ts  — inicializa o MSW no Next.js
 
 | Email              | Role      |
 | ------------------ | --------- |
-| admin@spectra.com  | admin     |
-| ana@spectra.com    | therapist |
-| carlos@spectra.com | therapist |
-| maria@gmail.com    | family    |
+| admin@alpha.com   | admin     |
+| ana@alpha.com     | therapist |
+| carlos@alpha.com  | therapist |
+| maria@alpha.com   | family    |
 
 Qualquer senha funciona no mock de login.
 

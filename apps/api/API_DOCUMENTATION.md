@@ -154,7 +154,7 @@ Authorization: Bearer {access_token}
   {
     "id": 10,
     "username": "ana",
-    "email": "ana@spectra.com",
+    "email": "ana@alpha.com",
     "first_name": "Ana",
     "last_name": "Costa",
     "role": "therapist",
@@ -240,7 +240,7 @@ Authorization: Bearer {access_token}
   "name": "Leonard Silva",
   "birth_date": "2017-03-10",
   "guardian_name": "Maria Silva",
-  "guardian_email": "maria@spectra.com",
+  "guardian_email": "maria@alpha.com",
   "notes": "Patient with ASD level 2",
   "created_at": "2026-05-05T22:24:49Z",
   "updated_at": "2026-05-05T22:24:49Z"
@@ -861,7 +861,10 @@ GET /api/health/
 | `SECRET_KEY` | Django secret key (required, no fallback) |
 | `ALLOWED_HOSTS` | Allowed domains (required in production) |
 | `CORS_ALLOWED_ORIGINS` | Allowed CORS origins |
-| `DATABASE_URL` | PostgreSQL connection URL |
+| `CENTRAL_DATABASE_URL` | Central PostgreSQL connection URL (users, tenants) |
+| `TENANT_DATABASE_URL` | Fallback tenant DB (placeholder) |
+| `ALPHA_DB_URL` | Alpha clinic seed DB (SQLite for dev) |
+| `BETA_DB_URL` | Beta clinic seed DB (SQLite for dev) |
 | `DJANGO_ENV` | Environment (`local` or `production`) |
 | `DEBUG` | Debug mode (`True` only in local) |
 | `SEED_SECRET` | Secret for `/api/seed/` endpoint |

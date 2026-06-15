@@ -37,10 +37,10 @@ Use the credentials below directly in the application:
 
 | Role | Email | Password |
 | --- | --- | --- |
-| Admin | admin@spectra.com | admin123 |
-| Therapist | ana@spectra.com | therapist123 |
-| Therapist | carlos@spectra.com | therapist123 |
-| Family | maria@gmail.com | family123 |
+| Admin | admin@alpha.com | admin123 |
+| Therapist | ana@alpha.com | therapist123 |
+| Therapist | carlos@alpha.com | therapist123 |
+| Family | maria@alpha.com | family123 |
 
 ➡️ You can also jump directly to the local developement credentials section: [Mock Accounts](#-mock-accounts)
 
@@ -208,7 +208,9 @@ pip install -r requirements.txt
 cp .env.local.example .env.local
 
 python manage.py migrate
-python manage.py seed
+python manage.py seed                  # seed both clinics
+python manage.py seed --clinic alpha   # seed only Alpha
+python manage.py seed --clinic beta    # seed only Beta
 
 python manage.py runserver
 ```
@@ -249,7 +251,10 @@ http://localhost:3000
 | --- | --- |
 | `SECRET_KEY` | Django secret key |
 | `DEBUG` | Debug mode |
-| `DATABASE_URL` | PostgreSQL connection string |
+| `CENTRAL_DATABASE_URL` | Central PostgreSQL connection string (users, tenants) |
+| `TENANT_DATABASE_URL` | Fallback tenant DB (placeholder, ignored if set) |
+| `ALPHA_DB_URL` | Alpha clinic seed DB (SQLite for dev) |
+| `BETA_DB_URL` | Beta clinic seed DB (SQLite for dev) |
 | `ALLOWED_HOSTS` | Allowed hosts |
 | `CORS_ALLOWED_ORIGINS` | Frontend origins |
 | `DJANGO_ENV` | Environment (`local` or `production`) |
@@ -271,12 +276,12 @@ http://localhost:3000
 
 | Role | Email | Password |
 | --- | --- | --- |
-| Admin | admin@spectra.com | any |
-| Therapist | ana@spectra.com | any |
-| Therapist | carlos@spectra.com | any |
-| Family | maria@gmail.com | any |
+| Admin | admin@alpha.com | any |
+| Therapist | ana@alpha.com | any |
+| Therapist | carlos@alpha.com | any |
+| Family | maria@alpha.com | any |
 
-> Run `python manage.py seed` to populate mock accounts in the selected API DB.
+> Run `python manage.py seed` to populate accounts in the API database.
 
 ---
 
