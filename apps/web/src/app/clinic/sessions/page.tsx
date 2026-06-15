@@ -4,8 +4,7 @@ import { getSessions } from '@/lib/api/clinic'
 export const dynamic = 'force-dynamic'
 
 export default async function ClinicSessionsPage() {
-  const sessions = await getSessions()
-  const activeSessions = sessions.filter((s) => !s.is_deleted)
+  const activeSessions = await getSessions()
 
   const sortedSessions = [...activeSessions].sort(
     (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()

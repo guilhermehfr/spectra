@@ -33,10 +33,9 @@ export type Patient = {
   notes: string
   created_at: string
   updated_at: string
-  is_deleted: boolean
 }
 
-export type CreatePatientInput = Omit<Patient, 'id' | 'created_at' | 'updated_at' | 'is_deleted'>
+export type CreatePatientInput = Omit<Patient, 'id' | 'created_at' | 'updated_at'>
 export type UpdatePatientInput = Partial<CreatePatientInput>
 
 export type SessionStatus = 'scheduled' | 'completed' | 'canceled'
@@ -50,7 +49,6 @@ export type Session = {
   date_time: string
   status: SessionStatus
   notes: string
-  is_deleted: boolean
   created_at: string
   updated_at: string
 }

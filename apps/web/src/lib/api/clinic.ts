@@ -44,11 +44,6 @@ export async function getPatient(id: number) {
   return impl.getPatient(id)
 }
 
-export async function getPatientByGuardianEmail(email: string) {
-  const impl = await getImpl()
-  return impl.getPatientByGuardianEmail(email)
-}
-
 export async function createPatient(data: CreatePatientInput) {
   const impl = await getImpl()
   return impl.createPatient(data)

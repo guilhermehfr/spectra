@@ -32,10 +32,6 @@ export function getPatient(id: number) {
   return http<Patient>(`/api/patients/${id}/`, { tags: [`patient-${id}`] })
 }
 
-export async function getPatientByGuardianEmail(email: string) {
-  return http<Patient | null>(`/api/patients/family/?guardian_email=${encodeURIComponent(email)}`)
-}
-
 export function createPatient(data: CreatePatientInput) {
   return http<Patient>('/api/patients/', {
     method: 'POST',

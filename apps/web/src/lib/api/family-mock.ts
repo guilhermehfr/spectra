@@ -8,7 +8,15 @@
  */
 
 import * as state from '@/mocks/state'
-import type { FamilyEvolution } from '@/lib/types'
+import type { FamilyEvolution, Patient } from '@/lib/types'
+
+export function getPatientByGuardianEmail(): Promise<Patient> {
+  const user = state.getCurrentUser()
+  if (!user) return Promise.reject(new Error('Not authenticated'))
+  const patient = state.getPatientByGuardianEmail(user.email)
+  if (!patient) return Promise.reject(new Error('Patient not found'))
+  return Promise.resolve(patient)
+}
 
 export function getFamilyEvolutions(): Promise<FamilyEvolution[]> {
   const evolutions = state.getFamilyEvolutions()

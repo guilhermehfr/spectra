@@ -37,11 +37,11 @@ Page fetches data with authenticated context
 
 ## Test Users (Mock Mode Only - Any Password Works)
 
-| Email              | Role      | Patient        | Component     |
-| ------------------ | --------- | -------------- | ------------- |
-| admin@spectra.com  | admin     | -              | Clinic Portal |
-| ana@spectra.com    | therapist | -              | Clinic Portal |
-| carlos@spectra.com | therapist | -              | Clinic Portal |
+| Email              | Role      | Patient       | Component     |
+| ------------------ | --------- | ------------- | ------------- |
+| admin@spectra.com  | admin     | -             | Clinic Portal |
+| ana@spectra.com    | therapist | -             | Clinic Portal |
+| carlos@spectra.com | therapist | -             | Clinic Portal |
 | maria@gmail.com    | family    | Leonard Silva | Family Portal |
 
 ---

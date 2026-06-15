@@ -3,8 +3,7 @@ import { notFound } from 'next/navigation'
 import { getLocale, getTranslations } from 'next-intl/server'
 import { ArrowLeft, Target, Activity, Brain, TrendingUp, Compass } from 'lucide-react'
 
-import { authService } from '@/lib/authService'
-import { getPatientByGuardianEmail } from '@/lib/api/clinic'
+import { getPatientByGuardianEmail } from '@/lib/api/family'
 import { getFamilyEvolution } from '@/lib/api/family'
 import type { FamilyEvolution } from '@/lib/types'
 import { Section } from '@/components/ui/family/EvolutionSection'
@@ -29,11 +28,9 @@ export default async function FamilyEvolutionPage({ params }: PageProps) {
   const tl = await getTranslations('LatestEvolutionCard')
   const locale = await getLocale()
 
-  const user = await authService.me()
-
   let patient = null
   try {
-    patient = await getPatientByGuardianEmail(user.email)
+    patient = await getPatientByGuardianEmail()
   } catch {
     patient = null
   }

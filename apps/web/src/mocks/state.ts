@@ -16,6 +16,14 @@ import { mockEvolutions } from './data/evolutions'
 
 import type { User, Patient, Session, Evolution } from '@/lib/types'
 
+/**
+ * Mock internal types — extend shared types with is_deleted to simulate
+ * DB-level soft-delete that the backend manages and the frontend types
+ * don't expose.
+ */
+type MockPatient = Patient & { is_deleted: boolean }
+type MockSession = Session & { is_deleted: boolean }
+
 // ─────────────────────────────────────────────────────────────────────────────
 // Auth State
 // ─────────────────────────────────────────────────────────────────────────────
@@ -38,8 +46,8 @@ export function clearCurrentUser(): void {
 // Database State
 // ─────────────────────────────────────────────────────────────────────────────
 
-const patients: Patient[] = [...mockPatients]
-const sessions: Session[] = mockSessions as Session[]
+const patients: MockPatient[] = [...mockPatients] as MockPatient[]
+const sessions: MockSession[] = mockSessions as MockSession[]
 const evolutions: Evolution[] = [...mockEvolutions]
 
 let nextPatientId = Math.max(...patients.map((p) => p.id), 0) + 1
@@ -66,13 +74,13 @@ export function createPatient(
   data: Omit<Patient, 'id' | 'created_at' | 'updated_at' | 'is_deleted'>
 ): Patient {
   const now = new Date().toISOString()
-  const newPatient: Patient = {
+  const newPatient: MockPatient = {
     ...data,
     id: nextPatientId++,
     created_at: now,
     updated_at: now,
     is_deleted: false,
-  }
+  } as MockPatient
   patients.push(newPatient)
   return newPatient
 }
@@ -82,7 +90,7 @@ export function updatePatient(id: number, data: Partial<Patient>): Patient | und
   if (index === -1) return undefined
 
   const now = new Date().toISOString()
-  patients[index] = {
+  const updated: MockPatient = {
     ...patients[index],
     ...data,
     id: patients[index].id,
@@ -90,6 +98,7 @@ export function updatePatient(id: number, data: Partial<Patient>): Patient | und
     updated_at: now,
     is_deleted: patients[index].is_deleted,
   }
+  patients[index] = updated
   return patients[index]
 }
 
@@ -122,7 +131,7 @@ export function createSession(
   const patient = patients.find((p) => p.id === data.patient)
   const therapist = mockUsers.find((u) => u.id === data.therapist)
 
-  const newSession: Session = {
+  const newSession: MockSession = {
     ...data,
     id: nextSessionId++,
     patient_name: patient?.name || '',
@@ -132,7 +141,7 @@ export function createSession(
     is_deleted: false,
     created_at: now,
     updated_at: now,
-  }
+  } as MockSession
   sessions.push(newSession)
   return newSession
 }
@@ -142,7 +151,7 @@ export function updateSession(id: number, data: Partial<Session>): Session | und
   if (index === -1) return undefined
 
   const now = new Date().toISOString()
-  sessions[index] = {
+  const updated: MockSession = {
     ...sessions[index],
     ...data,
     id: sessions[index].id,
@@ -152,6 +161,7 @@ export function updateSession(id: number, data: Partial<Session>): Session | und
     created_at: sessions[index].created_at,
     updated_at: now,
   }
+  sessions[index] = updated
   return sessions[index]
 }
 

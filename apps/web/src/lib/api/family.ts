@@ -25,6 +25,11 @@ const getImpl = cache(async () => {
   }
 })
 
+export async function getPatientByGuardianEmail() {
+  const impl = await getImpl()
+  return impl.getPatientByGuardianEmail()
+}
+
 export async function getFamilyEvolutions() {
   const impl = await getImpl()
   return impl.getFamilyEvolutions()
