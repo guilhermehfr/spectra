@@ -33,10 +33,16 @@ class Command(BaseCommand):
         parsed.setdefault('TIME_ZONE', None)
         for setting in ['NAME', 'USER', 'PASSWORD', 'HOST', 'PORT']:
             parsed.setdefault(setting, '')
-        parsed.setdefault('TEST', {
-            'CHARSET': None, 'COLLATION': None, 'MIGRATE': True,
-            'MIRROR': None, 'NAME': None,
-        })
+        parsed.setdefault(
+            'TEST',
+            {
+                'CHARSET': None,
+                'COLLATION': None,
+                'MIGRATE': True,
+                'MIRROR': None,
+                'NAME': None,
+            },
+        )
         settings.DATABASES[alias] = parsed
         connections.databases[alias] = parsed
         with contextlib.suppress(Exception):
@@ -109,22 +115,78 @@ class Command(BaseCommand):
         )
 
         users_data = [
-            {'email': 'admin@alpha.com', 'username': 'admin_alpha', 'password': 'alpha',
-             'first_name': 'Admin', 'last_name': 'Alpha', 'role': 'admin', 'tenant': alpha_tenant},
-            {'email': 'ana@alpha.com', 'username': 'ana', 'password': 'alpha',
-             'first_name': 'Ana', 'last_name': 'Costa', 'role': 'therapist', 'tenant': alpha_tenant},
-            {'email': 'carlos@alpha.com', 'username': 'carlos', 'password': 'alpha',
-             'first_name': 'Carlos', 'last_name': 'Mendes', 'role': 'therapist', 'tenant': alpha_tenant},
-            {'email': 'maria@alpha.com', 'username': 'maria_alpha', 'password': 'alpha',
-             'first_name': 'Maria', 'last_name': 'Silva', 'role': 'family', 'tenant': alpha_tenant},
-            {'email': 'admin@beta.com', 'username': 'admin_beta', 'password': 'beta',
-             'first_name': 'Admin', 'last_name': 'Beta', 'role': 'admin', 'tenant': beta_tenant},
-            {'email': 'beatriz@beta.com', 'username': 'beatriz', 'password': 'beta',
-             'first_name': 'Beatriz', 'last_name': 'Fonseca', 'role': 'therapist', 'tenant': beta_tenant},
-            {'email': 'marcos@beta.com', 'username': 'marcos', 'password': 'beta',
-             'first_name': 'Marcos', 'last_name': 'Lima', 'role': 'therapist', 'tenant': beta_tenant},
-            {'email': 'lucia@beta.com', 'username': 'lucia_beta', 'password': 'beta',
-             'first_name': 'Lucia', 'last_name': 'Santos', 'role': 'family', 'tenant': beta_tenant},
+            {
+                'email': 'admin@alpha.com',
+                'username': 'admin_alpha',
+                'password': 'alpha',
+                'first_name': 'Admin',
+                'last_name': 'Alpha',
+                'role': 'admin',
+                'tenant': alpha_tenant,
+            },
+            {
+                'email': 'ana@alpha.com',
+                'username': 'ana',
+                'password': 'alpha',
+                'first_name': 'Ana',
+                'last_name': 'Costa',
+                'role': 'therapist',
+                'tenant': alpha_tenant,
+            },
+            {
+                'email': 'carlos@alpha.com',
+                'username': 'carlos',
+                'password': 'alpha',
+                'first_name': 'Carlos',
+                'last_name': 'Mendes',
+                'role': 'therapist',
+                'tenant': alpha_tenant,
+            },
+            {
+                'email': 'maria@alpha.com',
+                'username': 'maria_alpha',
+                'password': 'alpha',
+                'first_name': 'Maria',
+                'last_name': 'Silva',
+                'role': 'family',
+                'tenant': alpha_tenant,
+            },
+            {
+                'email': 'admin@beta.com',
+                'username': 'admin_beta',
+                'password': 'beta',
+                'first_name': 'Admin',
+                'last_name': 'Beta',
+                'role': 'admin',
+                'tenant': beta_tenant,
+            },
+            {
+                'email': 'beatriz@beta.com',
+                'username': 'beatriz',
+                'password': 'beta',
+                'first_name': 'Beatriz',
+                'last_name': 'Fonseca',
+                'role': 'therapist',
+                'tenant': beta_tenant,
+            },
+            {
+                'email': 'marcos@beta.com',
+                'username': 'marcos',
+                'password': 'beta',
+                'first_name': 'Marcos',
+                'last_name': 'Lima',
+                'role': 'therapist',
+                'tenant': beta_tenant,
+            },
+            {
+                'email': 'lucia@beta.com',
+                'username': 'lucia_beta',
+                'password': 'beta',
+                'first_name': 'Lucia',
+                'last_name': 'Santos',
+                'role': 'family',
+                'tenant': beta_tenant,
+            },
         ]
 
         users = {}
@@ -263,8 +325,10 @@ class Command(BaseCommand):
         # ── Leonard Sessions & Evolutions ─────────────────────────────────────
 
         s = Session.objects.using(db).create(
-            patient=leonard, therapist_id=ana.id,
-            date_time=now - timedelta(days=88), status='completed',
+            patient=leonard,
+            therapist_id=ana.id,
+            date_time=now - timedelta(days=88),
+            status='completed',
             notes=(
                 '50-minute session focused on PECS Phase 2 - communicative persistence. '
                 'Leonard practiced the protocol "wait while the communicator does not respond": '
@@ -274,7 +338,8 @@ class Command(BaseCommand):
             ),
         )
         TherapeuticEvolution.objects.using(db).create(
-            session=s, created_by_id=ana.id,
+            session=s,
+            created_by_id=ana.id,
             objective='Teach communicative persistence via PECS Phase 2: Leonard holds the image until he gets a response from the communicator.',
             activities='Protocol "wait for response": therapist holds the image without delivering the item. Leonard waits up to 10 seconds. 20 trials, 12 correct (60%).',
             behavior='Leonard showed mild frustration in 4 trials (pushes image away). On correct trials, he delivered the image firmly. Maintained high motivation.',
@@ -284,8 +349,10 @@ class Command(BaseCommand):
         )
 
         s = Session.objects.using(db).create(
-            patient=leonard, therapist_id=carlos.id,
-            date_time=now - timedelta(days=75), status='completed',
+            patient=leonard,
+            therapist_id=carlos.id,
+            date_time=now - timedelta(days=75),
+            status='completed',
             notes=(
                 '50-minute session focused on verbal imitation of vowel sounds (/a/, /o/, /u/). '
                 'Activities with sound games: whistle, tambourine, and soap bubbles. '
@@ -294,7 +361,8 @@ class Command(BaseCommand):
             ),
         )
         TherapeuticEvolution.objects.using(db).create(
-            session=s, created_by_id=carlos.id,
+            session=s,
+            created_by_id=carlos.id,
             objective='Establish verbal imitation of vowels in a playful context.',
             activities='Sound games: whistle, tambourine, soap bubbles. 15 imitation opportunities after modeling.',
             behavior='Leonard produced /a/, /o/, /u/ in 8 out of 15 trials (53%). Associated sound with the action of blowing. No disruptive behaviors.',
@@ -304,8 +372,10 @@ class Command(BaseCommand):
         )
 
         s = Session.objects.using(db).create(
-            patient=leonard, therapist_id=ana.id,
-            date_time=now - timedelta(days=61), status='completed',
+            patient=leonard,
+            therapist_id=ana.id,
+            date_time=now - timedelta(days=61),
+            status='completed',
             notes=(
                 '50-minute session dedicated to functional eye contact training. '
                 'Protocol: look-take (mandatory to receive desired item). '
@@ -314,7 +384,8 @@ class Command(BaseCommand):
             ),
         )
         TherapeuticEvolution.objects.using(db).create(
-            session=s, created_by_id=ana.id,
+            session=s,
+            created_by_id=ana.id,
             objective='Increase functional eye contact to 80% of requests.',
             activities='Protocol "look-take": item given only after eye contact >1s. 10 trials with storybook preference as motivator.',
             behavior='Leonard achieved 70% spontaneous eye contact (7/10). In the other 3, needed visual prompt (signal to "look").',
@@ -324,8 +395,10 @@ class Command(BaseCommand):
         )
 
         s = Session.objects.using(db).create(
-            patient=leonard, therapist_id=carlos.id,
-            date_time=now - timedelta(days=47), status='completed',
+            patient=leonard,
+            therapist_id=carlos.id,
+            date_time=now - timedelta(days=47),
+            status='completed',
             notes=(
                 '50-minute session focused on emotional self-regulation. '
                 'Teaching the "stop-breathe-continue" strategy with visual support. '
@@ -335,7 +408,8 @@ class Command(BaseCommand):
             ),
         )
         TherapeuticEvolution.objects.using(db).create(
-            session=s, created_by_id=carlos.id,
+            session=s,
+            created_by_id=carlos.id,
             objective='Teach "stop-breathe-continue" strategy with visual support.',
             activities='Visual breathing card. 3 tantrum episodes during transitions. Strategy practice in each episode.',
             behavior='3 brief tantrums (30-60 sec). Used breathing card in 2/3 opportunities. Self-regulation improving.',
@@ -345,8 +419,10 @@ class Command(BaseCommand):
         )
 
         s = Session.objects.using(db).create(
-            patient=leonard, therapist_id=ana.id,
-            date_time=now - timedelta(days=33), status='completed',
+            patient=leonard,
+            therapist_id=ana.id,
+            date_time=now - timedelta(days=33),
+            status='completed',
             notes=(
                 '50-minute session on social skills via parallel -> shared play. '
                 'Activity: joint construction with blocks. Leonard agreed to share space '
@@ -355,7 +431,8 @@ class Command(BaseCommand):
             ),
         )
         TherapeuticEvolution.objects.using(db).create(
-            session=s, created_by_id=ana.id,
+            session=s,
+            created_by_id=ana.id,
             objective='Transition from parallel play to shared interaction.',
             activities='Joint construction with blocks. Visual negotiation of space. Alternating turns for 12 minutes.',
             behavior='Leonard agreed to share space. Maintained interaction for 12 continuous minutes. Initiated spontaneous eye contact to check therapist 4x.',
@@ -365,8 +442,10 @@ class Command(BaseCommand):
         )
 
         s = Session.objects.using(db).create(
-            patient=leonard, therapist_id=carlos.id,
-            date_time=now - timedelta(days=19), status='completed',
+            patient=leonard,
+            therapist_id=carlos.id,
+            date_time=now - timedelta(days=19),
+            status='completed',
             notes=(
                 '50-minute session on joint attention via cause-and-effect play. '
                 'Activity: ball that rolls and falls into a bucket, with turn-taking. '
@@ -375,7 +454,8 @@ class Command(BaseCommand):
             ),
         )
         TherapeuticEvolution.objects.using(db).create(
-            session=s, created_by_id=carlos.id,
+            session=s,
+            created_by_id=carlos.id,
             objective='Develop joint attention via cause-and-effect play.',
             activities='Ball that rolls and falls into a bucket. Turn-taking. 4 opportunities to request continuation.',
             behavior="Leonard requested continuation 4x (vocalization + gesture). Followed therapist's gaze to object 3x — emergent joint attention!",
@@ -385,8 +465,10 @@ class Command(BaseCommand):
         )
 
         s = Session.objects.using(db).create(
-            patient=leonard, therapist_id=ana.id,
-            date_time=now - timedelta(days=14), status='completed',
+            patient=leonard,
+            therapist_id=ana.id,
+            date_time=now - timedelta(days=14),
+            status='completed',
             notes=(
                 '50-minute session focused on functional communication via PECS Phase 1. '
                 'Leonard arrived agitated, possibly due to a route change reported by his mother. '
@@ -397,7 +479,8 @@ class Command(BaseCommand):
             ),
         )
         TherapeuticEvolution.objects.using(db).create(
-            session=s, created_by_id=ana.id,
+            session=s,
+            created_by_id=ana.id,
             objective=(
                 'Establish functional communicative exchange via PECS Phase 1: Leonard spontaneously '
                 'hands the image of a desired item to the communicator to obtain it, without physical prompting.'
@@ -432,8 +515,10 @@ class Command(BaseCommand):
         )
 
         s = Session.objects.using(db).create(
-            patient=leonard, therapist_id=ana.id,
-            date_time=now - timedelta(days=7), status='completed',
+            patient=leonard,
+            therapist_id=ana.id,
+            date_time=now - timedelta(days=7),
+            status='completed',
             notes=(
                 '50-minute session focused on verbal imitation and expansion of requests. '
                 'Leonard showed good disposition since arrival. The token economy '
@@ -442,7 +527,8 @@ class Command(BaseCommand):
             ),
         )
         TherapeuticEvolution.objects.using(db).create(
-            session=s, created_by_id=ana.id,
+            session=s,
+            created_by_id=ana.id,
             objective=(
                 'Expand repertoire of spontaneous requests via PECS to 5 distinct '
                 'items and begin verbal imitation of vowel sounds in a playful context.'
@@ -473,33 +559,43 @@ class Command(BaseCommand):
 
         # Leonard scheduled
         Session.objects.using(db).create(
-            patient=leonard, therapist_id=ana.id,
-            date_time=now + timedelta(days=7), status='scheduled',
+            patient=leonard,
+            therapist_id=ana.id,
+            date_time=now + timedelta(days=7),
+            status='scheduled',
             notes='Follow-up for PECS Phase 2. Assess generalization of communicative persistence. Test with new communication partner.',
         )
         Session.objects.using(db).create(
-            patient=leonard, therapist_id=carlos.id,
-            date_time=now + timedelta(days=14), status='scheduled',
+            patient=leonard,
+            therapist_id=carlos.id,
+            date_time=now + timedelta(days=14),
+            status='scheduled',
             notes='Family guidance session with mother present. Progress review. Alignment of home generalization strategies.',
         )
 
         # Leonard PENDING (completed, no evolution) — 2 pending for Ana
         Session.objects.using(db).create(
-            patient=leonard, therapist_id=ana.id,
-            date_time=now - timedelta(days=4), status='completed',
+            patient=leonard,
+            therapist_id=ana.id,
+            date_time=now - timedelta(days=4),
+            status='completed',
             notes='Brief maintenance session. PECS generalization with new communication partner. Token economy review.',
         )
         Session.objects.using(db).create(
-            patient=leonard, therapist_id=ana.id,
-            date_time=now - timedelta(days=2), status='completed',
+            patient=leonard,
+            therapist_id=ana.id,
+            date_time=now - timedelta(days=2),
+            status='completed',
             notes='Verbal imitation check-in. Introduced bilabial sounds /p/ and /b/. Mother present for last 10 minutes.',
         )
 
         # ── Sophia Sessions & Evolutions ──────────────────────────────────────
 
         s = Session.objects.using(db).create(
-            patient=sophia, therapist_id=ana.id,
-            date_time=now - timedelta(days=10), status='completed',
+            patient=sophia,
+            therapist_id=ana.id,
+            date_time=now - timedelta(days=10),
+            status='completed',
             notes=(
                 '50-minute session focused on social skills and anxiety management in '
                 'situations of activity change. Sophia arrived anxious reporting a '
@@ -509,7 +605,8 @@ class Command(BaseCommand):
             ),
         )
         TherapeuticEvolution.objects.using(db).create(
-            session=s, created_by_id=ana.id,
+            session=s,
+            created_by_id=ana.id,
             objective=(
                 'Develop emotional regulation skills in the face of unexpected routine changes '
                 'and train self-regulation strategies for independent use in the school context.'
@@ -542,23 +639,29 @@ class Command(BaseCommand):
         )
 
         Session.objects.using(db).create(
-            patient=sophia, therapist_id=ana.id,
-            date_time=now + timedelta(days=5), status='scheduled',
+            patient=sophia,
+            therapist_id=ana.id,
+            date_time=now + timedelta(days=5),
+            status='scheduled',
             notes='Social skills module continuity: recognition of facial expressions. Introduce "social detective" exercise.',
         )
 
         # Sophia PENDING — 1 pending for Ana
         Session.objects.using(db).create(
-            patient=sophia, therapist_id=ana.id,
-            date_time=now - timedelta(days=3), status='completed',
+            patient=sophia,
+            therapist_id=ana.id,
+            date_time=now - timedelta(days=3),
+            status='completed',
             notes='Pocket card usage review. Social detective exercise introduction. Anxiety management check-in.',
         )
 
         # ── Peter Sessions & Evolutions ───────────────────────────────────────
 
         s = Session.objects.using(db).create(
-            patient=peter, therapist_id=carlos.id,
-            date_time=now - timedelta(days=12), status='completed',
+            patient=peter,
+            therapist_id=carlos.id,
+            date_time=now - timedelta(days=12),
+            status='completed',
             notes=(
                 'Initial session for functional assessment and therapeutic bond establishment. '
                 'Peter arrived accompanied by his mother and showed intense resistance to separation '
@@ -568,7 +671,8 @@ class Command(BaseCommand):
             ),
         )
         TherapeuticEvolution.objects.using(db).create(
-            session=s, created_by_id=carlos.id,
+            session=s,
+            created_by_id=carlos.id,
             objective=(
                 "Conduct initial functional assessment of Peter's behavioral, communicative, "
                 'and sensory repertoire, and establish therapeutic alliance with child and family.'
@@ -583,7 +687,7 @@ class Command(BaseCommand):
                 'Peter explored materials systematically. Pulled hand away from modeling clay and crepe paper (expression of disgust). '
                 'Tolerated interlocking blocks, cars, and kinetic sand well. '
                 'Imitated 2 gestures spontaneously (clapping, hitting table). '
-                'Communicated through pointing, touching therapist\'s arm, and affirmative/negative vocalizations.'
+                "Communicated through pointing, touching therapist's arm, and affirmative/negative vocalizations."
             ),
             progress=(
                 'Initial assessment completed. Preliminary profile: marked tactile hypersensitivity; '
@@ -599,28 +703,36 @@ class Command(BaseCommand):
         )
 
         Session.objects.using(db).create(
-            patient=peter, therapist_id=carlos.id,
-            date_time=now + timedelta(days=2), status='scheduled',
+            patient=peter,
+            therapist_id=carlos.id,
+            date_time=now + timedelta(days=2),
+            status='scheduled',
             notes='Start individualized sensory diet. Introduce first pictograms from visual schedule (arrival, activity 1, snack, goodbye).',
         )
         Session.objects.using(db).create(
-            patient=peter, therapist_id=carlos.id,
-            date_time=now + timedelta(days=9), status='scheduled',
+            patient=peter,
+            therapist_id=carlos.id,
+            date_time=now + timedelta(days=9),
+            status='scheduled',
             notes='Visual schedule review. PECS vocabulary expansion. Proprioceptive sensory diet activities.',
         )
 
         # Peter PENDING — 1 pending for Carlos
         Session.objects.using(db).create(
-            patient=peter, therapist_id=carlos.id,
-            date_time=now - timedelta(days=2), status='completed',
+            patient=peter,
+            therapist_id=carlos.id,
+            date_time=now - timedelta(days=2),
+            status='completed',
             notes='Sensory diet introduction. Visual schedule first implementation. Kinetic sand tactile response assessment.',
         )
 
         # ── Claire Sessions & Evolutions ──────────────────────────────────────
 
         Session.objects.using(db).create(
-            patient=claire, therapist_id=carlos.id,
-            date_time=now - timedelta(days=3), status='canceled',
+            patient=claire,
+            therapist_id=carlos.id,
+            date_time=now - timedelta(days=3),
+            status='canceled',
             notes=(
                 'Session canceled by the family with 2 hours notice. '
                 'Claire had an epileptic seizure the previous night lasting 3 minutes. '
@@ -629,8 +741,10 @@ class Command(BaseCommand):
         )
 
         s = Session.objects.using(db).create(
-            patient=claire, therapist_id=carlos.id,
-            date_time=now - timedelta(days=1), status='completed',
+            patient=claire,
+            therapist_id=carlos.id,
+            date_time=now - timedelta(days=1),
+            status='completed',
             notes=(
                 "45-minute session (reduced due to Claire's state — irritability and low frustration tolerance). "
                 'Restructured to prioritize sensory regulation and basic AAC communication, '
@@ -638,7 +752,8 @@ class Command(BaseCommand):
             ),
         )
         TherapeuticEvolution.objects.using(db).create(
-            session=s, created_by_id=carlos.id,
+            session=s,
+            created_by_id=carlos.id,
             objective=(
                 'Promote sensory and emotional regulation after neurological intercurrence '
                 'and maintain engagement with the AAC system in a low-demand context.'
@@ -671,21 +786,27 @@ class Command(BaseCommand):
 
         # Claire PENDING — 2 pending for Carlos
         Session.objects.using(db).create(
-            patient=claire, therapist_id=carlos.id,
-            date_time=now - timedelta(days=6), status='completed',
+            patient=claire,
+            therapist_id=carlos.id,
+            date_time=now - timedelta(days=6),
+            status='completed',
             notes='AAC expansion session. "Finished" and "help" icons introduced. Sensory diet review.',
         )
         Session.objects.using(db).create(
-            patient=claire, therapist_id=carlos.id,
-            date_time=now - timedelta(days=2), status='completed',
+            patient=claire,
+            therapist_id=carlos.id,
+            date_time=now - timedelta(days=2),
+            status='completed',
             notes='Functional skills session post-regulation. Good AAC engagement throughout. PBS transition protocol applied.',
         )
 
         # ── Gabriel Sessions & Evolutions ─────────────────────────────────────
 
         s = Session.objects.using(db).create(
-            patient=gabriel, therapist_id=ana.id,
-            date_time=now - timedelta(days=11), status='completed',
+            patient=gabriel,
+            therapist_id=ana.id,
+            date_time=now - timedelta(days=11),
+            status='completed',
             notes=(
                 '50-minute session focused on pragmatic communication skills. '
                 'Gabriel arrived excited and immediately started a monologue about dinosaurs, '
@@ -694,7 +815,8 @@ class Command(BaseCommand):
             ),
         )
         TherapeuticEvolution.objects.using(db).create(
-            session=s, created_by_id=ana.id,
+            session=s,
+            created_by_id=ana.id,
             objective=(
                 'Develop conversational turn regulation: ask questions to interlocutor, '
                 "check the other's interest, and modulate speaking time about topics of own interest."
@@ -702,7 +824,7 @@ class Command(BaseCommand):
             activities=(
                 'Block 1 (10 min): Free conversation about dinosaurs — observational baseline: 8 min monologue, 0 questions. '
                 'Block 2 (25 min): Explicit teaching of "conversational turn" with speech bubble visual support. '
-                'Role-play of conversation about dinosaurs and therapist\'s topic (cooking), with role reversal. '
+                "Role-play of conversation about dinosaurs and therapist's topic (cooking), with role reversal. "
                 'Block 3 (15 min): Naturalistic practice with speech bubble support.'
             ),
             behavior=(
@@ -724,15 +846,19 @@ class Command(BaseCommand):
         )
 
         Session.objects.using(db).create(
-            patient=gabriel, therapist_id=ana.id,
-            date_time=now + timedelta(days=4), status='scheduled',
+            patient=gabriel,
+            therapist_id=ana.id,
+            date_time=now + timedelta(days=4),
+            status='scheduled',
             notes='Conversational skills continuity. "Other\'s perspective" exercise with social stories. Gestural signal introduction.',
         )
 
         # Gabriel PENDING — 1 pending for Ana
         Session.objects.using(db).create(
-            patient=gabriel, therapist_id=ana.id,
-            date_time=now - timedelta(days=1), status='completed',
+            patient=gabriel,
+            therapist_id=ana.id,
+            date_time=now - timedelta(days=1),
+            status='completed',
             notes='Social perspective-taking exercise. "Other\'s perspective" social stories introduction. Speech bubble fading.',
         )
 
@@ -791,7 +917,7 @@ class Command(BaseCommand):
                 '7 years old and is in the 1st grade of elementary school. Exhibits developed verbal communication '
                 'with good ability to narrate events and express emotions when regulated. '
                 'School difficulties concentrated in phonemic decoding and reading fluency, causing frustration '
-                'and school refusal behaviors (2-3 episodes per week per mother\'s report). '
+                "and school refusal behaviors (2-3 episodes per week per mother's report). "
                 'Demonstrates above-average visual memory and LEGO construction ability. '
                 'Therapeutic work integrates: emotional regulation for school frustration; '
                 'visual compensation strategies for reading; school curricular adaptation interface.'
@@ -851,17 +977,20 @@ class Command(BaseCommand):
         # ── Isabella Sessions & Evolutions ────────────────────────────────────
 
         s = Session.objects.using(db).create(
-            patient=isabella, therapist_id=beatriz.id,
-            date_time=now - timedelta(days=9), status='completed',
+            patient=isabella,
+            therapist_id=beatriz.id,
+            date_time=now - timedelta(days=9),
+            status='completed',
             notes=(
                 '50-minute session with ongoing maternal separation desensitization protocol (week 6). '
                 'Mother remained in room for first 10 minutes, waited outside with door ajar for 15 minutes, '
-                'then withdrew to waiting room. Isabella cried approximately 8 minutes after mother\'s definitive '
+                "then withdrew to waiting room. Isabella cried approximately 8 minutes after mother's definitive "
                 'departure (reduction from 18 minutes previous week). Finished the session engaged and smiling.'
             ),
         )
         TherapeuticEvolution.objects.using(db).create(
-            session=s, created_by_id=beatriz.id,
+            session=s,
+            created_by_id=beatriz.id,
             objective=(
                 'Advance in the maternal separation desensitization protocol (step 6): '
                 'mother stays 10 min, waits 15 min outside, withdraws to waiting room for remaining time.'
@@ -876,7 +1005,7 @@ class Command(BaseCommand):
             behavior=(
                 'Isabella showed anticipatory anxiety before the session. '
                 "Cried 8 minutes after mother's definitive departure (previous: 18 min). "
-                'Crying ceased autonomously without needing mother\'s return — important protocol milestone. '
+                "Crying ceased autonomously without needing mother's return — important protocol milestone. "
                 'After regulation, participated with high engagement and spontaneously vocalized song lyrics.'
             ),
             progress=(
@@ -894,23 +1023,29 @@ class Command(BaseCommand):
         )
 
         Session.objects.using(db).create(
-            patient=isabella, therapist_id=beatriz.id,
-            date_time=now + timedelta(days=6), status='scheduled',
+            patient=isabella,
+            therapist_id=beatriz.id,
+            date_time=now + timedelta(days=6),
+            status='scheduled',
             notes='Step 7 of desensitization protocol: mother leaves immediately at session start. Music regulation protocol.',
         )
 
         # Isabella PENDING — 1 pending for Beatriz
         Session.objects.using(db).create(
-            patient=isabella, therapist_id=beatriz.id,
-            date_time=now - timedelta(days=3), status='completed',
+            patient=isabella,
+            therapist_id=beatriz.id,
+            date_time=now - timedelta(days=3),
+            status='completed',
             notes='Step 7 implementation. Mother left immediately at session start. Regulation time monitored.',
         )
 
         # ── Matthew Sessions & Evolutions ─────────────────────────────────────
 
         s = Session.objects.using(db).create(
-            patient=matthew, therapist_id=beatriz.id,
-            date_time=now - timedelta(days=8), status='completed',
+            patient=matthew,
+            therapist_id=beatriz.id,
+            date_time=now - timedelta(days=8),
+            status='completed',
             notes=(
                 '50-minute session integrating ABA and adapted CBT for managing compulsive behaviors. '
                 'Matthew reported difficult week at school: spent 20 minutes checking backpack before entering classroom. '
@@ -918,7 +1053,8 @@ class Command(BaseCommand):
             ),
         )
         TherapeuticEvolution.objects.using(db).create(
-            session=s, created_by_id=beatriz.id,
+            session=s,
+            created_by_id=beatriz.id,
             objective=(
                 'Conduct functional analysis of the backpack checking behavior '
                 'and introduce the compulsion delay technique as a first ERP strategy.'
@@ -948,23 +1084,29 @@ class Command(BaseCommand):
         )
 
         Session.objects.using(db).create(
-            patient=matthew, therapist_id=beatriz.id,
-            date_time=now + timedelta(days=7), status='scheduled',
+            patient=matthew,
+            therapist_id=beatriz.id,
+            date_time=now + timedelta(days=7),
+            status='scheduled',
             notes='Review compulsion delay card. ERP round increasing delay to 5 minutes. Chess cognitive flexibility training.',
         )
 
         # Matthew PENDING — 1 pending for Beatriz
         Session.objects.using(db).create(
-            patient=matthew, therapist_id=beatriz.id,
-            date_time=now - timedelta(days=2), status='completed',
+            patient=matthew,
+            therapist_id=beatriz.id,
+            date_time=now - timedelta(days=2),
+            status='completed',
             notes='ERP session 2. Delay time increased to 5 minutes. Desk symmetry ritual addressed. Chess training.',
         )
 
         # ── Laura Sessions & Evolutions ───────────────────────────────────────
 
         s = Session.objects.using(db).create(
-            patient=laura, therapist_id=beatriz.id,
-            date_time=now - timedelta(days=6), status='completed',
+            patient=laura,
+            therapist_id=beatriz.id,
+            date_time=now - timedelta(days=6),
+            status='completed',
             notes=(
                 '50-minute session focused on emotional regulation and frustration tolerance '
                 'associated with school difficulties. Laura arrived with angry expression, '
@@ -972,7 +1114,8 @@ class Command(BaseCommand):
             ),
         )
         TherapeuticEvolution.objects.using(db).create(
-            session=s, created_by_id=beatriz.id,
+            session=s,
+            created_by_id=beatriz.id,
             objective=(
                 'Work on emotional regulation in situations of school frustration '
                 'and initiate pre-reading activity with high-structure visual support.'
@@ -1005,23 +1148,29 @@ class Command(BaseCommand):
         )
 
         Session.objects.using(db).create(
-            patient=laura, therapist_id=beatriz.id,
-            date_time=now + timedelta(days=8), status='scheduled',
+            patient=laura,
+            therapist_id=beatriz.id,
+            date_time=now + timedelta(days=8),
+            status='scheduled',
             notes='Reading ruler introduction. "Book of things I do well" continuation. School letter finalization.',
         )
 
         # Laura PENDING — 1 pending for Beatriz
         Session.objects.using(db).create(
-            patient=laura, therapist_id=beatriz.id,
-            date_time=now - timedelta(days=4), status='completed',
+            patient=laura,
+            therapist_id=beatriz.id,
+            date_time=now - timedelta(days=4),
+            status='completed',
             notes='Reading ruler first use. OpenDyslexic font trialed. School guidance letter drafted with mother.',
         )
 
         # ── Hector Sessions & Evolutions ──────────────────────────────────────
 
         s = Session.objects.using(db).create(
-            patient=hector, therapist_id=marcos.id,
-            date_time=now - timedelta(days=5), status='completed',
+            patient=hector,
+            therapist_id=marcos.id,
+            date_time=now - timedelta(days=5),
+            status='completed',
             notes=(
                 '50-minute session focused on comprehension of instructions and visual support use. '
                 'Hector was in good spirits and engaged easily with vehicle-themed activities. '
@@ -1029,7 +1178,8 @@ class Command(BaseCommand):
             ),
         )
         TherapeuticEvolution.objects.using(db).create(
-            session=s, created_by_id=marcos.id,
+            session=s,
+            created_by_id=marcos.id,
             objective=(
                 'Assess dependence on visual support for comprehension of 2-step instructions '
                 'under different noise conditions and introduce the agreed signal "I didn\'t understand".'
@@ -1060,28 +1210,36 @@ class Command(BaseCommand):
         )
 
         Session.objects.using(db).create(
-            patient=hector, therapist_id=marcos.id,
-            date_time=now + timedelta(days=1), status='scheduled',
+            patient=hector,
+            therapist_id=marcos.id,
+            date_time=now + timedelta(days=1),
+            status='scheduled',
             notes='Small group generalization session (2 patients). "I didn\'t understand" signal practice in classroom-like context.',
         )
 
         # Hector PENDING — 2 pending for Marcos
         Session.objects.using(db).create(
-            patient=hector, therapist_id=marcos.id,
-            date_time=now - timedelta(days=3), status='completed',
+            patient=hector,
+            therapist_id=marcos.id,
+            date_time=now - timedelta(days=3),
+            status='completed',
             notes='Small group generalization. "I didn\'t understand" signal practice with peer. School material drafted.',
         )
         Session.objects.using(db).create(
-            patient=hector, therapist_id=marcos.id,
-            date_time=now - timedelta(days=1), status='completed',
+            patient=hector,
+            therapist_id=marcos.id,
+            date_time=now - timedelta(days=1),
+            status='completed',
             notes='School guidance material finalized. Family orientation on non-comprehension vs refusal differentiation.',
         )
 
         # ── Valentina Sessions & Evolutions ───────────────────────────────────
 
         s = Session.objects.using(db).create(
-            patient=valentina, therapist_id=marcos.id,
-            date_time=now - timedelta(days=4), status='completed',
+            patient=valentina,
+            therapist_id=marcos.id,
+            date_time=now - timedelta(days=4),
+            status='completed',
             notes=(
                 '45-minute session focused on AAC communication and SIB management during transitions. '
                 'Valentina had 2 SIB episodes during transition from fitting activity to snack, '
@@ -1089,7 +1247,8 @@ class Command(BaseCommand):
             ),
         )
         TherapeuticEvolution.objects.using(db).create(
-            session=s, created_by_id=marcos.id,
+            session=s,
+            created_by_id=marcos.id,
             objective=(
                 'Maintain and expand functional AAC use for expressing basic needs '
                 'and apply PBS protocol for SIB reduction during transition moments.'
@@ -1121,30 +1280,37 @@ class Command(BaseCommand):
         )
 
         Session.objects.using(db).create(
-            patient=valentina, therapist_id=marcos.id,
-            date_time=now + timedelta(days=6), status='scheduled',
+            patient=valentina,
+            therapist_id=marcos.id,
+            date_time=now + timedelta(days=6),
+            status='scheduled',
             notes='SIB frequency data review. AAC emotion vocabulary expansion. Sleep hygiene protocol check with father.',
         )
 
         # Valentina PENDING — 1 pending for Marcos
         Session.objects.using(db).create(
-            patient=valentina, therapist_id=marcos.id,
-            date_time=now - timedelta(days=2), status='completed',
+            patient=valentina,
+            therapist_id=marcos.id,
+            date_time=now - timedelta(days=2),
+            status='completed',
             notes='AAC emotion vocabulary expansion. "Happy", "sad", "in pain" icons introduced. Sleep hygiene protocol review.',
         )
 
         # ── Enzo Sessions & Evolutions ────────────────────────────────────────
 
         s = Session.objects.using(db).create(
-            patient=enzo, therapist_id=beatriz.id,
-            date_time=now - timedelta(days=13), status='completed',
+            patient=enzo,
+            therapist_id=beatriz.id,
+            date_time=now - timedelta(days=13),
+            status='completed',
             notes=(
                 'Initial session for assessment of language prerequisites and therapeutic bond establishment. '
                 'Enzo accompanied by mother throughout (full parental inclusion protocol, first 4 weeks).'
             ),
         )
         TherapeuticEvolution.objects.using(db).create(
-            session=s, created_by_id=beatriz.id,
+            session=s,
+            created_by_id=beatriz.id,
             objective=(
                 'Assess motor imitation repertoire, joint attention, and communicative intent '
                 'as language development prerequisites, and initiate parental guidance in NDBI strategies.'
@@ -1161,7 +1327,7 @@ class Command(BaseCommand):
                 'Gross motor imitation: 6/10 actions spontaneously (clapping, hitting table, raising arms). '
                 'Fine motor imitation: 0/5 — absent. '
                 "Following therapist's pointing: 3/8 trials with gaze toward indicated object (emergent). "
-                'Communicative intent: pointing to desired toy on 4 occasions, touching therapist\'s arm on 2 occasions. '
+                "Communicative intent: pointing to desired toy on 4 occasions, touching therapist's arm on 2 occasions. "
                 'Mother practiced NDBI strategies with engagement and asked pertinent questions.'
             ),
             progress=(
@@ -1179,15 +1345,19 @@ class Command(BaseCommand):
         )
 
         Session.objects.using(db).create(
-            patient=enzo, therapist_id=beatriz.id,
-            date_time=now + timedelta(days=3), status='scheduled',
+            patient=enzo,
+            therapist_id=beatriz.id,
+            date_time=now + timedelta(days=3),
+            status='scheduled',
             notes='Fine motor imitation and joint attention expansion. Mirror activities and cause-and-effect games. "More" AAC icon introduction.',
         )
 
         # Enzo PENDING — 1 pending for Beatriz
         Session.objects.using(db).create(
-            patient=enzo, therapist_id=beatriz.id,
-            date_time=now - timedelta(days=1), status='completed',
+            patient=enzo,
+            therapist_id=beatriz.id,
+            date_time=now - timedelta(days=1),
+            status='completed',
             notes='Fine motor imitation program start. "More" AAC icon introduced in preferred activity. NDBI home implementation review.',
         )
 

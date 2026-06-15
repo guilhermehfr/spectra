@@ -55,8 +55,8 @@ class Tenant(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        verbose_name = "Tenant"
-        verbose_name_plural = "Tenants"
+        verbose_name = 'Tenant'
+        verbose_name_plural = 'Tenants'
 
     def __str__(self):
         return self.name

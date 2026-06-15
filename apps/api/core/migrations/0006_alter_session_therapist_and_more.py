@@ -6,7 +6,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ('core', '0005_tenant_customuser_tenant'),
     ]
@@ -15,11 +14,26 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='session',
             name='therapist',
-            field=models.ForeignKey(db_constraint=False, limit_choices_to={'role': 'therapist'}, on_delete=django.db.models.deletion.CASCADE, related_name='sessions', to=settings.AUTH_USER_MODEL, verbose_name='Terapeuta'),
+            field=models.ForeignKey(
+                db_constraint=False,
+                limit_choices_to={'role': 'therapist'},
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name='sessions',
+                to=settings.AUTH_USER_MODEL,
+                verbose_name='Terapeuta',
+            ),
         ),
         migrations.AlterField(
             model_name='therapeuticevolution',
             name='created_by',
-            field=models.ForeignKey(blank=True, db_constraint=False, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='created_evolutions', to=settings.AUTH_USER_MODEL, verbose_name='Criado por'),
+            field=models.ForeignKey(
+                blank=True,
+                db_constraint=False,
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                related_name='created_evolutions',
+                to=settings.AUTH_USER_MODEL,
+                verbose_name='Criado por',
+            ),
         ),
     ]

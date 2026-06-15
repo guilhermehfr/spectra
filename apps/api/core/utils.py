@@ -1,7 +1,8 @@
 def prefetch_cross_db_fks(instances, fk_map, db='default'):
     for fk_field, model_cls in fk_map.items():
         ids = {
-            getattr(obj, fk_field.attname) for obj in instances
+            getattr(obj, fk_field.attname)
+            for obj in instances
             if getattr(obj, fk_field.attname) is not None
         }
         if not ids:

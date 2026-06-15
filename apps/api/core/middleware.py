@@ -35,10 +35,16 @@ class TenantMiddleware:
             parsed.setdefault(k, v)
         for k in ['USER', 'PASSWORD', 'HOST', 'PORT']:
             parsed.setdefault(k, '')
-        parsed.setdefault('TEST', {
-            'CHARSET': None, 'COLLATION': None, 'MIGRATE': True,
-            'MIRROR': None, 'NAME': None,
-        })
+        parsed.setdefault(
+            'TEST',
+            {
+                'CHARSET': None,
+                'COLLATION': None,
+                'MIGRATE': True,
+                'MIRROR': None,
+                'NAME': None,
+            },
+        )
         parsed.setdefault('DISABLE_SERVER_SIDE_CURSORS', False)
         settings.DATABASES['tenant'] = parsed
         # delete cached connection so it re-creates with real engine

@@ -38,10 +38,16 @@ class Command(BaseCommand):
         parsed.setdefault('TIME_ZONE', None)
         for setting in ['NAME', 'USER', 'PASSWORD', 'HOST', 'PORT']:
             parsed.setdefault(setting, '')
-        parsed.setdefault('TEST', {
-            'CHARSET': None, 'COLLATION': None, 'MIGRATE': True,
-            'MIRROR': None, 'NAME': None,
-        })
+        parsed.setdefault(
+            'TEST',
+            {
+                'CHARSET': None,
+                'COLLATION': None,
+                'MIGRATE': True,
+                'MIRROR': None,
+                'NAME': None,
+            },
+        )
         settings.DATABASES['tenant'] = parsed
         if connections['tenant']:
             connections['tenant'].close()
@@ -57,7 +63,8 @@ class Command(BaseCommand):
             (
                 f'{subdomain}_therapist',
                 f'therapist@{subdomain}.spectra.com',
-                'therapist123', 'therapist',
+                'therapist123',
+                'therapist',
             ),
             (f'{subdomain}_family', f'family@{subdomain}.spectra.com', 'family123', 'family'),
         ]

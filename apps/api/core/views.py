@@ -221,7 +221,8 @@ class TherapeuticEvolutionListCreateView(ListCreateAPIView):
         if page is not None:
             prefetch_cross_db_fks(page, {TherapeuticEvolution.created_by.field: CustomUser})
             sessions = [
-                ev.session for ev in page
+                ev.session
+                for ev in page
                 if hasattr(ev, 'session') and ev.session and ev.session.therapist_id
             ]
             prefetch_cross_db_fks(sessions, {Session.therapist.field: CustomUser})
@@ -410,16 +411,19 @@ class FamilyEvolutionsListView(ListCreateAPIView):
 
     def get_queryset(self):
         user = self.request.user
-        return TherapeuticEvolution.objects.select_related('session').filter(
-            released_to_family=True, session__patient__guardian_email=user.email
-        ).order_by('-created_at')
+        return (
+            TherapeuticEvolution.objects.select_related('session')
+            .filter(released_to_family=True, session__patient__guardian_email=user.email)
+            .order_by('-created_at')
+        )
 
     def paginate_queryset(self, queryset):
         page = super().paginate_queryset(queryset)
         if page is not None:
             prefetch_cross_db_fks(page, {TherapeuticEvolution.created_by.field: CustomUser})
             sessions = [
-                ev.session for ev in page
+                ev.session
+                for ev in page
                 if hasattr(ev, 'session') and ev.session and ev.session.therapist_id
             ]
             prefetch_cross_db_fks(sessions, {Session.therapist.field: CustomUser})
@@ -443,9 +447,11 @@ class FamilyEvolutionDetailView(APIView):
     def get(self, request, pk):
         user = request.user
 
-        evolution = TherapeuticEvolution.objects.select_related('session').filter(
-            id=pk, released_to_family=True, session__patient__guardian_email=user.email
-        ).first()
+        evolution = (
+            TherapeuticEvolution.objects.select_related('session')
+            .filter(id=pk, released_to_family=True, session__patient__guardian_email=user.email)
+            .first()
+        )
 
         if not evolution:
             return Response({'detail': 'Evolução não encontrada ou não autorizada.'}, status=404)

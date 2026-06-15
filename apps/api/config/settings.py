@@ -79,7 +79,8 @@ WSGI_APPLICATION = 'config.wsgi.application'
 DATABASES = {
     'default': dj_database_url.parse(env('CENTRAL_DATABASE_URL')),
     'tenant': dj_database_url.parse(env('TENANT_DATABASE_URL', default=''))
-    if env('TENANT_DATABASE_URL', default=None) else {},
+    if env('TENANT_DATABASE_URL', default=None)
+    else {},
 }
 
 DATABASE_ROUTERS = ['core.router.TenantDatabaseRouter']
