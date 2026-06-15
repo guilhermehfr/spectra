@@ -1,5 +1,18 @@
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AbstractUser, UserManager
 from django.db import models
+
+from core.tenant_context import get_tenant_id
+
+
+class TenantScopedManager(UserManager):
+    """Auto-scopes CustomUser queries to the current tenant via ContextVar."""
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+        tenant_id = get_tenant_id()
+        if tenant_id is not None:
+            return qs.filter(tenant_id=tenant_id)
+        return qs
 
 
 class SoftDeleteManager(models.Manager):
@@ -35,12 +48,29 @@ class SoftDeleteModel(models.Model):
         return super().delete(*args, **kwargs)
 
 
+class Tenant(models.Model):
+    name = models.CharField(max_length=255)
+    db_url = models.CharField(max_length=500)
+    subdomain = models.CharField(max_length=255, unique=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = "Tenant"
+        verbose_name_plural = "Tenants"
+
+    def __str__(self):
+        return self.name
+
+
 class CustomUser(AbstractUser):
     """
     Custom User model com suporte a roles (admin, therapist, family).
 
     Utilizamos AbstractUser para manter todas as funcionalidades padrão do Django
     enquanto adicionamos campos customizados.
+
+    `objects`   — TenantScopedManager: auto-filters by tenant_id from request context.
+    `all_objects` — UserManager: unfiltered, for login and setup commands.
     """
 
     ROLE_CHOICES = [
@@ -56,9 +86,18 @@ class CustomUser(AbstractUser):
         help_text='Função do usuário no sistema',
     )
     phone = models.CharField(max_length=20, blank=True)
+    tenant = models.ForeignKey(
+        Tenant,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+    )
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    objects = TenantScopedManager()
+    all_objects = UserManager()
 
     class Meta:
         ordering = ['-created_at']
@@ -139,6 +178,7 @@ class Session(SoftDeleteModel):
         related_name='sessions',
         limit_choices_to={'role': 'therapist'},
         verbose_name='Terapeuta',
+        db_constraint=False,
     )
     date_time = models.DateTimeField(verbose_name='Data e Hora')
     status = models.CharField(
@@ -170,6 +210,7 @@ class TherapeuticEvolution(SoftDeleteModel):
         blank=True,
         related_name='created_evolutions',
         verbose_name='Criado por',
+        db_constraint=False,
     )
     objective = models.TextField(verbose_name='Objetivo')
     activities = models.TextField(verbose_name='Atividades Realizadas')

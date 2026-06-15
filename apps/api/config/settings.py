@@ -46,6 +46,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'core.middleware.TenantMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -75,17 +76,13 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
-DATABASE_URL = env('DATABASE_URL', default=None)
+DATABASES = {
+    'default': dj_database_url.parse(env('CENTRAL_DATABASE_URL')),
+    'tenant': dj_database_url.parse(env('TENANT_DATABASE_URL', default=''))
+    if env('TENANT_DATABASE_URL', default=None) else {},
+}
 
-if DATABASE_URL:
-    DATABASES = {'default': dj_database_url.parse(DATABASE_URL)}
-else:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
-        }
-    }
+DATABASE_ROUTERS = ['core.router.TenantDatabaseRouter']
 
 AUTH_PASSWORD_VALIDATORS: list[dict[str, str]] = []
 
@@ -131,4 +128,5 @@ SIMPLE_JWT = {
     'UPDATE_LAST_LOGIN': False,
     'ALGORITHM': 'HS256',
     'SIGNING_KEY': SECRET_KEY,
+    'TOKEN_OBTAIN_SERIALIZER': 'core.serializers.CustomTokenObtainPairSerializer',
 }

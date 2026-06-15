@@ -1,5 +1,6 @@
 from django.utils import timezone
 from rest_framework import serializers
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from .models import CustomUser, Patient, Session, TherapeuticEvolution
@@ -40,7 +41,7 @@ class LoginSerializer(serializers.Serializer):
         email = attrs.get('email')
         password = attrs.get('password')
 
-        user = CustomUser.objects.filter(email=email).first()
+        user = CustomUser.all_objects.filter(email=email).first()
 
         if not user or not user.check_password(password):
             raise serializers.ValidationError('Credenciais inválidas')
@@ -49,6 +50,8 @@ class LoginSerializer(serializers.Serializer):
             raise serializers.ValidationError('Conta desativada')
 
         refresh = RefreshToken.for_user(user)
+        refresh['tenant_id'] = user.tenant_id
+        refresh['role'] = user.role
 
         return {
             'user': CustomUserSerializer(user).data,
@@ -69,6 +72,15 @@ class RefreshTokenSerializer(serializers.Serializer):
             return {'access': str(refresh.access_token)}
         except Exception:
             raise serializers.ValidationError('Token inválido ou expirado')
+
+
+class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
+    @classmethod
+    def get_token(cls, user):
+        token = super().get_token(user)
+        token['tenant_id'] = user.tenant_id
+        token['role'] = user.role
+        return token
 
 
 class PatientSerializer(serializers.ModelSerializer):
