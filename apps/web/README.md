@@ -221,21 +221,21 @@ O portal da clínica inclui:
 
 ### Mock (NEXT_PUBLIC_DISABLE_MSW=false)
 
-| Email              | Role      | Senha          |
-| ------------------ | --------- | -------------- |
-| admin@alpha.com   | admin     | qualquer senha |
-| ana@alpha.com     | therapist | qualquer senha |
-| carlos@alpha.com  | therapist | qualquer senha |
-| maria@alpha.com   | family    | qualquer senha |
+| Email            | Role      | Senha          |
+| ---------------- | --------- | -------------- |
+| admin@alpha.com  | admin     | qualquer senha |
+| ana@alpha.com    | therapist | qualquer senha |
+| carlos@alpha.com | therapist | qualquer senha |
+| maria@alpha.com  | family    | qualquer senha |
 
 ### Real API (NEXT_PUBLIC_DISABLE_MSW=true)
 
-| Email              | Role      | Senha        |
-| ------------------ | --------- | ------------ |
-| admin@alpha.com   | admin     | alpha        |
-| ana@alpha.com     | therapist | alpha        |
-| carlos@alpha.com  | therapist | alpha        |
-| maria@alpha.com   | family    | alpha        |
+| Email            | Role      | Senha |
+| ---------------- | --------- | ----- |
+| admin@alpha.com  | admin     | alpha |
+| ana@alpha.com    | therapist | alpha |
+| carlos@alpha.com | therapist | alpha |
+| maria@alpha.com  | family    | alpha |
 
 **Nota**: Execute `python manage.py seed` no backend para criar os usuários na API real.
 

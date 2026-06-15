@@ -26,12 +26,12 @@ instrumentation-client.ts  — inicializa o MSW no Next.js
 
 ## Usuários disponíveis para teste
 
-| Email              | Role      |
-| ------------------ | --------- |
-| admin@alpha.com   | admin     |
-| ana@alpha.com     | therapist |
-| carlos@alpha.com  | therapist |
-| maria@alpha.com   | family    |
+| Email            | Role      |
+| ---------------- | --------- |
+| admin@alpha.com  | admin     |
+| ana@alpha.com    | therapist |
+| carlos@alpha.com | therapist |
+| maria@alpha.com  | family    |
 
 Qualquer senha funciona no mock de login.
 

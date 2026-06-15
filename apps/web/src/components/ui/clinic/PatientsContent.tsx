@@ -74,10 +74,6 @@ export function PatientsContent({
     }
   }
 
-  const cancelDelete = () => {
-    setPatientToDelete(null)
-  }
-
   // Calculate pagination indices
   const startItem = (currentPage - 1) * ITEMS_PER_PAGE
   const endItem = Math.min(startItem + ITEMS_PER_PAGE, filteredPatients.length)
