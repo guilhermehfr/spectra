@@ -163,6 +163,7 @@ src/lib/utils/
 ├── statsUtils.ts     # Dashboard statistics
 ├── envUtils.ts       # Environment checks (getUseMock)
 ├── redirectUtils.ts  # URL redirects (getDashboardUrl)
+├── classUtils.ts       # cn() — clsx + twMerge class composition
 ├── permissionUtils.ts# Permission checks
 ├── sessionStatusUtils.ts # Session status display
 └── translationUtils.ts   # getServerT() for server actions
@@ -309,7 +310,97 @@ export async function action(_: ActionState, formData: FormData): Promise<Action
 
 ---
 
+## Skeleton Primitives
+
+All skeletons built on a single `<Skeleton>` base component:
+
+```tsx
+// base: animate-pulse rounded-md bg-slate-200
+```
+
+Exported from `@/components/ui/shared`: `Skeleton`, `SkeletonText`, `SkeletonAvatar`, `SkeletonCard`, `SkeletonButton`, `SkeletonTitle`
+
+Use `cn()` from `@/lib/utils/classUtils` for class composition.
+
+---
+
+## Route Loading UI
+
+Every route under `/clinic/` and `/family/` has its own `loading.tsx` to avoid visual flash from ancestor loading boundaries. `clinic/loading.tsx` (top progress bar) is the root fallback — overridden by every child route.
+
+Compose skeleton inline in `loading.tsx` using shared primitives:
+
+```tsx
+// src/app/clinic/sessions/loading.tsx
+import { Skeleton, SkeletonCard, SkeletonText } from '@/components/ui/shared'
+
+export default function SessionsLoading() {
+  return (
+    <div className="space-y-4">
+      <Skeleton className="h-8 w-48" />
+      {Array.from({ length: 5 }).map((_, i) => (
+        <SkeletonCard key={i}>
+          <SkeletonText lines={2} />
+        </SkeletonCard>
+      ))}
+    </div>
+  )
+}
+```
+
+No page-specific skeleton components — compose inline.
+
+---
+
 ## Testing Patterns (Development)
+
+Tests use **Vitest** + **Testing Library** (not Playwright).
+
+### Test Infrastructure
+
+```
+src/test/
+├── setup.ts           # Auto-imported, adds jest-dom matchers
+├── test-utils.tsx     # Custom render() with NextIntlClientProvider wrapper
+└── vitest.d.ts        # TypeScript declarations
+```
+
+### Test Utilities
+
+Import custom `render` from `@/test/test-utils` — wraps components with i18n providers automatically:
+
+```tsx
+import { render, screen } from '@/test/test-utils'
+import { Button } from './Button'
+
+it('renders with text', () => {
+  render(<Button>Click me</Button>)
+  expect(screen.getByText('Click me')).toBeInTheDocument()
+})
+```
+
+### Running Tests
+
+```bash
+pnpm test          # Watch mode
+pnpm test:run      # Single run
+pnpm test:coverage # With coverage report
+```
+
+### Storybook
+
+Component visual tests and documentation via Storybook:
+
+```bash
+pnpm storybook           # Dev server on port 6006
+pnpm build-storybook     # Static build
+```
+
+Stories live alongside components: `*.stories.tsx` files in the same directory. Config in `.storybook/main.ts`.
+
+---
+
+
 
 ### Mock Data Relationships
 
@@ -349,6 +440,7 @@ Evolution (session=1, released_to_family=true)
 | `calculateClinicStats()`    | Dashboard metrics         | `@/lib/utils/statsUtils`       |
 | `aggregateByDayOfWeek()`    | Chart data                | `@/lib/utils/dateRangeUtils`   |
 | `getServerT()`              | Translations in actions   | `@/lib/utils/translationUtils` |
+| `cn()`                      | Class composition         | `@/lib/utils/classUtils`       |
 
 ---
 

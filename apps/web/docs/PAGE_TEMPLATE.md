@@ -204,6 +204,7 @@ When creating a new page, ensure:
 - [ ] Use `notFound()` for invalid params
 - [ ] Use `redirect()` for auth failures
 - [ ] Follow responsive text patterns (`text-xs md:text-sm`)
+- [ ] Add `loading.tsx` with inline skeleton using `Skeleton` primitives from `@/components/ui/shared`
 
 ---
 
@@ -260,16 +261,30 @@ export default function PageWithErrorBoundary() {
 
 ## Loading States
 
-Pages use `loading.tsx` files for each portal (clinic and family) with a shared `LoadingSpinner` component. Pattern:
+Every route under `/clinic/` and `/family/` has its own `loading.tsx` to avoid visual flash from ancestor loading boundaries. `clinic/loading.tsx` (top progress bar) is the root fallback — overridden by every child route using inline skeleton composition.
+
+Compose skeletons inline using shared primitives from `@/components/ui/shared` — no page-specific skeleton components:
 
 ```tsx
-// src/app/clinic/loading.tsx
-import { LoadingSpinner } from '@/components/ui/shared'
+// src/app/clinic/sessions/loading.tsx
+import { Skeleton, SkeletonText, SkeletonCard } from '@/components/ui/shared'
 
-export default function ClinicLoading() {
-  return <LoadingSpinner />
+export default function SessionsLoading() {
+  return (
+    <div className="space-y-4">
+      <Skeleton className="h-8 w-48" />
+      <Skeleton className="h-4 w-72" />
+      {Array.from({ length: 5 }).map((_, i) => (
+        <SkeletonCard key={i}>
+          <SkeletonText lines={2} />
+        </SkeletonCard>
+      ))}
+    </div>
+  )
 }
 ```
+
+Available primitives: `Skeleton`, `SkeletonText`, `SkeletonAvatar`, `SkeletonCard`, `SkeletonButton`, `SkeletonTitle` — all based on `animate-pulse rounded-md bg-slate-200`.
 
 ---
 

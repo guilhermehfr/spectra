@@ -194,6 +194,19 @@ const canRelease = canReleaseEvolution(evolution, user)
 
 ---
 
+### Class Composition Utilities (`src/lib/utils/classUtils.ts`)
+
+```tsx
+import { cn } from '@/lib/utils/classUtils'
+
+// Shadcn-style class composition (clsx + twMerge)
+const className = cn('base', isActive && 'active', className)
+```
+
+**Use in:** Any component with dynamic className composition
+
+---
+
 ### Session Status Utilities (`src/lib/utils/sessionStatusUtils.ts`)
 
 ```tsx

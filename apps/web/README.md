@@ -8,6 +8,8 @@ Parte do monorepo Spectra, esta é uma aplicação Next.js 16 construída com Re
 - **UI**: React 19, Tailwind CSS 4
 - **Linguagem**: TypeScript
 - **Linting/Formatting**: ESLint com configuração Next.js + Prettier
+- **Testes**: Vitest + Testing Library (substituiu Playwright)
+- **Storybook**: Visualização e documentação de componentes
 - **i18n**: next-intl com suporte a PT-BR e EN (cookie `locale`)
 - **Autenticação**: Cookie-based (JWT em `access_token`)
 - **Mock**: MSW com estado centralizado em memória
@@ -136,6 +138,11 @@ Abra [http://localhost:3000](http://localhost:3000) no seu navegador para ver o 
 - `pnpm start`: Inicia o servidor de produção
 - `pnpm lint`: Executa verificações do ESLint
 - `pnpm format`: Formata código com Prettier e corrige problemas do ESLint
+- `pnpm test`: Testes em modo watch (Vitest)
+- `pnpm test:run`: Testes em modo single run
+- `pnpm test:coverage`: Testes com relatório de cobertura
+- `pnpm storybook`: Servidor de desenvolvimento do Storybook (porta 6006)
+- `pnpm build-storybook`: Build estático do Storybook
 
 ## Estrutura do Projeto
 
@@ -183,9 +190,16 @@ apps/web/
 │   │       ├── permissionUtils.ts # Permissões de sessões/evoluções
 │   │       ├── sessionStatusUtils.ts # Status de sessão (locale-aware)
 │   │       └── translationUtils.ts   # getServerT() para server actions
+│   ├── test/                      # Configuração de testes
+│   │   ├── setup.ts               # jest-dom matchers
+│   │   ├── test-utils.tsx         # Custom render com providers i18n
+│   │   └── vitest.d.ts            # Declarações TypeScript
 │   └── mocks/                     # MSW para desenvolvimento
 │       ├── state.ts               # Estado centralizado
 │       └── data/                  # Dados mock
+├── .storybook/                    # Configuração do Storybook
+│   ├── main.ts                    # Stories glob, addons, framework
+│   └── preview.tsx                # Decorações globais, CSS
 ├── public/                        # Arquivos estáticos
 └── package.json                    # Dependências e scripts
 ```

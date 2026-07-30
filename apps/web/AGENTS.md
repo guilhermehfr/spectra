@@ -281,6 +281,12 @@ src/
 - Exported from `@/components/ui/shared`: `Skeleton`, `SkeletonText`, `SkeletonAvatar`, `SkeletonCard`, `SkeletonButton`, `SkeletonTitle`
 - Use `cn()` from `@/lib/utils/classUtils` for class composition (`clsx` + `twMerge`, shadcn pattern)
 
+**Navigation UX with `useTransition`**:
+
+- Use `useTransition` from React to handle pending states during navigation/submission instead of manual loading flags
+- Avoids blocking the UI and keeps the page responsive
+- Pattern: `const [isPending, startTransition] = useTransition()` then `startTransition(() => router.push(...))`
+
 **Creating New Utilities**:
 
 - Put in `src/lib/utils/` with descriptive filename
@@ -380,6 +386,19 @@ src/
 - `pnpm lint` - ESLint checks
 - `pnpm format` - Prettier + ESLint auto-fix
 
+**Testing**:
+
+- **Vitest** + **Testing Library** (not Playwright)
+- `pnpm test` - Watch mode; `pnpm test:run` - Single run; `pnpm test:coverage` - With coverage
+- Custom `render` from `@/test/test-utils` wraps components with i18n providers (NextIntlClientProvider)
+- Test setup in `src/test/setup.ts` (auto-imports jest-dom matchers)
+
+**Storybook**:
+
+- `pnpm storybook` - Dev server on port 6006; `pnpm build-storybook` - Static build
+- Stories live alongside components: `*.stories.tsx` in same directory
+- Config in `.storybook/main.ts` (Next.js Vite framework, a11y & docs addons)
+
 **Config Files**:
 
 - `next.config.ts` - TypeScript-based Next.js config (with `cacheComponents: true` and security headers)
@@ -387,3 +406,5 @@ src/
 - `eslint.config.mjs` - Next.js core web vitals + TypeScript rules + Prettier
 - `postcss.config.mjs` - Tailwind CSS 4 plugin
 - `.prettierrc` / `.prettierignore` - Prettier formatting config
+- `.storybook/main.ts` - Storybook configuration
+- `vitest.config.ts` - Vitest test runner configuration

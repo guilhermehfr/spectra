@@ -71,7 +71,9 @@ src/components/
         ├── Container.tsx
         ├── LanguageToggle.tsx  # PT|EN toggle (single instance in root layout)
         ├── LoadingSpinner.tsx # Shared loading indicator
-        └── IconButton.tsx
+        ├── IconButton.tsx
+        ├── Skeleton.tsx        # Skeleton primitives (Skeleton, SkeletonText, SkeletonAvatar, SkeletonCard, SkeletonButton, SkeletonTitle)
+        └── Skeleton.stories.tsx# Storybook stories for skeleton primitives
 ```
 
 ---
@@ -108,7 +110,28 @@ export function Button({ className, variant = 'primary', ...props }: ButtonProps
 }
 ```
 
-### 2. Domain UI Components (`ui/clinic/` or `ui/family/`)
+### 2. Test Infrastructure (`src/test/`)
+
+Test configuration and utilities for Vitest + Testing Library.
+
+```
+src/test/
+├── setup.ts           # jest-dom matchers import (auto-executed)
+├── test-utils.tsx     # Custom render with i18n providers (NextIntlClientProvider)
+└── vitest.d.ts        # TypeScript declarations for vitest globals
+```
+
+### 3. Storybook (`.storybook/`)
+
+Component visual testing and documentation via Storybook.
+
+```
+.storybook/
+├── main.ts         # Storybook config (stories glob, addons, framework)
+└── preview.tsx     # Global decorators, CSS import, a11y config
+```
+
+### 4. Domain UI Components (`ui/clinic/` or `ui/family/`)
 
 Components specific to a portal that encapsulate domain logic.
 
@@ -118,7 +141,7 @@ Components specific to a portal that encapsulate domain logic.
 - Handle portal-specific display logic
 - May use shared UI components internally
 
-### 3. Layout Components (`layout/clinic/` or `layout/family/`)
+### 5. Layout Components (`layout/clinic/` or `layout/family/`)
 
 Wrappers that provide consistent layout structure for pages.
 
@@ -129,7 +152,7 @@ Wrappers that provide consistent layout structure for pages.
 - Handle responsive behavior
 - Include portal-specific branding
 
-### 4. Auth Components (`auth/`)
+### 6. Auth Components (`auth/`)
 
 Authentication-related components.
 
